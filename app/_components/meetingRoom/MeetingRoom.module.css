@@ -28,6 +28,7 @@
 }
 
 .networkGraphContainer {
+  cursor: pointer;
   position: fixed;
   left: 0;
   width: 100%;
@@ -77,6 +78,18 @@
   align-items: center;
   width: 100%;
   z-index: 2;
+  padding: 10px;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.footerRight {
+  display: flex;
+  gap: 10px;
+  margin-right: 50px;
 }
 
 .iconButton {
@@ -84,7 +97,7 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 30px;
+  font-size: 45px;
   color: #96a0fe;
   transition: color 0.3s ease;
 }
@@ -98,7 +111,7 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 30px;
+  font-size: 50px;
   color: #ff0000;
   transition: color 0.3s ease;
 }

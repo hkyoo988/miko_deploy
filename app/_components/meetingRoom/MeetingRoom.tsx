@@ -105,26 +105,30 @@ const HomeContent: React.FC = () => {
       </div>
       <Footer>
         <div className={styles.footerComponents}>
-          <ControlPanel
-            newNodeLabel={controlNodeLabel}
-            newNodeContent={controlNodeContent}
-            newNodeColor={controlNodeColor}
-            setNewNodeLabel={setControlNodeLabel}
-            setNewNodeContent={setControlNodeContent}
-            setNewNodeColor={setControlNodeColor}
-            addNode={handleAddNode}
-            setAction={setAction}
-            fitToScreen={fitToScreen}
-          />
-          <button onClick={handleSharingRoom} className={styles.iconButton}>
-            <FontAwesomeIcon icon={faShareSquare} />
-          </button>
-          <button className={styles.iconButton} onClick={handleKeyword}>
-            <FontAwesomeIcon icon={faSquarePlus} />
-          </button>
-          <button onClick={handleLeaveSession} className={styles.leaveButton}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
-          </button>
+          <div className={styles.footerLeft}>
+            <ControlPanel
+              newNodeLabel={controlNodeLabel}
+              newNodeContent={controlNodeContent}
+              newNodeColor={controlNodeColor}
+              setNewNodeLabel={setControlNodeLabel}
+              setNewNodeContent={setControlNodeContent}
+              setNewNodeColor={setControlNodeColor}
+              addNode={handleAddNode}
+              setAction={setAction}
+              fitToScreen={fitToScreen}
+            />
+          </div>
+          <div className={styles.footerRight}>
+            <button className={styles.iconButton} onClick={handleKeyword}>
+              Key Words
+            </button>
+            <button onClick={handleSharingRoom} className={styles.iconButton}>
+              <FontAwesomeIcon icon={faShareSquare} />
+            </button>
+            <button onClick={handleLeaveSession} className={styles.leaveButton}>
+              <FontAwesomeIcon icon={faSignOutAlt} />
+            </button>
+          </div>
         </div>
       </Footer>
       <SharingRoom
