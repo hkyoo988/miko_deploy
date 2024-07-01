@@ -7,8 +7,6 @@ interface Props {
 }
 
 const UserVideoComponent: React.FC<Props> = ({ streamManager }) => {
-    const [isSpeaking, setIsSpeaking] = useState(false);
-    
     const getNicknameTag = () => {
         return JSON.parse(streamManager.stream.connection.data).clientData;
     };
