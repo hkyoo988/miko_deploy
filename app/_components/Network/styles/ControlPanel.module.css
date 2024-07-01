@@ -1,0 +1,47 @@
+.controlPanel {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(249, 249, 249, 0.8); /* 반투명 배경색 */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.colorInput {
+  width: 30%;
+  height: 40px;
+  cursor: pointer;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  height: 40px;
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #96a0fe;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+}

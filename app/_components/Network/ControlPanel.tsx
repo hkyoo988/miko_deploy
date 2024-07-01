@@ -1,5 +1,12 @@
 import React from "react";
 import styles from "./styles/ControlPanel.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faLink,
+  faUnlink,
+  faExpand,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface ControlPanelProps {
   newNodeLabel: string;
@@ -47,16 +54,16 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         className={styles.colorInput}
       />
       <button onClick={addNode} className={styles.button}>
-        ➕ Add Node
+        <FontAwesomeIcon icon={faPlus} /> Add Node
       </button>
       <button onClick={() => setAction("connect")} className={styles.button}>
-        🔗 Connect
+        <FontAwesomeIcon icon={faLink} /> Connect
       </button>
       <button onClick={() => setAction("disconnect")} className={styles.button}>
-        ❌ Disconnect
+        <FontAwesomeIcon icon={faUnlink} /> Disconnect
       </button>
       <button onClick={fitToScreen} className={styles.button}>
-        📏 Fit to Screen
+        <FontAwesomeIcon icon={faExpand} /> Fit to Screen
       </button>
     </div>
   );
