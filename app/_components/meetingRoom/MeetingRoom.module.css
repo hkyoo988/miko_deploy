@@ -70,3 +70,31 @@
   width: 100%;
   z-index: 2;
 }
+
+.iconButton {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+  color: #96a0fe;
+  transition: color 0.3s ease;
+}
+
+.iconButton:hover {
+  color: #0056b3;
+}
+
+.leaveButton {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+  color: #ff0000;
+  transition: color 0.3s ease;
+}
+
+.leaveButton:hover {
+  color: #cc0000;
+}

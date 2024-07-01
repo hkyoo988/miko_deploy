@@ -1,4 +1,10 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faShareSquare,
+  faSignOutAlt,
+  faSquarePlus,
+} from "@fortawesome/free-solid-svg-icons";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
@@ -90,7 +96,6 @@ const HomeContent: React.FC = () => {
       </div>
       <Footer>
         <div className={styles.footerComponents}>
-          <button onClick={handleSharingRoom}>Sharing a room</button>
           <ControlPanel
             newNodeLabel={controlNodeLabel}
             newNodeContent={controlNodeContent}
@@ -102,6 +107,9 @@ const HomeContent: React.FC = () => {
             setAction={setAction}
             fitToScreen={fitToScreen}
           />
+          <button onClick={handleSharingRoom} className={styles.iconButton}>
+            <FontAwesomeIcon icon={faShareSquare} />
+          </button>
           {sessionId && (
             <VoiceRecorder
               sessionId={sessionId}
@@ -109,10 +117,12 @@ const HomeContent: React.FC = () => {
               subscriber={subscriber}
             />
           )}
-          <button className={styles.keywordButton} onClick={handleKeyword}>
-            keyword
+          <button className={styles.iconButton} onClick={handleKeyword}>
+            <FontAwesomeIcon icon={faSquarePlus} />
           </button>
-          <button onClick={handleLeaveSession}>Leave Session</button>
+          <button onClick={handleLeaveSession} className={styles.leaveButton}>
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
         </div>
       </Footer>
       <SharingRoom
