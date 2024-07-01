@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "../../styles/SettingsSlider.module.css";
 
 interface SettingsSliderProps {
   label: string;
@@ -9,13 +10,28 @@ interface SettingsSliderProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SettingsSlider: React.FC<SettingsSliderProps> = ({ label, min, max, step, value, onChange }) => {
+const SettingsSlider: React.FC<SettingsSliderProps> = ({
+  label,
+  min,
+  max,
+  step,
+  value,
+  onChange,
+}) => {
   return (
-    <label>
-      {label}
-      <input type="range" min={min} max={max} step={step} value={value} onChange={onChange} />
-      {value}
-    </label>
+    <div className={styles.sliderWrapper}>
+      <label className={styles.sliderLabel}>{label}</label>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        className={styles.slider}
+      />
+      <span className={styles.sliderValue}>{value.toFixed(2)}</span>
+    </div>
   );
 };
 

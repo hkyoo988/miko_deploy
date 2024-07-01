@@ -85,6 +85,15 @@ const HomeContent: React.FC = () => {
             <p>Socket is not connected. Please check your connection.</p>
           )}
         </div>
+        <div className={styles.voiceRecorderContainer}>
+          {sessionId && (
+            <VoiceRecorder
+              sessionId={sessionId}
+              publisher={publisher}
+              subscriber={subscriber}
+            />
+          )}
+        </div>
         <div className={styles.nodeConversationWrapper}>
           <NodeConversation
             nodes={nodes.get()}
@@ -110,13 +119,6 @@ const HomeContent: React.FC = () => {
           <button onClick={handleSharingRoom} className={styles.iconButton}>
             <FontAwesomeIcon icon={faShareSquare} />
           </button>
-          {sessionId && (
-            <VoiceRecorder
-              sessionId={sessionId}
-              publisher={publisher}
-              subscriber={subscriber}
-            />
-          )}
           <button className={styles.iconButton} onClick={handleKeyword}>
             <FontAwesomeIcon icon={faSquarePlus} />
           </button>
