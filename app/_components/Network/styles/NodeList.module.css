@@ -1,0 +1,56 @@
+.nodeList {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+  max-height: 80vh; /* 최대 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤 허용 */
+  overflow-x: hidden; /* 가로 스크롤 막기 */
+}
+
+.nodeItem {
+  cursor: pointer; /* 마우스를 올렸을 때 포인터 커서로 변경 */
+  padding: 8px; /* 요소 내부의 패딩을 8픽셀로 설정 */
+  border: 3px solid #ccc; /* 두께 3픽셀, 색상 #ccc의 실선 테두리를 설정 */
+  border-radius: 4px; /* 모서리를 4픽셀의 반경으로 둥글게 설정 */
+  margin-bottom: 5px; /* 요소의 아래쪽 외부 여백을 5픽셀로 설정 */
+  transition: background-color 0.3s, color 0.3s; /* 배경색과 글자색이 0.3초 동안 점진적으로 변하도록 설정 */
+  width: 100%; /* 요소의 너비를 부모 요소의 100%로 설정 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 너비와 높이를 설정 */
+}
+
+.nodeItemSelected {
+  background-color: #96a0fe;
+  color: #fff;
+  border: 1px solid #96a0fe;
+}
+
+.nodeItemNotSelected {
+  background-color: #fff;
+  color: #333;
+}
+
+.groupHeader {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #fff;
+  color: #96a0fe;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.groupHeaderExpanded {
+  background-color: #96a0fe;
+  color: #fff;
+}
+
+.nodeList {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0;
+  transition: max-height 0.3s;
+}

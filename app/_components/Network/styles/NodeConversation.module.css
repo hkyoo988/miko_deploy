@@ -1,0 +1,48 @@
+.chromeTabs {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}
+
+.chromeTab {
+  flex: 1;
+  padding: 5px 10px;
+  cursor: pointer;
+  text-align: center;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  margin-right: 5px;
+  transition: background-color 0.3s, color 0.3s, flex 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chromeTab:last-child {
+  margin-right: 0;
+}
+
+.chromeTabActive {
+  background-color: #96a0fe;
+  color: white;
+  border: 1px solid #96a0fe;
+  border-bottom: 1px solid #fff;
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nodeConversationContainer {
+  flex-grow: 1;
+  overflow-y: auto; /* 세로 스크롤 허용 */
+  overflow-x: hidden; /* 가로 스크롤 막기 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px;
+}

@@ -1,0 +1,12 @@
+/* Conversation.module.css */
+.conversationList {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .messageItem {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+  

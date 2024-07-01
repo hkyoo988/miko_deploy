@@ -1,0 +1,114 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
+  padding-bottom: 30px; /* 푸터 높이 고려 */
+  box-sizing: border-box;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  padding: 1rem;
+  overflow: hidden; /* 전체 스크롤 방지 */
+}
+
+.left,
+.right {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  margin: 0.5rem;
+}
+
+.left {
+  flex: 1;
+  overflow: hidden; /* 스크롤 방지 */
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  text-align: center;
+}
+
+.tabButton:hover {
+  background-color: #f1f1f1;
+}
+
+.activeTab {
+  background-color: #96a0fe;
+  color: white;
+}
+
+.tabContent {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  overflow-y: auto; /* 우측 영역에서 세로 스크롤 허용 */
+}
+
+@media (min-width: 768px) {
+  .main {
+    flex-direction: row;
+  }
+}
+
+.keywordItem,
+.conversationItem {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 세로 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  color: #555;
+  transition: background-color 0.3s ease, font-weight 0.3s ease;
+}
+
+.keywordItem:hover,
+.conversationItem:hover {
+  background-color: rgba(150, 160, 254, 0.3);
+  font-weight: bold;
+}
+
+.keywordLabel {
+  color: black;
+}
+
+.keywordContent {
+  color: #555;
+}
+
+.conversationUser {
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.conversationScript {
+  color: #555;
+  flex-grow: 1; /* 공간 차지 */
+  margin-right: 8px; /* 간격 */
+}
+
+.conversationTimestamp {
+  font-size: 13px;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
