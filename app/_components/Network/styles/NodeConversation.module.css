@@ -35,6 +35,11 @@
   justify-content: center;
 }
 
+.nodeConversationContainerWrapper {
+  height: 100%; /* 바깥 div의 최대 높이를 제한합니다 */
+  overflow-y: hidden; /* 내부 div에 스크롤을 추가합니다 */
+}
+
 .nodeConversationContainer {
   flex-grow: 1;
   overflow-y: auto; /* 세로 스크롤 허용 */
@@ -45,4 +50,9 @@
   align-items: flex-start;
   width: 100%;
   padding: 10px;
+  max-height: 80vh; /* 내부 컨테이너의 최대 높이를 설정합니다 */
+}
+
+.nodeConversationContainer::-webkit-scrollbar {
+  display: none;
 }

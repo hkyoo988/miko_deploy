@@ -59,7 +59,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   };
 
   return (
-    <div className={className}>
+    <div className={`${styles.nodeConversationContainerWrapper} ${className}`}>
       <div className={styles.chromeTabs}>
         <div
           className={
