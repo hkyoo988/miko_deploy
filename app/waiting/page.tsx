@@ -32,6 +32,10 @@ const WaitingPage: React.FC = () => {
     }
   }, [session]);
 
+  const base64Encode = (str: string) => {
+    return btoa(encodeURIComponent(str));
+  };  
+
   const handleChangeSessionId = (e: ChangeEvent<HTMLInputElement>) => {
     setMySessionId(e.target.value);
   };
@@ -41,9 +45,9 @@ const WaitingPage: React.FC = () => {
   };
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const encodedPassword = base64Encode(e.target.value);
+    setPassword(encodedPassword);
   };
-
 
   useEffect(() => {
     const getDevices = async () => {

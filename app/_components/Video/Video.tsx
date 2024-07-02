@@ -49,15 +49,15 @@ const Video: React.FC<Props> = ({
       }
     };
 
-    socket.on("roomId", handleRoomId);
+    socket.on("end_meeting", handleRoomId);
 
     return () => {
-      socket.off("roomId", handleRoomId);
+      socket.off("end_meeting", handleRoomId);
     };
   }, [session, subscriber, socket, router])
 
   const handlerLeaveSessionEvent = useCallback(() => {
-    socket.emit("roomId", sessionId);
+    socket.emit("end_meeting", sessionId);
   }, [socket]);
 
   const handlerErrorEvent = (error: any) => {
