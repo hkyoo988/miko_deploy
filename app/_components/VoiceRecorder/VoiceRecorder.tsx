@@ -32,6 +32,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
+  const startTimestampRef = useRef<number | null>(null);
+
 
   const [recordingMode, setRecordingMode] = useState<boolean>(false);
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07);
@@ -94,10 +96,11 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
         mediaRecorderRef.current.onstop = () => {
           if (audioChunksRef.current.length > 0) {
+            const timestamp = startTimestampRef.current ?? Date.now();
             const blob = new Blob(audioChunksRef.current, {
               type: "audio/wav",
             });
-            sendAudioToServer(blob);
+            sendAudioToServer(blob, timestamp);
             const url = URL.createObjectURL(blob);
             setAudioURLs((prev) => [...prev, url]);
             audioChunksRef.current = [];
@@ -190,6 +193,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "recording"
     ) {
+      startTimestampRef.current = Date.now(); // 녹음 시작 시의 타임스탬프 저장
       mediaRecorderRef.current.start();
       setRecording(true);
       console.log("녹음 시작됨");
@@ -225,13 +229,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     }
   };
 
-  const sendAudioToServer = (blob: Blob) => {
+  const sendAudioToServer = (blob: Blob, timestamp: number) => {
     const reader = new FileReader();
     reader.onload = function (event) {
       const arrayBuffer = event.target?.result as ArrayBuffer;
       if (arrayBuffer) {
         console.log(arrayBuffer);
-        socket.emit("stt", [sessionId, arrayBuffer]);
+        socket.emit("stt", [sessionId, arrayBuffer, timestamp]);
         console.log("오디오 데이터 전송 중");
       } else {
         console.error("블롭을 읽는데 실패했습니다");
