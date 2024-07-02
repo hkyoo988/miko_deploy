@@ -45,8 +45,7 @@ const WaitingPage: React.FC = () => {
   };
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    const encodedPassword = base64Encode(e.target.value);
-    setPassword(encodedPassword);
+    setPassword(e.target.value);
   };
 
   useEffect(() => {
@@ -75,11 +74,13 @@ const WaitingPage: React.FC = () => {
         const token = await getToken(isCreate);
         console.log("Token received:", token);
 
+        const encodedPassword = base64Encode(password);
+
         const url = `/meetingRoom?sessionId=${encodeURIComponent(
           mySessionId
         )}&userName=${encodeURIComponent(
           myUserName
-        )}&token=${encodeURIComponent(token)}&password=${encodeURIComponent(password)}`;
+        )}&token=${encodeURIComponent(token)}&password=${encodeURIComponent(encodedPassword)}`;
 
         router.push(url);
       } catch (error) {
