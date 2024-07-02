@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from 'react';
-import VoiceComponent from '../_components/VoiceRecorder/VoiceRecorder';
+import VoiceComponent from './VoiceRecorderForTest';
 import { MainSocketProvider, useSocket } from '../_components/Socket/SocketContext';
 import socket from '../_lib/socket';
 

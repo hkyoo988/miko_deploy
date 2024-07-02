@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import SettingsSlider from "./SettingSlider";
-import styles from "./VoiceRecorder.module.css";
-import { useSocket } from "../Socket/SocketContext";
-import { handleMicrophoneError } from "../../_utils/voiceErrorHandler";
+import SettingsSlider from "../_components/VoiceRecorder/SettingSlider";
+import styles from "../_components/VoiceRecorder/VoiceRecorder.module.css";
+import { handleMicrophoneError } from "../_utils/voiceErrorHandler";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrophone,
   faMicrophoneSlash,
   faCircle,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface VoiceRecorderProps {
@@ -40,7 +40,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     useState<number>(20000);
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { socket } = useSocket();
 
   useEffect(() => {
     async function init() {
@@ -64,12 +63,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
         const gainNode = audioContext.createGain();
         gainNode.gain.value = 3; // 오디오 신호를 크게 증폭
+        console.log("gain:", gainNode.gain.value);
         gainNodeRef.current = gainNode;
 
         try {
           console.log("AudioWorklet 모듈 로드 중...");
           await audioContext.audioWorklet.addModule(
-            new URL("./worklet-processor.js", import.meta.url).toString()
+            new URL("../_components/VoiceRecorder/worklet-processor.js", import.meta.url).toString()
           );
           console.log("AudioWorklet 모듈 로드 성공.");
         } catch (err) {
@@ -97,7 +97,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
             const blob = new Blob(audioChunksRef.current, {
               type: "audio/wav",
             });
-            sendAudioToServer(blob);
+
             const url = URL.createObjectURL(blob);
             setAudioURLs((prev) => [...prev, url]);
             audioChunksRef.current = [];
@@ -145,14 +145,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         workletNodeRef.current.port.onmessage = null;
       }
     }
-  }, [recordingMode]);
-
-  useEffect(() => {
-    if (!publisher) {
-      console.error("퍼블리셔가 아직 준비되지 않았습니다");
-      return;
-    }
-    publisher.publishAudio(recordingMode);
   }, [recordingMode]);
 
   const createWorkletNode = (
@@ -225,20 +217,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
     }
   };
 
-  const sendAudioToServer = (blob: Blob) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const arrayBuffer = event.target?.result as ArrayBuffer;
-      if (arrayBuffer) {
-        console.log(arrayBuffer);
-        socket.emit("stt", [sessionId, arrayBuffer]);
-        console.log("오디오 데이터 전송 중");
-      } else {
-        console.error("블롭을 읽는데 실패했습니다");
-      }
-    };
-    reader.readAsArrayBuffer(blob);
-  };
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSilenceThreshold(parseFloat(event.target.value));
@@ -249,16 +227,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   };
 
   const toggleRecordingMode = () => {
-    if (!publisher) {
-      console.error("퍼블리셔가 아직 준비되지 않았습니다");
-      return;
-    }
     setRecordingMode((prev) => !prev);
-    if (recordingMode === false) {
-      publisher.publishAudio(false);
-    } else {
-      publisher.publishAudio(true);
-    }
+  };
+
+  const downloadAudio = (url: string) => {
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "recording.wav";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -266,53 +245,66 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
       {error ? (
         <p>{error}</p>
       ) : (
-        <div className={styles.controls}>
-          <div className={styles.sliderContainer}>
-            <SettingsSlider
-              label="음성 인식 감도:"
-              min={0.01}
-              max={1}
-              step={0.01}
-              value={silenceThreshold}
-              onChange={handleSliderChange}
-            />
-            <SettingsSlider
-              label="침묵 인식 시간 (초):"
-              min={0}
-              max={5}
-              step={0.5}
-              value={silenceDuration / 1000}
-              onChange={(e) =>
-                handleDurationChange({
-                  ...e,
-                  target: {
-                    ...e.target,
-                    value: (parseFloat(e.target.value) * 1000).toString(),
-                  },
-                })
-              }
-            />
-          </div>
-          <div className={styles.recordingControl}>
-            <button
-              className={styles.recordingButton}
-              onClick={toggleRecordingMode}
-            >
-              <FontAwesomeIcon
-                icon={recordingMode ? faMicrophone : faMicrophoneSlash}
+          <div className={styles.controls}>
+            <div className={styles.sliderContainer}>
+              <SettingsSlider
+                  label="음성 인식 감도:"
+                  min={0.01}
+                  max={1}
+                  step={0.01}
+                  value={silenceThreshold}
+                  onChange={handleSliderChange}
               />
-            </button>
-            {recordingMode && recording && (
-              <span className={styles.recordingIndicator}>
+              <SettingsSlider
+                  label="침묵 인식 시간 (초):"
+                  min={0}
+                  max={5}
+                  step={0.5}
+                  value={silenceDuration / 1000}
+                  onChange={(e) =>
+                      handleDurationChange({
+                        ...e,
+                        target: {
+                          ...e.target,
+                          value: (parseFloat(e.target.value) * 1000).toString(),
+                        },
+                      })
+                  }
+              />
+            </div>
+            <div className={styles.recordingControl}>
+              <button
+                  className={styles.recordingButton}
+                  onClick={toggleRecordingMode}
+              >
                 <FontAwesomeIcon
-                  icon={faCircle}
-                  className={styles.recordingIcon}
+                    icon={recordingMode ? faMicrophone : faMicrophoneSlash}
+                />
+              </button>
+              {recordingMode && recording && (
+                  <span className={styles.recordingIndicator}>
+                <FontAwesomeIcon
+                    icon={faCircle}
+                    className={styles.recordingIcon}
                 />
                 음성 인식 중...
               </span>
-            )}
+              )}
+            </div>
+            <div className={styles.audioList}>
+              {audioURLs.map((url, index) => (
+                  <div key={index} className={styles.audioItem}>
+                    <audio controls src={url}/>
+                    <button
+                        className={styles.downloadButton}
+                        onClick={() => downloadAudio(url)}
+                    >
+                      <FontAwesomeIcon icon={faDownload}/> Download
+                    </button>
+                  </div>
+              ))}
+            </div>
           </div>
-        </div>
       )}
     </div>
   );
