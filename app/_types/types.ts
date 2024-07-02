@@ -17,5 +17,6 @@ export interface Conversation {
   user: string;
   script: string;
   timestamp: string;
+  time_offset: number;
   __v: number;
 }

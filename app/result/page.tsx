@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
@@ -32,6 +38,8 @@ const ResultPage: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [vertexes, setVertexes] = useState<Vertex[]>([]);
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
+  const [meetingId, setMeetingId] = useState<string | null>(null);
+  const [seekTime, setSeekTime] = useState<number | null>(null);
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,6 +63,7 @@ const ResultPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const meetingId = searchParams.get("meetingId");
+      setMeetingId(meetingId);
 
       if (meetingId) {
         try {
@@ -102,6 +111,10 @@ const ResultPage: React.FC = () => {
     printMap();
   }, [vertexes, addNode, edges, newEdges]);
 
+  const handleSeek = useCallback((time: number) => {
+    setSeekTime(time);
+  }, []);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
@@ -143,7 +156,11 @@ const ResultPage: React.FC = () => {
           <div>
             {conversations && conversations.length > 0 ? (
               conversations.map((conversation) => (
-                <div key={conversation._id} className={styles.conversationItem}>
+                <div
+                  key={conversation._id}
+                  className={styles.conversationItem}
+                  onClick={() => handleSeek(conversation.time_offset / 1000)}
+                >
                   <span className={styles.conversationUser}>
                     {conversation.user}:
                   </span>
@@ -213,7 +230,7 @@ const ResultPage: React.FC = () => {
         </section>
       </main>
       <Footer isFixed>
-        <AudioPlayer />
+        {meetingId && <AudioPlayer meetingId={meetingId} seekTime={seekTime} />}
       </Footer>
     </div>
   );
