@@ -23,6 +23,7 @@ interface RoomSocketProviderProps {
 export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [hasEnteredRoom, setHasEnteredRoom] = useState(false);
   const { socket, isConnected, connectSocket } = useSocket();
@@ -32,6 +33,7 @@ export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
     const storedSessionId = query.get("sessionId");
     const storedUserName = query.get("userName");
     const storedToken = query.get("token");
+    const storedPassword = query.get("password");
 
     if (storedUserName) {
       connectSocket(storedUserName);
@@ -41,7 +43,7 @@ export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
       console.log("Socket is connected!");
 
       if (!hasEnteredRoom && sessionId) {
-        socket.emit("enter_room", sessionId);
+        socket.emit("enter_room", sessionId, storedPassword);
 
         socket.on("entered_room", () => {
           console.log("Entered room:", storedSessionId);
@@ -56,6 +58,7 @@ export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
       setSessionId(storedSessionId);
       setUserName(storedUserName);
       setToken(storedToken);
+      setPassword(storedPassword)
     } else {
       // 세션 정보가 없으면 대기 페이지로 이동
       window.location.href = "/waiting";
