@@ -43,7 +43,7 @@ export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
       console.log("Socket is connected!");
 
       if (!hasEnteredRoom && sessionId) {
-        socket.emit("enter_room", sessionId, storedPassword);
+        socket.emit("enter_room", [sessionId, storedPassword]);
 
         socket.on("entered_room", () => {
           console.log("Entered room:", storedSessionId);
