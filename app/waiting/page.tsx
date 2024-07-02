@@ -91,11 +91,12 @@ const WaitingPage: React.FC = () => {
 
   const handleCreateSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    const encodedPassword = base64Encode(password);
     const requestData = {
       // 여기에 필요한 데이터를 추가하세요. 예:
       nickname: myUserName,
       room: mySessionId,
-      password: password
+      password: encodedPassword
     };
     console.log(requestData);
     const response = await fetch(
@@ -120,10 +121,12 @@ const WaitingPage: React.FC = () => {
   const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    const encodedPassword = base64Encode(password);
+
     const requestData = {
       // 여기에 필요한 데이터를 추가하세요. 예:
       room: mySessionId,
-      password: password
+      password: encodedPassword
     };
   
     const response = await fetch(
