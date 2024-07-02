@@ -50,6 +50,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
             noiseSuppression: true,
             echoCancellation: true,
             autoGainControl: true,
+            sampleRate: 8000, // 8kHz 전화 음질
+            channelCount: 1,  // 모노 마이크 채널
           },
         });
         mediaStreamRef.current = stream;
