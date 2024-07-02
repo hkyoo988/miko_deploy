@@ -162,14 +162,14 @@ const ResultPage: React.FC = () => {
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
-                    {conversation.user}:
-                  </span>
-                  <span className={styles.conversationScript}>
-                    {conversation.script}
+                    {conversation.user}
                   </span>
                   <span className={styles.conversationTimestamp}>
-                    {conversation.timestamp}
+                    {new Date(conversation.timestamp).toLocaleTimeString()}
                   </span>
+                  <div className={styles.conversationScript}>
+                    {conversation.script}
+                  </div>
                 </div>
               ))
             ) : (

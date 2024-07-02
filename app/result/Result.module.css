@@ -61,6 +61,7 @@
   border: 1px solid #ddd;
   padding: 1rem;
   overflow-y: auto; /* 우측 영역에서 세로 스크롤 허용 */
+  word-break: break-word; /* 텍스트 줄바꿈을 위한 설정 */
 }
 
 @media (min-width: 768px) {
@@ -71,19 +72,16 @@
 
 .keywordItem,
 .conversationItem {
-  display: flex; /* Flexbox 사용 */
-  align-items: center; /* 세로 정렬 */
-  justify-content: space-between; /* 양쪽 정렬 */
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
   color: #555;
   transition: background-color 0.3s ease, font-weight 0.3s ease;
+  word-break: break-word; /* 텍스트 줄바꿈을 위한 설정 */
 }
 
 .keywordItem:hover,
 .conversationItem:hover {
   background-color: rgba(150, 160, 254, 0.3);
-  font-weight: bold;
 }
 
 .keywordLabel {
@@ -97,20 +95,24 @@
 .conversationUser {
   font-weight: bold;
   color: #333;
-  margin-right: 5px;
-}
-
-.conversationScript {
-  color: #555;
-  flex-grow: 1; /* 공간 차지 */
-  margin-right: 8px; /* 간격 */
+  margin-right: 10px; /* 이름과 타임스탬프 간격 조정 */
+  display: inline-block; /* 인라인 블록으로 변경 */
 }
 
 .conversationTimestamp {
   font-size: 13px;
-  margin-left: auto;
+  color: #999;
   text-align: right;
   white-space: nowrap;
+  display: inline-block; /* 인라인 블록으로 변경 */
+}
+
+.conversationScript {
+  font-size: 15px;
+  color: #555;
+  display: block; /* 블록 요소로 변경하여 전체 너비 사용 */
+  white-space: normal; /* 줄바꿈을 위한 설정 */
+  margin-top: 5px; /* 대화 내용과 화자/타임스탬프 간격 조정 */
 }
 
 .button {
