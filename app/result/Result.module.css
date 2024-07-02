@@ -112,3 +112,28 @@
   text-align: right;
   white-space: nowrap;
 }
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  height: 40px;
+  color: white;
+  font-size: 13px;
+  font-weight: bolder;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #96a0fe;
+  margin-bottom: 5px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+}

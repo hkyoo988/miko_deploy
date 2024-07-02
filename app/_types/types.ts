@@ -15,7 +15,7 @@ export interface Edge {
 export interface Conversation {
   _id: string;
   user: string;
-  content: string;
+  script: string;
   timestamp: string;
   __v: number;
 }

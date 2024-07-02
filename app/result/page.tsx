@@ -132,7 +132,7 @@ const ResultPage: React.FC = () => {
                   {conversation.user}:
                 </span>
                 <span className={styles.conversationScript}>
-                  {conversation.content}
+                  {conversation.script}
                 </span>
                 <span className={styles.conversationTimestamp}>
                   {conversation.timestamp}
@@ -153,8 +153,8 @@ const ResultPage: React.FC = () => {
         <section className={styles.left}>
           노드 그래프 영역
           <div style={{ position: "relative", width: "100%", height: "900px" }}>
-            <button onClick={fitToScreen}>fitToScreen</button>
-            <NetworkGraph
+          <button onClick={fitToScreen} className={styles.button}>fitToScreen</button>
+          <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
