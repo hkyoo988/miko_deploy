@@ -38,11 +38,14 @@ const ResultPage: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { addNode, selectedNodeId, handleNodeClick, edges, fitToScreen, nodes } = useNetwork(
-    containerRef,
-    null,
-    null
-  );
+  const {
+    addNode,
+    selectedNodeId,
+    handleNodeClick,
+    edges,
+    fitToScreen,
+    nodes,
+  } = useNetwork(containerRef, null, null);
   const { disconnectSocket } = useSocket();
 
   useEffect(() => {
@@ -102,18 +105,20 @@ const ResultPage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
-        return <div>
-          {nodes.get().length > 0 ? (
-            <NodeList
-              nodes={nodes.get()}
-              edges={edges.get()}
-              selectedNodeId={selectedNodeId}
-              onNodeClick={handleNodeClick}
-            />
-          ) : (
-            <div>No vertexes available</div>
-          )}
-        </div>
+        return (
+          <div>
+            {nodes.get().length > 0 ? (
+              <NodeList
+                nodes={nodes.get()}
+                edges={edges.get()}
+                selectedNodeId={selectedNodeId}
+                onNodeClick={handleNodeClick}
+              />
+            ) : (
+              <div>No vertexes available</div>
+            )}
+          </div>
+        );
       case "tab2":
         return (
           <div>
@@ -165,9 +170,10 @@ const ResultPage: React.FC = () => {
       <Header>MIKO</Header>
       <main className={styles.main}>
         <section className={styles.left}>
-          노드 그래프 영역
-          <div style={{ position: "relative", width: "100%", height: "900px" }}>
-            <button onClick={fitToScreen} className={styles.button}>fitToScreen</button>
+          <div style={{ position: "relative", width: "100%", height: "90%" }}>
+            <button onClick={fitToScreen} className={styles.button}>
+              fitToScreen
+            </button>
             <NetworkGraph
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
@@ -180,22 +186,25 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab1" ? styles.activeTab : ""
+              }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab2" ? styles.activeTab : ""
+              }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab3" ? styles.activeTab : ""
+              }`}
             >
               음성 기록
             </button>
