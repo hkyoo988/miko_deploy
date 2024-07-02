@@ -142,7 +142,6 @@ const WaitingPage: React.FC = () => {
       console.error('Failed to create room:', response.statusText); // 에러 처리
       alert('Failed to create room');
     }
-    await joinSession(event, false); // 방 참가
   };
 
   const getToken = async (isCreate: boolean) => {
