@@ -134,6 +134,15 @@ const ResultPage: React.FC = () => {
     }
   }, [activeTab, containerRef.current]);
 
+  useEffect(() => {
+    if (highlightedConversation) {
+      const element = document.getElementById(highlightedConversation);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [highlightedConversation]);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
@@ -176,6 +185,7 @@ const ResultPage: React.FC = () => {
             {conversations && conversations.length > 0 ? (
               conversations.map((conversation) => (
                 <div
+                  id={conversation._id}
                   key={conversation._id}
                   className={`${styles.conversationItem} ${
                     highlightedConversation === conversation._id

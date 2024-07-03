@@ -31,7 +31,7 @@
 
 .seekSlider::before {
   content: "";
-  height: 5px;
+  height: 7px;
   background: #007bff; /* 재생된 부분의 색 */
   position: absolute;
   top: 0;
@@ -43,9 +43,8 @@
 .seekSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 15px; /* 핸들의 크기를 줄입니다 */
-  height: 15px;
-  border-radius: 50%; /* 동그란 모양으로 만듭니다 */
+  width: 0px; /* 핸들의 크기를 줄입니다 */
+  height: 0px;
   background: #007bff; /* 핸들의 색상 */
   cursor: pointer; /* 커서를 포인터로 변경 */
   position: relative; /* 가상 요소를 상대적으로 위치시킵니다. */
