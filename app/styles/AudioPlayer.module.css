@@ -1,26 +1,88 @@
-/* AudioPlayer.module.css */
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #96a0fe; /* Blue */
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 2s linear infinite;
-  margin: auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.audio {
+.footerPlayer {
   width: 100%;
-  max-width: 600px;
-  border: 0px;
-  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.audioPlayer {
+  background-color: transparent; /* 배경을 투명으로 설정 */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.hiddenAudio {
+  display: none;
+}
+
+.seekSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  background: #ddd; /* 전체 슬라이더 바의 배경색 */
+  outline: none;
+  margin-bottom: 10px;
+  position: relative; /* 가상 요소를 상대적으로 위치시킵니다. */
+}
+
+.seekSlider::before {
+  content: "";
+  height: 5px;
+  background: #007bff; /* 재생된 부분의 색 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--seek-before-width, 0%);
+  z-index: 1;
+}
+
+.seekSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px; /* 핸들의 크기를 줄입니다 */
+  height: 15px;
+  border-radius: 50%; /* 동그란 모양으로 만듭니다 */
+  background: #007bff; /* 핸들의 색상 */
+  cursor: pointer; /* 커서를 포인터로 변경 */
+  position: relative; /* 가상 요소를 상대적으로 위치시킵니다. */
+  z-index: 2; /* 핸들이 가상 요소보다 위에 위치하도록 설정 */
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 5px; /* 버튼들 사이의 간격을 일정하게 유지 */
+}
+
+.playPauseButton,
+.controlButton {
+  background-color: transparent; /* 배경을 투명으로 설정 */
+  border: none;
+  color: black;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: background-color 0.2s ease; /* 배경색 변환 시 부드럽게 */
+}
+
+.playPauseButton:hover,
+.controlButton:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* 호버 시 배경색 */
+}
+
+.time {
+  font-size: 14px;
+  color: #999;
+  min-width: 50px; /* 시간 표시를 위한 최소 너비 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
 }

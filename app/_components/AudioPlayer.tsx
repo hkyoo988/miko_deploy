@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 import styles from "../styles/AudioPlayer.module.css";
 
 interface AudioPlayerProps {
@@ -13,7 +14,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onTimeUpdate,
 }) => {
   const [audioSrc, setAudioSrc] = useState("");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const sliderRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchAudio = async () => {
@@ -45,33 +50,109 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime);
         onTimeUpdate(audioRef.current.currentTime);
+        if (sliderRef.current) {
+          const percentage = (audioRef.current.currentTime / duration) * 100;
+          sliderRef.current.style.setProperty(
+            "--seek-before-width",
+            `${percentage}%`
+          );
+        }
+      }
+    };
+
+    const handleLoadedMetadata = () => {
+      if (audioRef.current) {
+        setDuration(audioRef.current.duration);
       }
     };
 
     const audioElement = audioRef.current;
     if (audioElement) {
       audioElement.addEventListener("timeupdate", handleTimeUpdate);
+      audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
     }
 
     return () => {
       if (audioElement) {
         audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+        audioElement.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
       }
     };
-  }, [onTimeUpdate]);
+  }, [onTimeUpdate, duration]);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play();
+        setIsPlaying(true);
+      } else {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
+  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const seekTime = parseFloat(event.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = seekTime;
+      setCurrentTime(seekTime);
+      if (!isPlaying) {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const rewind = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime -= 5;
+    }
+  };
+
+  const forward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime += 5;
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
 
   return (
-    <>
-      {audioSrc ? (
-        <audio controls className={styles.audio} ref={audioRef}>
-          <source src={audioSrc} type="audio/webm" />
-          Your browser does not support the audio element.
-        </audio>
-      ) : (
-        <div className={styles.loader}></div>
-      )}
-    </>
+    <div className={styles.audioPlayer}>
+      <audio ref={audioRef} src={audioSrc} className={styles.hiddenAudio} />
+      <input
+        type="range"
+        min="0"
+        max={duration}
+        value={currentTime}
+        onChange={handleSeek}
+        className={styles.seekSlider}
+        ref={sliderRef}
+      />
+      <div className={styles.controls}>
+        <span className={styles.time}>{formatTime(currentTime)}</span>
+        <button onClick={rewind} className={styles.controlButton}>
+          <FaBackward />
+        </button>
+        <button onClick={togglePlayPause} className={styles.playPauseButton}>
+          {isPlaying ? <FaPause /> : <FaPlay />}
+        </button>
+        <button onClick={forward} className={styles.controlButton}>
+          <FaForward />
+        </button>
+        <span className={styles.time}>{formatTime(duration)}</span>
+      </div>
+    </div>
   );
 };
 

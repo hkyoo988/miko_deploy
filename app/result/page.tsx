@@ -266,11 +266,13 @@ const ResultPage: React.FC = () => {
       </main>
       <Footer isFixed>
         {meetingId && (
-          <AudioPlayer
-            meetingId={meetingId}
-            seekTime={seekTime}
-            onTimeUpdate={handleTimeUpdate}
-          />
+          <div className={styles.footerPlayer}>
+            <AudioPlayer
+              meetingId={meetingId}
+              seekTime={seekTime}
+              onTimeUpdate={handleTimeUpdate}
+            />
+          </div>
         )}
       </Footer>
     </div>
