@@ -82,6 +82,9 @@ const WaitingPage: React.FC = () => {
           myUserName
         )}&token=${encodeURIComponent(token)}&password=${encodeURIComponent(encodedPassword)}`;
 
+        sessionStorage.setItem("Video", selectedVideoDeviceId? selectedVideoDeviceId : 'off');
+        sessionStorage.setItem("Audio", selectedAudioDeviceId? selectedAudioDeviceId : 'off');
+
         router.push(url);
       } catch (error) {
         console.error("Error joining session:", error);
