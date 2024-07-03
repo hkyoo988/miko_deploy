@@ -94,9 +94,7 @@ const HomeContent: React.FC = () => {
             />
           )}
         </div>
-        <div
-      className="absolute right-0 top-[200px] mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-10 overflow-y-hidden overflow-x-hidden h-[60%] w-[15%]"
-    >
+        <div className="absolute right-0 top-[200px] mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-10 overflow-y-hidden overflow-x-hidden h-[60%] w-[15%]">
           <NodeConversation
             nodes={nodes.get()}
             edges={edges.get()}
@@ -112,24 +110,15 @@ const HomeContent: React.FC = () => {
               newNodeLabel={controlNodeLabel}
               newNodeContent={controlNodeContent}
               newNodeColor={controlNodeColor}
-              setNewNodeLabel={setControlNodeLabel}
-              setNewNodeContent={setControlNodeContent}
-              setNewNodeColor={setControlNodeColor}
-              addNode={handleAddNode}
+              // setNewNodeLabel={setControlNodeLabel}
+              // setNewNodeContent={setControlNodeContent}
+              // setNewNodeColor={setControlNodeColor}
+              handleKeyword={handleKeyword}
               setAction={setAction}
               fitToScreen={fitToScreen}
+              handleSharingRoom={handleSharingRoom}
+              handleLeaveSession={handleLeaveSession}
             />
-          </div>
-          <div className={styles.footerRight}>
-            <button className={styles.iconButton} onClick={handleKeyword}>
-              Key Words
-            </button>
-            <button onClick={handleSharingRoom} className={styles.iconButton}>
-              <FontAwesomeIcon icon={faShareSquare} />
-            </button>
-            <button onClick={handleLeaveSession} className={styles.leaveButton}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-            </button>
           </div>
         </div>
       </Footer>
