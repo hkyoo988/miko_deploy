@@ -94,7 +94,9 @@ const HomeContent: React.FC = () => {
             />
           )}
         </div>
-        <div className={styles.nodeConversationWrapper}>
+        <div
+      className="absolute right-0 top-[200px] mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-10 overflow-y-hidden overflow-x-hidden h-[60%] w-[15%]"
+    >
           <NodeConversation
             nodes={nodes.get()}
             edges={edges.get()}

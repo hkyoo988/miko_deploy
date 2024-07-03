@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Node, Edge } from "../../_types/types";
-import styles from "./styles/NodeList.module.css";
+import styles from "./styles/NodeConversation.module.css";
 
 interface NodeListProps {
   nodes: Node[];
@@ -25,10 +25,10 @@ const NodeList: React.FC<NodeListProps> = ({
   );
 
   const toggleGroup = (groupId: number) => {
-    setExpandedGroups({
-      ...expandedGroups,
-      [groupId]: !expandedGroups[groupId],
-    });
+    setExpandedGroups((prevExpandedGroups) => ({
+      ...prevExpandedGroups,
+      [groupId]: !prevExpandedGroups[groupId],
+    }));
   };
 
   const getConnectedNodes = (nodeId: number, edges: Edge[]): Set<number> => {
@@ -56,7 +56,7 @@ const NodeList: React.FC<NodeListProps> = ({
     const groups: { [key: number]: Node[] } = {};
     const nodeGroupMap = new Map<number, number>();
     let nextGroupId = 1;
-
+  
     nodes.forEach((node) => {
       if (!nodeGroupMap.has(node.id)) {
         const connectedNodes = Array.from(getConnectedNodes(node.id, edges));
@@ -71,66 +71,67 @@ const NodeList: React.FC<NodeListProps> = ({
         }
       }
     });
-
+  
     setGroupedNodes(groups);
   }, [nodes, edges]);
 
   return (
-    <ul className={`${styles.nodeList} ${className}`}>
-      {Object.keys(groupedNodes).map((groupId) => (
-        <li key={groupId}>
-          <div
-            onClick={() => toggleGroup(Number(groupId))}
-            className={`${styles.groupHeader} ${
-              expandedGroups[Number(groupId)] ? styles.groupHeaderExpanded : ""
-            }`}
-            aria-expanded={expandedGroups[Number(groupId)]}
-          >
-            <span>Group {groupId}</span>
-            <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
-          </div>
-          {expandedGroups[Number(groupId)] && (
-            <ul className={styles.nodeList}>
-              {groupedNodes[Number(groupId)].map((node) => (
-                <li
-                  key={node.id}
-                  onClick={() => onNodeClick(node.id)}
-                  className={`${styles.nodeItem} ${
-                    node.id === selectedNodeId
-                      ? styles.nodeItemSelected
-                      : styles.nodeItemNotSelected
-                  }`}
-                >
-                  <strong>ID:</strong> {node.id} <br />
-                  <strong>Label:</strong> {node.label} <br />
-                  <strong>Content:</strong>
-                  <div dangerouslySetInnerHTML={{ __html: node.content }} />
-                </li>
-              ))}
-            </ul>
-          )}
+<ul className={`list-none p-0 w-full max-h-[calc(100%-3rem)] overflow-y-auto overflow-x-hidden ${styles['custom-scrollbar']} ${className}`}>      {Object.keys(groupedNodes).map((groupId) => (
+      <li key={groupId} className="mb-2">
+        <div
+          onClick={() => toggleGroup(Number(groupId))}
+          className={`cursor-pointer p-2 border rounded-md flex justify-between items-center ${
+            expandedGroups[Number(groupId)]
+              ? "bg-[#96a0fe] text-white"
+              : "bg-white text-[#96a0fe] border-gray-300"
+          } transition-colors duration-300`}
+          aria-expanded={expandedGroups[Number(groupId)]}
+        >
+          <span>Group {groupId}</span>
+          <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
+        </div>
+        {expandedGroups[Number(groupId)] && (
+          <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
+            {groupedNodes[Number(groupId)].map((node) => (
+              <li
+                key={node.id}
+                onClick={() => onNodeClick(node.id)}
+                className={`cursor-pointer p-2 border-3 rounded-md mb-1 transition-colors duration-300 box-border ${
+                  node.id === selectedNodeId
+                    ? "bg-[#96a0fe] text-white border-[#96a0fe]"
+                    : "bg-white text-gray-800 border-gray-300"
+                }`}
+              >
+                <strong>ID:</strong> {node.id} <br />
+                <strong>Label:</strong> {node.label} <br />
+                <strong>Content:</strong>
+                <div dangerouslySetInnerHTML={{ __html: node.content }} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))}
+    {nodes
+      .filter((node) => !Object.values(groupedNodes).flat().includes(node))
+      .map((node) => (
+        <li
+          key={node.id}
+          onClick={() => onNodeClick(node.id)}
+          className={`cursor-pointer p-2 border-3 rounded-md mb-1 transition-colors duration-300 box-border ${
+            node.id === selectedNodeId
+              ? "bg-[#96a0fe] text-white border-[#96a0fe]"
+              : "bg-white text-gray-800 border-gray-300"
+          }`}
+        >
+          <strong>ID:</strong> {node.id} <br />
+          <strong>Label:</strong> {node.label} <br />
+          <strong>Content:</strong>
+          <div dangerouslySetInnerHTML={{ __html: node.content }} />
         </li>
       ))}
-      {nodes
-        .filter((node) => !Object.values(groupedNodes).flat().includes(node))
-        .map((node) => (
-          <li
-            key={node.id}
-            onClick={() => onNodeClick(node.id)}
-            className={`${styles.nodeItem} ${
-              node.id === selectedNodeId
-                ? styles.nodeItemSelected
-                : styles.nodeItemNotSelected
-            }`}
-          >
-            <strong>ID:</strong> {node.id} <br />
-            <strong>Label:</strong> {node.label} <br />
-            <strong>Content:</strong>
-            <div dangerouslySetInnerHTML={{ __html: node.content }} />
-          </li>
-        ))}
-    </ul>
-  );
+  </ul>
+);
 };
 
 export default NodeList;

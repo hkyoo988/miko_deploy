@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import VoiceComponent from './VoiceRecorderForTest';
 import { MainSocketProvider, useSocket } from '../_components/Socket/SocketContext';
 import socket from '../_lib/socket';
+import { Navbar } from "flowbite-react";
 
 const Home: React.FC = () => {
     const { connectSocket, disconnectSocket } = useSocket();
