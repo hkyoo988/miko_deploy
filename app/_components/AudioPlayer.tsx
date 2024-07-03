@@ -4,9 +4,14 @@ import styles from "../styles/AudioPlayer.module.css";
 interface AudioPlayerProps {
   meetingId: string;
   seekTime: number | null;
+  onTimeUpdate: (currentTime: number) => void;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ meetingId, seekTime }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({
+  meetingId,
+  seekTime,
+  onTimeUpdate,
+}) => {
   const [audioSrc, setAudioSrc] = useState("");
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -36,6 +41,25 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ meetingId, seekTime }) => {
       audioRef.current.play();
     }
   }, [seekTime]);
+
+  useEffect(() => {
+    const handleTimeUpdate = () => {
+      if (audioRef.current) {
+        onTimeUpdate(audioRef.current.currentTime);
+      }
+    };
+
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.addEventListener("timeupdate", handleTimeUpdate);
+    }
+
+    return () => {
+      if (audioElement) {
+        audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+      }
+    };
+  }, [onTimeUpdate]);
 
   return (
     <>

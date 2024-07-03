@@ -40,6 +40,9 @@ const ResultPage: React.FC = () => {
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [seekTime, setSeekTime] = useState<number | null>(null);
+  const [highlightedConversation, setHighlightedConversation] = useState<
+    string | null
+  >(null);
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,6 +91,16 @@ const ResultPage: React.FC = () => {
   const handleSeek = useCallback((time: number) => {
     setSeekTime(time);
   }, []);
+
+  const handleTimeUpdate = (currentTime: number) => {
+    const closestConversation = conversations.reduce((prev, curr) => {
+      return Math.abs(curr.time_offset / 1000 - currentTime) <
+        Math.abs(prev.time_offset / 1000 - currentTime)
+        ? curr
+        : prev;
+    });
+    setHighlightedConversation(closestConversation._id);
+  };
 
   const printMap = () => {
     if (vertexes && vertexes.length > 0) {
@@ -164,7 +177,11 @@ const ResultPage: React.FC = () => {
               conversations.map((conversation) => (
                 <div
                   key={conversation._id}
-                  className={styles.conversationItem}
+                  className={`${styles.conversationItem} ${
+                    highlightedConversation === conversation._id
+                      ? styles.highlighted
+                      : ""
+                  }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -248,7 +265,13 @@ const ResultPage: React.FC = () => {
         </section>
       </main>
       <Footer isFixed>
-        {meetingId && <AudioPlayer meetingId={meetingId} seekTime={seekTime} />}
+        {meetingId && (
+          <AudioPlayer
+            meetingId={meetingId}
+            seekTime={seekTime}
+            onTimeUpdate={handleTimeUpdate}
+          />
+        )}
       </Footer>
     </div>
   );

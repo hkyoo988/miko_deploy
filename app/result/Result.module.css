@@ -139,3 +139,13 @@
   height: 20px;
   margin-right: 3px;
 }
+
+.conversationItem {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.conversationItem.highlighted {
+  background-color: yellow;
+}
