@@ -53,6 +53,8 @@ const ResultPage: React.FC = () => {
     edges,
     fitToScreen,
     nodes,
+    network,
+    initializeNetwork,
   } = useNetwork(containerRef, null, null);
   const { disconnectSocket } = useSocket();
 
@@ -83,44 +85,48 @@ const ResultPage: React.FC = () => {
     fetchData();
   }, [searchParams]);
 
-  useEffect(() => {
-    const printMap = () => {
-      if (vertexes && vertexes.length > 0) {
-        vertexes.forEach((vertex) => {
-          if (!addedNodesRef.current.has(vertex._id)) {
-            addNode(vertex._id, vertex.keyword, vertex.subject, "#5A5A5A");
-            addedNodesRef.current.add(vertex._id);
-          }
-        });
-      }
-      if (newEdges && newEdges.length > 0) {
-        newEdges.forEach((edge) => {
-          if (!addedEdgesRef.current.has(edge._id)) {
-            const newEdge: Edge = {
-              id: edge._id,
-              from: edge.vertex1,
-              to: edge.vertex2,
-            };
-
-            edges.add(newEdge);
-            addedEdgesRef.current.add(edge._id);
-          }
-        });
-      }
-    };
-    printMap();
-  }, [vertexes, addNode, edges, newEdges]);
-
   const handleSeek = useCallback((time: number) => {
     setSeekTime(time);
   }, []);
+
+  const printMap = () => {
+    if (vertexes && vertexes.length > 0) {
+      vertexes.forEach((vertex) => {
+        if (!addedNodesRef.current.has(vertex._id)) {
+          addNode(vertex._id, vertex.keyword, vertex.subject, "#5A5A5A");
+          addedNodesRef.current.add(vertex._id);
+        }
+      });
+    }
+    if (newEdges && newEdges.length > 0) {
+      newEdges.forEach((edge) => {
+        if (!addedEdgesRef.current.has(edge._id)) {
+          const newEdge: Edge = {
+            id: edge._id,
+            from: edge.vertex1,
+            to: edge.vertex2,
+          };
+
+          edges.add(newEdge);
+          addedEdgesRef.current.add(edge._id);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "tab4" && containerRef.current) {
+      initializeNetwork(containerRef.current);
+      printMap();
+    }
+  }, [activeTab, containerRef.current]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "tab1":
         return (
           <div>
-            {nodes.get().length > 0 ? (
+            {nodes.length > 0 ? (
               <NodeList
                 nodes={nodes.get()}
                 edges={edges.get()}
@@ -177,16 +183,8 @@ const ResultPage: React.FC = () => {
             )}
           </div>
         );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className={styles.container}>
-      <Header>MIKO</Header>
-      <main className={styles.main}>
-        <section className={styles.left}>
+      case "tab4":
+        return (
           <div style={{ position: "relative", width: "100%", height: "90%" }}>
             <button onClick={fitToScreen} className={styles.button}>
               fitToScreen
@@ -198,6 +196,18 @@ const ResultPage: React.FC = () => {
               socket={null}
             />
           </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <Header>MIKO</Header>
+      <main className={styles.main}>
+        <section className={styles.left}>
+          <div> {/* 이곳에 다른 콘텐츠를 넣을 수 있습니다. */} </div>
         </section>
         <section className={styles.right}>
           <div className={styles.tabs}>
@@ -224,6 +234,14 @@ const ResultPage: React.FC = () => {
               }`}
             >
               음성 기록
+            </button>
+            <button
+              onClick={() => setActiveTab("tab4")}
+              className={`${styles.tabButton} ${
+                activeTab === "tab4" ? styles.activeTab : ""
+              }`}
+            >
+              네트워크 그래프
             </button>
           </div>
           <div className={styles.tabContent}>{renderTabContent()}</div>
