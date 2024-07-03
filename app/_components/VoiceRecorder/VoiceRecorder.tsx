@@ -230,18 +230,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   };
 
   const sendAudioToServer = (blob: Blob, timestamp: number) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const arrayBuffer = event.target?.result as ArrayBuffer;
-      if (arrayBuffer) {
-        console.log(arrayBuffer);
-        socket.emit("stt", [sessionId, arrayBuffer, timestamp]);
-        console.log("오디오 데이터 전송 중");
-      } else {
-        console.error("블롭을 읽는데 실패했습니다");
-      }
-    };
-    reader.readAsArrayBuffer(blob);
+    socket.emit("stt", [sessionId, blob, timestamp]);
+    console.log("오디오 데이터 전송 중");
   };
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
