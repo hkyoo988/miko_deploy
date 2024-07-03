@@ -1,17 +1,27 @@
 import React from "react";
 
-interface ModalProps {
+interface SharingRoomProps {
   isOpen: boolean;
   onClose: () => void;
   roomLink: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, roomLink }) => {
+const SharingRoom: React.FC<SharingRoomProps> = ({
+  isOpen,
+  onClose,
+  roomLink,
+}) => {
   if (!isOpen) return null;
 
   const handleCopyLink = () => {
+    console.log("Copy Link button clicked");
     navigator.clipboard.writeText(roomLink);
     alert("Room link copied to clipboard!");
+  };
+
+  const handleClose = () => {
+    console.log("Close button clicked");
+    onClose();
   };
 
   return (
@@ -26,6 +36,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, roomLink }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        zIndex: 1000,
       }}
     >
       <div
@@ -64,7 +75,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, roomLink }) => {
           Copy Link
         </button>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           style={{
             padding: "10px 20px",
             backgroundColor: "#ccc",
@@ -82,4 +93,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, roomLink }) => {
   );
 };
 
-export default Modal;
+export default SharingRoom;

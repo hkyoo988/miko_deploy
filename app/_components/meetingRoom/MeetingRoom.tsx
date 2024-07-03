@@ -110,9 +110,6 @@ const HomeContent: React.FC = () => {
               newNodeLabel={controlNodeLabel}
               newNodeContent={controlNodeContent}
               newNodeColor={controlNodeColor}
-              // setNewNodeLabel={setControlNodeLabel}
-              // setNewNodeContent={setControlNodeContent}
-              // setNewNodeColor={setControlNodeColor}
               handleKeyword={handleKeyword}
               setAction={setAction}
               fitToScreen={fitToScreen}
