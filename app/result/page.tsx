@@ -59,6 +59,7 @@ const ResultPage: React.FC = () => {
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,18 +92,26 @@ const ResultPage: React.FC = () => {
           const response = await fetch(
             `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}`
           );
-          const data = await response.json();
-          setConversations(data.conversations);
-          setVertexes(data.vertexes);
-          setNewEdges(data.edges);
+          if (response.ok) {
+            const data = await response.json();
+            setConversations(data.conversations);
+            setVertexes(data.vertexes);
+            setNewEdges(data.edges);
+            setIsLoading(false); // 데이터 로드 완료
+          } else {
+            router.push("/error"); // 데이터가 없을 경우 에러 페이지로 리다이렉트
+          }
         } catch (error) {
           console.error("Error fetching data: ", error);
+          router.push("/error"); // 오류가 발생할 경우 에러 페이지로 리다이렉트
         }
+      } else {
+        router.push("/error"); // meetingId가 없을 경우 에러 페이지로 리다이렉트
       }
     };
 
     fetchData();
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   useEffect(() => {
     const fetchMeetingDetails = async () => {
@@ -111,16 +120,21 @@ const ResultPage: React.FC = () => {
           const response = await fetch(
             `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}/mom`
           );
-          const data = await response.json();
-          setMeetingDetails(data.momResponseDto);
+          if (response.ok) {
+            const data = await response.json();
+            setMeetingDetails(data.momResponseDto);
+          } else {
+            router.push("/error"); // 데이터가 없을 경우 에러 페이지로 리다이렉트
+          }
         } catch (error) {
           console.error("Error fetching meeting details: ", error);
+          router.push("/error"); // 오류가 발생할 경우 에러 페이지로 리다이렉트
         }
       }
     };
 
     fetchMeetingDetails();
-  }, [meetingId]);
+  }, [meetingId, router]);
 
   const handleSeek = useCallback((time: number) => {
     setSeekTime(time);
@@ -268,6 +282,10 @@ const ResultPage: React.FC = () => {
     const seconds = Math.floor((period % 60000) / 1000);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // 로딩 중일 때 표시할 내용
+  }
 
   return (
     <div className={styles.container}>
