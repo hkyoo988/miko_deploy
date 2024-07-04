@@ -98,8 +98,6 @@ const ResultPage: React.FC = () => {
             setVertexes(data.vertexes);
             setNewEdges(data.edges);
             setIsLoading(false); // 데이터 로드 완료
-          } else {
-            router.push("/error"); // 데이터가 없을 경우 에러 페이지로 리다이렉트
           }
         } catch (error) {
           console.error("Error fetching data: ", error);
@@ -123,8 +121,6 @@ const ResultPage: React.FC = () => {
           if (response.ok) {
             const data = await response.json();
             setMeetingDetails(data.momResponseDto);
-          } else {
-            router.push("/error"); // 데이터가 없을 경우 에러 페이지로 리다이렉트
           }
         } catch (error) {
           console.error("Error fetching meeting details: ", error);
