@@ -33,6 +33,19 @@ interface NewEdge {
   __v: number;
 }
 
+interface Participant {
+  name: string;
+  role: string;
+}
+
+interface MeetingDetails {
+  title: string;
+  startTime: string;
+  period: number;
+  participants: Participant[];
+  mom: string;
+}
+
 const ResultPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -43,6 +56,9 @@ const ResultPage: React.FC = () => {
   const [highlightedConversation, setHighlightedConversation] = useState<
     string | null
   >(null);
+  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
+    null
+  );
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +103,24 @@ const ResultPage: React.FC = () => {
 
     fetchData();
   }, [searchParams]);
+
+  useEffect(() => {
+    const fetchMeetingDetails = async () => {
+      if (meetingId) {
+        try {
+          const response = await fetch(
+            `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}/mom`
+          );
+          const data = await response.json();
+          setMeetingDetails(data.momResponseDto);
+        } catch (error) {
+          console.error("Error fetching meeting details: ", error);
+        }
+      }
+    };
+
+    fetchMeetingDetails();
+  }, [meetingId]);
 
   const handleSeek = useCallback((time: number) => {
     setSeekTime(time);
@@ -229,12 +263,45 @@ const ResultPage: React.FC = () => {
     }
   };
 
+  const formatPeriod = (period: number) => {
+    const minutes = Math.floor(period / 60000);
+    const seconds = Math.floor((period % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
     <div className={styles.container}>
       <Header>MIKO</Header>
       <main className={styles.main}>
         <section className={styles.left}>
-          <div> {/* 이곳에 다른 콘텐츠를 넣을 수 있습니다. */} </div>
+          {meetingDetails ? (
+            <div className={styles.meetingDetails}>
+              <h2>{meetingDetails.title}</h2>
+              <p>
+                <strong>Start Time:</strong>{" "}
+                {new Date(meetingDetails.startTime).toLocaleString()}
+              </p>
+              <p>
+                <strong>Period:</strong> {formatPeriod(meetingDetails.period)}
+              </p>
+              <p>
+                <strong>Participants:</strong>{" "}
+                {Array.isArray(meetingDetails.participants)
+                  ? meetingDetails.participants
+                      .map(
+                        (participant) =>
+                          `${participant.name} (${participant.role})`
+                      )
+                      .join(", ")
+                  : "No participants"}
+              </p>
+              <p>
+                <strong>Summary:</strong> {meetingDetails.mom}
+              </p>
+            </div>
+          ) : (
+            <div>Loading meeting details...</div>
+          )}
         </section>
         <section className={styles.right}>
           <div className={styles.tabs}>
