@@ -52,7 +52,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           />
         );
       case "conversation":
-        return <Conversation messages={messages} className="p-4" />;
+        return <Conversation messages={messages}  />;
       default:
         return null;
     }
