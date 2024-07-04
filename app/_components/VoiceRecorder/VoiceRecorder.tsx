@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import SettingsSlider from "./SettingSlider";
-import styles from "./VoiceRecorder.module.css";
 import { useSocket } from "../Socket/SocketContext";
 import { handleMicrophoneError } from "../../_utils/voiceErrorHandler";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,7 +33,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const gainNodeRef = useRef<GainNode | null>(null);
   const startTimestampRef = useRef<number | null>(null);
 
-
   const [recordingMode, setRecordingMode] = useState<boolean>(false);
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07);
   const [silenceDuration, setSilenceDuration] = useState<number>(1000);
@@ -54,7 +52,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
             echoCancellation: true,
             autoGainControl: true,
             sampleRate: 8000, // 8kHz 전화 음질
-            channelCount: 1,  // 모노 마이크 채널
+            channelCount: 1, // 모노 마이크 채널
           },
         });
         mediaStreamRef.current = stream;
@@ -256,14 +254,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col items-center gap-4 w-full">
       {error ? (
         <p>{error}</p>
       ) : (
-        <div className={styles.controls}>
-          <div className={styles.sliderContainer}>
+        <div className="flex flex-col items-center gap-4 w-full">
+          <div className="flex flex-col items-center gap-4 w-full max-w-md">
             <SettingsSlider
-              label="음성 인식 감도:"
+              label="음성 인식 감도 :"
               min={0.01}
               max={1}
               step={0.01}
@@ -271,7 +269,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
               onChange={handleSliderChange}
             />
             <SettingsSlider
-              label="침묵 인식 시간 (초):"
+              label="침묵 인식(초) :"
               min={0}
               max={5}
               step={0.5}
@@ -287,9 +285,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
               }
             />
           </div>
-          <div className={styles.recordingControl}>
+          <div className="flex items-center gap-2">
             <button
-              className={styles.recordingButton}
+              className="bg-none border-none text-xl cursor-pointer text-gray-700 hover:text-gray-500"
               onClick={toggleRecordingMode}
             >
               <FontAwesomeIcon
@@ -297,11 +295,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
               />
             </button>
             {recordingMode && recording && (
-              <span className={styles.recordingIndicator}>
-                <FontAwesomeIcon
-                  icon={faCircle}
-                  className={styles.recordingIcon}
-                />
+              <span className="flex items-center gap-2 text-sm text-red-500">
+                <FontAwesomeIcon icon={faCircle} className="text-base" />
                 음성 인식 중...
               </span>
             )}

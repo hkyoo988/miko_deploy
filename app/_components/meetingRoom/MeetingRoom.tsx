@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
 import Video from "../Video/Video";
-import styles from "./MeetingRoom.module.css";
 import Footer from "../common/Footer";
 import SharingRoom from "../sharingRoom";
 import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
 import useHomeContent from "../../_hooks/useHomeContent";
 
 const HomeContent: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
   const {
     socket,
     socketContext,
@@ -62,10 +64,14 @@ const HomeContent: React.FC = () => {
     return <p>Error: Socket context is not available.</p>;
   }
 
+  const toggleVisibility = () => {
+    setIsVisible((prev) => !prev);
+  };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.mainContainer}>
-        <div className={styles.networkGraphContainer}>
+    <div className="flex flex-col items-center h-[calc(100vh-3vh)] overflow-hidden">
+      <div className="relative w-full h-screen">
+        <div className="cursor-pointer fixed left-0 w-full h-[calc(100%-3%)] z-[20]">
           <NetworkGraph
             containerRef={containerRef}
             selectedNodeId={selectedNodeId}
@@ -74,10 +80,10 @@ const HomeContent: React.FC = () => {
           />
         </div>
 
-        <div className={styles.appContainer}>
+        <div className="relative w-full h-full">
           {isConnected ? (
             <>
-              <div className={styles.appContainer}>
+              <div className="relative w-full h-full">
                 {sessionId && userName && token ? (
                   <Video
                     sessionId={sessionId}
@@ -94,7 +100,11 @@ const HomeContent: React.FC = () => {
             <p>Socket is not connected. Please check your connection.</p>
           )}
         </div>
-        <div className={styles.voiceRecorderContainer}>
+        <div
+          className={`absolute top-0 mt-10 mr-5 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+            isVisible ? "right-0" : "-right-[30%]"
+          } w-[20%] h-[20%] p-4`}
+        >
           {sessionId && (
             <VoiceRecorder
               sessionId={sessionId}
@@ -103,7 +113,11 @@ const HomeContent: React.FC = () => {
             />
           )}
         </div>
-        <div className="absolute right-0 top-[200px] mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-10 overflow-y-hidden overflow-x-hidden h-[60%] w-[15%]">
+        <div
+          className={`absolute top-[30%] mt-2 mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-20 overflow-hidden transition-transform duration-300 ${
+            isVisible ? "right-0" : "-right-[30%]"
+          } w-[30%] h-[50%] p-4`}
+        >
           <NodeConversation
             nodes={nodes.get()}
             edges={edges.get()}
@@ -111,10 +125,16 @@ const HomeContent: React.FC = () => {
             onNodeClick={handleNodeClick}
           />
         </div>
+        <button
+          className="absolute right-0 top-0 mt-2 mr-5 z-30 bg-blue-500 text-white p-2 rounded flex items-center justify-center"
+          onClick={toggleVisibility}
+        >
+          {isVisible ? <FaChevronRight /> : <FaChevronLeft />}
+        </button>
       </div>
       <Footer>
-        <div className={styles.footerComponents}>
-          <div className={styles.footerLeft}>
+        <div className="flex justify-between items-center w-full z-2 p-2.5">
+          <div className="flex items-center">
             <ControlPanel
               newNodeLabel={controlNodeLabel}
               newNodeContent={controlNodeContent}
