@@ -1,4 +1,9 @@
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaMicrophone,
+  FaComments,
+} from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
@@ -10,7 +15,8 @@ import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
 import useHomeContent from "../../_hooks/useHomeContent";
 
 const HomeContent: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isConversationVisible, setIsConversationVisible] = useState(false);
+  const [isRecorderVisible, setIsRecorderVisible] = useState(false);
 
   const {
     socket,
@@ -64,8 +70,12 @@ const HomeContent: React.FC = () => {
     return <p>Error: Socket context is not available.</p>;
   }
 
-  const toggleVisibility = () => {
-    setIsVisible((prev) => !prev);
+  const toggleConversationVisibility = () => {
+    setIsConversationVisible((prev) => !prev);
+  };
+
+  const toggleRecorderVisibility = () => {
+    setIsRecorderVisible((prev) => !prev);
   };
 
   return (
@@ -100,9 +110,25 @@ const HomeContent: React.FC = () => {
             <p>Socket is not connected. Please check your connection.</p>
           )}
         </div>
+
+        <div className="absolute right-0 top-0 mt-2 mr-5 z-30">
+          <button
+            className="bg-blue-500 text-white p-2 rounded flex items-center justify-center mb-2"
+            onClick={toggleRecorderVisibility}
+          >
+            <FaMicrophone />
+          </button>
+          <button
+            className="bg-blue-500 text-white p-2 rounded flex items-center justify-center"
+            onClick={toggleConversationVisibility}
+          >
+            <FaComments />
+          </button>
+        </div>
+
         <div
-          className={`absolute top-0 mt-10 mr-5 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
-            isVisible ? "right-0" : "-right-[30%]"
+          className={`absolute right-0 top-12 mt-10 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+            isRecorderVisible ? "translate-x-0" : "translate-x-full"
           } w-[20%] h-[20%] p-4`}
         >
           {sessionId && (
@@ -113,10 +139,11 @@ const HomeContent: React.FC = () => {
             />
           )}
         </div>
+
         <div
-          className={`absolute top-[30%] mt-2 mr-5 border border-gray-300 rounded-lg shadow-lg bg-[rgba(249,249,249,0.7)] backdrop-blur-sm z-20 overflow-hidden transition-transform duration-300 ${
-            isVisible ? "right-0" : "-right-[30%]"
-          } w-[30%] h-[50%] p-4`}
+          className={`absolute right-0 top-[32%] mt-2 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+            isConversationVisible ? "translate-x-0" : "translate-x-full"
+          } w-[30%] h-[60%] p-4`}
         >
           <NodeConversation
             nodes={nodes.get()}
@@ -125,13 +152,8 @@ const HomeContent: React.FC = () => {
             onNodeClick={handleNodeClick}
           />
         </div>
-        <button
-          className="absolute right-0 top-0 mt-2 mr-5 z-30 bg-blue-500 text-white p-2 rounded flex items-center justify-center"
-          onClick={toggleVisibility}
-        >
-          {isVisible ? <FaChevronRight /> : <FaChevronLeft />}
-        </button>
       </div>
+
       <Footer>
         <div className="flex justify-between items-center w-full z-2 p-2.5">
           <div className="flex items-center">
