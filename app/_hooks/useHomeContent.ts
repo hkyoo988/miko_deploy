@@ -81,7 +81,7 @@ const useHomeContent = () => {
       if (sessionId) {
         const link = `${
           window.location.origin
-        }/main?sessionId=${encodeURIComponent(
+        }/meetingRoom?sessionId=${encodeURIComponent(
           sessionId
         )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
           token

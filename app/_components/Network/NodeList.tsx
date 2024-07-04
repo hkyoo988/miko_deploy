@@ -1,6 +1,6 @@
+// NodeList.tsx
 import React, { useState, useEffect } from "react";
 import { Node, Edge } from "../../_types/types";
-import styles from "./styles/NodeConversation.module.css";
 
 interface NodeListProps {
   nodes: Node[];
@@ -56,7 +56,7 @@ const NodeList: React.FC<NodeListProps> = ({
     const groups: { [key: number]: Node[] } = {};
     const nodeGroupMap = new Map<number, number>();
     let nextGroupId = 1;
-  
+
     nodes.forEach((node) => {
       if (!nodeGroupMap.has(node.id)) {
         const connectedNodes = Array.from(getConnectedNodes(node.id, edges));
@@ -71,67 +71,68 @@ const NodeList: React.FC<NodeListProps> = ({
         }
       }
     });
-  
+
     setGroupedNodes(groups);
   }, [nodes, edges]);
 
   return (
-<ul className={`list-none p-0 w-full max-h-[calc(100%-3rem)] overflow-y-auto overflow-x-hidden ${styles['custom-scrollbar']} ${className}`}>      {Object.keys(groupedNodes).map((groupId) => (
-      <li key={groupId} className="mb-2">
-        <div
-          onClick={() => toggleGroup(Number(groupId))}
-          className={`cursor-pointer p-2 border rounded-md flex justify-between items-center ${
-            expandedGroups[Number(groupId)]
-              ? "bg-[#96a0fe] text-white"
-              : "bg-white text-[#96a0fe] border-gray-300"
-          } transition-colors duration-300`}
-          aria-expanded={expandedGroups[Number(groupId)]}
-        >
-          <span>Group {groupId}</span>
-          <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
-        </div>
-        {expandedGroups[Number(groupId)] && (
-          <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
-            {groupedNodes[Number(groupId)].map((node) => (
-              <li
-                key={node.id}
-                onClick={() => onNodeClick(node.id)}
-                className={`cursor-pointer p-2 border-3 rounded-md mb-1 transition-colors duration-300 box-border ${
-                  node.id === selectedNodeId
-                    ? "bg-[#96a0fe] text-white border-[#96a0fe]"
-                    : "bg-white text-gray-800 border-gray-300"
-                }`}
-              >
-                <strong>ID:</strong> {node.id} <br />
-                <strong>Label:</strong> {node.label} <br />
-                <strong>Content:</strong>
-                <div dangerouslySetInnerHTML={{ __html: node.content }} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </li>
-    ))}
-    {nodes
-      .filter((node) => !Object.values(groupedNodes).flat().includes(node))
-      .map((node) => (
-        <li
-          key={node.id}
-          onClick={() => onNodeClick(node.id)}
-          className={`cursor-pointer p-2 border-3 rounded-md mb-1 transition-colors duration-300 box-border ${
-            node.id === selectedNodeId
-              ? "bg-[#96a0fe] text-white border-[#96a0fe]"
-              : "bg-white text-gray-800 border-gray-300"
-          }`}
-        >
-          <strong>ID:</strong> {node.id} <br />
-          <strong>Label:</strong> {node.label} <br />
-          <strong>Content:</strong>
-          <div dangerouslySetInnerHTML={{ __html: node.content }} />
+    <ul
+      className={`list-none p-0 w-full max-h-[calc(100%-3rem)] overflow-y-auto overflow-x-hidden ${className}`}
+    >
+      {Object.keys(groupedNodes).map((groupId) => (
+        <li key={groupId} className="mb-4">
+          <div
+            onClick={() => toggleGroup(Number(groupId))}
+            className={`cursor-pointer p-4 border rounded-md flex justify-between items-center w-full box-border ${
+              expandedGroups[Number(groupId)]
+                ? "bg-[#96A0FE] text-white"
+                : "bg-white text-[#96A0FE] border-gray-300"
+            } transition-colors duration-300 shadow-md`}
+            aria-expanded={expandedGroups[Number(groupId)]}
+          >
+            <span>Group {groupId}</span>
+            <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
+          </div>
+          {expandedGroups[Number(groupId)] && (
+            <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
+              {groupedNodes[Number(groupId)].map((node) => (
+                <li
+                  key={node.id}
+                  onClick={() => onNodeClick(node.id)}
+                  className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
+                    node.id === selectedNodeId
+                      ? "bg-[#96A0FE] text-white border-[#96A0FE]"
+                      : "bg-white text-gray-800 border-gray-300"
+                  } shadow-sm hover:shadow-md`}
+                >
+                  <strong>Label:</strong> {node.label} <br />
+                  <strong>Content:</strong>
+                  <div dangerouslySetInnerHTML={{ __html: node.content }} />
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))}
-  </ul>
-);
+      {nodes
+        .filter((node) => !Object.values(groupedNodes).flat().includes(node))
+        .map((node) => (
+          <li
+            key={node.id}
+            onClick={() => onNodeClick(node.id)}
+            className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
+              node.id === selectedNodeId
+                ? "bg-[#96A0FE] text-white border-[#96A0FE]"
+                : "bg-white text-gray-800 border-gray-300"
+            } shadow-sm hover:shadow-md`}
+          >
+            <strong>Label:</strong> {node.label} <br />
+            <strong>Content:</strong>
+            <div dangerouslySetInnerHTML={{ __html: node.content }} />
+          </li>
+        ))}
+    </ul>
+  );
 };
 
 export default NodeList;
