@@ -101,10 +101,7 @@ const ResultPage: React.FC = () => {
           }
         } catch (error) {
           console.error("Error fetching data: ", error);
-          router.push("/error"); // 오류가 발생할 경우 에러 페이지로 리다이렉트
         }
-      } else {
-        router.push("/error"); // meetingId가 없을 경우 에러 페이지로 리다이렉트
       }
     };
 
@@ -124,7 +121,6 @@ const ResultPage: React.FC = () => {
           }
         } catch (error) {
           console.error("Error fetching meeting details: ", error);
-          router.push("/error"); // 오류가 발생할 경우 에러 페이지로 리다이렉트
         }
       }
     };
