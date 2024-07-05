@@ -31,6 +31,9 @@ const Video: React.FC<Props> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const currentPublisherRef = useRef<any>(null);
 
+  // Ref to track if initializeSession has already been called
+  const sessionInitializedRef = useRef(false);
+
   const handlerJoinSessionEvent = () => {
     console.log("Join session");
   };
@@ -44,7 +47,7 @@ const Video: React.FC<Props> = ({
         session.disconnect();
         setSession(undefined);
         setSubscribers([]);
-        socket.disconnect();
+        // socket.disconnect(); // end_meeting이 대신 처리함
         router.push(url);
       }
     };
@@ -54,7 +57,7 @@ const Video: React.FC<Props> = ({
     return () => {
       socket.off("end_meeting", handleRoomId);
     };
-  }, [session, subscriber, socket, router])
+  }, [session, subscriber, socket, router]);
 
   const handlerLeaveSessionEvent = useCallback(() => {
     socket.emit("end_meeting", sessionId);
@@ -66,6 +69,13 @@ const Video: React.FC<Props> = ({
   };
 
   const initializeSession = async (token: string) => {
+    // 한번만 실행되도록 수정
+    if (sessionInitializedRef.current) {
+      return;
+    }
+    sessionInitializedRef.current = true;
+    
+    console.log("initializeSession called");
     const openvidu = new OpenVidu();
     const mySession = openvidu.initSession();
     openvidu.setAdvancedConfiguration({
@@ -181,6 +191,7 @@ const Video: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    console.log("token: ", token);
     if (token) {
       initializeSession(token);
     }
