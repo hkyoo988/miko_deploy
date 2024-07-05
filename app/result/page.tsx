@@ -18,6 +18,7 @@ import NetworkGraph from "../_components/Network/NetworkGraph";
 import useNetwork from "../_hooks/useNetwork";
 import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
+import ReactMarkdown from "react-markdown";
 
 interface Vertex {
   _id: string;
@@ -60,19 +61,19 @@ const ResultPage: React.FC = () => {
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
     null
   );
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(true);
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   const popoverRef = useRef<HTMLDivElement>(null);
   const [popoverState, setPopoverState] = useState({
     visible: false,
     x: 0,
     y: 0,
-    content: '',
+    content: "",
   });
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const ResultPage: React.FC = () => {
     nodes,
     network,
     initializeNetwork,
-    handleNodeHover
+    handleNodeHover,
   } = useNetwork(containerRef, null, null, setPopoverState);
   const { disconnectSocket } = useSocket();
 
@@ -131,7 +132,7 @@ const ResultPage: React.FC = () => {
             setConversations(data.conversations);
             setVertexes(data.vertexes);
             setNewEdges(data.edges);
-            setIsLoading(false); // 데이터 로드 완료
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("Error fetching data: ", error);
@@ -225,32 +226,32 @@ const ResultPage: React.FC = () => {
 `;
 
   const popoverStyle: CSSProperties = {
-    position: 'absolute',
+    position: "absolute",
     top: `${popoverState.y - 20}px`,
-    left: `${popoverState.x}px`, // 중앙 정렬을 위해 수정
-    backgroundColor: '#333', // 더 어두운 회색으로 변경
-    color: 'white',
-    padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
-    borderRadius: '8px', // 테두리 둥글게
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
+    left: `${popoverState.x}px`,
+    backgroundColor: "#333",
+    color: "white",
+    padding: "10px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     zIndex: 1000,
-    visibility: popoverState.visible ? 'visible' : 'hidden',
+    visibility: popoverState.visible ? "visible" : "hidden",
     opacity: popoverState.visible ? 1 : 0,
-    animation: popoverState.visible ? 'fade-in 300ms ease' : 'none', // 애니메이션 추가
-    fontFamily: 'Arial, sans-serif', // 폰트 변경
-    fontSize: '14px', // 폰트 크기 조정
+    animation: popoverState.visible ? "fade-in 300ms ease" : "none",
+    fontFamily: "Arial, sans-serif",
+    fontSize: "14px",
   };
 
   const arrowStyle: CSSProperties = {
-    position: 'absolute',
-    width: '10px',
-    height: '10px',
-    backgroundColor: '#333', // 같은 배경색 적용
-    transform: 'rotate(45deg)',
+    position: "absolute",
+    width: "10px",
+    height: "10px",
+    backgroundColor: "#333",
+    transform: "rotate(45deg)",
     zIndex: -1,
-    top: 'calc(100% - 5px)', // 화살표 위치 조정
-    left: '50%',
-    marginLeft: '-5px',
+    top: "calc(100% - 5px)",
+    left: "50%",
+    marginLeft: "-5px",
   };
 
   const renderTabContent = () => {
@@ -297,10 +298,11 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id
-                    ? styles.highlighted
-                    : ""
-                    }`}
+                  className={`${styles.conversationItem} ${
+                    highlightedConversation === conversation._id
+                      ? styles.highlighted
+                      : ""
+                  }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -332,7 +334,6 @@ const ResultPage: React.FC = () => {
               handleNodeHover={handleNodeHover}
               socket={null}
             />
-            {/* 팝오버 요소 */}
             {popoverState.visible && (
               <div style={popoverStyle} ref={popoverRef}>
                 <p>{popoverState.content}</p>
@@ -353,7 +354,7 @@ const ResultPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // 로딩 중일 때 표시할 내용
+    return <div>Loading...</div>;
   }
 
   return (
@@ -363,29 +364,61 @@ const ResultPage: React.FC = () => {
       <main className={styles.main}>
         <section className={styles.left}>
           {meetingDetails ? (
-            <div className={styles.meetingDetails}>
-              <h2>{meetingDetails.title}</h2>
-              <p>
-                <strong>Start Time:</strong>{" "}
-                {new Date(meetingDetails.startTime).toLocaleString()}
-              </p>
-              <p>
-                <strong>Period:</strong> {formatPeriod(meetingDetails.period)}
-              </p>
-              <p>
-                <strong>Participants:</strong>{" "}
-                {Array.isArray(meetingDetails.participants)
-                  ? meetingDetails.participants
-                    .map(
-                      (participant) =>
-                        `${participant.name} (${participant.role})`
-                    )
-                    .join(", ")
-                  : "No participants"}
-              </p>
-              <p>
-                <strong>Summary:</strong> {meetingDetails.mom}
-              </p>
+            <div className="h-full flex flex-col">
+              <div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    회의 제목
+                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    value={meetingDetails.title}
+                    readOnly
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    진행일
+                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    value={new Date(meetingDetails.startTime).toLocaleString()}
+                    readOnly
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    참가자
+                  </label>
+                  <input
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    value={
+                      Array.isArray(meetingDetails.participants)
+                        ? meetingDetails.participants
+                            .map(
+                              (participant) =>
+                                `${participant.name} (${participant.role})`
+                            )
+                            .join(", ")
+                        : "No participants"
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  회의 내용
+                </label>
+                <div
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 overflow-y-auto"
+                  style={{ height: "calc(100% - 2rem)" }} // Adjusted height
+                >
+                  <ReactMarkdown>{meetingDetails.mom}</ReactMarkdown>
+                </div>
+              </div>
             </div>
           ) : (
             <div>Loading meeting details...</div>
@@ -395,31 +428,35 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab1" ? styles.activeTab : ""
+              }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab2" ? styles.activeTab : ""
+              }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab3" ? styles.activeTab : ""
+              }`}
             >
               음성 기록
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
-              className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab4" ? styles.activeTab : ""
+              }`}
             >
-              네트워크 그래프
+              키워드 맵
             </button>
           </div>
           <div className={styles.tabContent}>{renderTabContent()}</div>
