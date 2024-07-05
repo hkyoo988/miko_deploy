@@ -7,15 +7,13 @@ const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
   socket: Socket | null,
   sessionId: string | null | undefined,
-  setPopoverState: React.Dispatch<React.SetStateAction<any>> | null// 상태 업데이트 함수 추가
+  setPopoverState: React.Dispatch<React.SetStateAction<any>> | null // 상태 업데이트 함수 추가
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
   const [nodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
   const [edges] = useState<DataSet<Edge>>(new DataSet<Edge>([]));
   const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null);
-  const [prevSelectedNodeId, setPrevSelectedNodeId] = useState<number | null>(
-    null
-  );
+  const [prevSelectedNodeId, setPrevSelectedNodeId] = useState<number | null>(null);
   const [nextNodeId, setNextNodeId] = useState<number>(1);
   const [nextEdgeId, setNextEdgeId] = useState<number>(1);
   const [action, setAction] = useState<string | null>(null);
@@ -90,29 +88,30 @@ const useNetwork = (
       if (nodeId !== null) {
         const node = nodes.get(nodeId);
         if (node && network) {
-          const nodePosition = network.getPositions([nodeId])[nodeId];
-          const canvasPosition = network.canvasToDOM({ x: nodePosition.x, y: nodePosition.y });
-  
-          console.log("Node Position:", nodePosition);
+          const canvasPosition = network.getPositions([nodeId])[nodeId];
+          const domPosition = network.canvasToDOM({ x: canvasPosition.x, y: canvasPosition.y });
+
           console.log("Canvas Position:", canvasPosition);
-          
-          if(setPopoverState)
-          setPopoverState({
-            visible: true,
-            x: canvasPosition.x,
-            y: canvasPosition.y,
-            content: node.content,
-          });
-          console.log("popvoerqeq");
+          console.log("DOM Position:", domPosition);
+
+          if (setPopoverState) {
+            setPopoverState({
+              visible: true,
+              x: domPosition.x,
+              y: domPosition.y,
+              content: node.content,
+            });
+          }
         }
       } else {
-        if(setPopoverState)
-        setPopoverState((prev : any) => ({ ...prev, visible: false }));
+        if (setPopoverState) {
+          setPopoverState((prev: any) => ({ ...prev, visible: false }));
+        }
       }
     },
     [network, nodes, setPopoverState]
   );
-  
+
   const handleNodeBlur = useCallback(
     () => {
       if(setPopoverState)
@@ -120,7 +119,6 @@ const useNetwork = (
     },
     [setPopoverState]
   );
-
 
   const initializeNetwork = (container: HTMLDivElement) => {
     const data = {
@@ -175,7 +173,6 @@ const useNetwork = (
     });
 
     net.on("hoverNode", (params) => {
-      console.log(params);
       if (params.node) {
         handleNodeHover(params.node);
       } else {
@@ -184,7 +181,6 @@ const useNetwork = (
     });
 
     net.on("blurNode", (params) => {
-      console.log("Blur Node:", params);
       handleNodeBlur();
     });
   };

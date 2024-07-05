@@ -66,13 +66,22 @@ const ResultPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  
+  const popoverRef = useRef<HTMLDivElement>(null);
   const [popoverState, setPopoverState] = useState({
     visible: false,
     x: 0,
     y: 0,
     content: '',
   });
+
+  useEffect(() => {
+    if (popoverRef.current && popoverState.visible) {
+      const popoverWidth = popoverRef.current.offsetWidth;
+      const newX = popoverState.x - popoverWidth / 2;
+      setPopoverState((prev) => ({ ...prev, x: newX }));
+    }
+  }, [popoverState.visible]);
 
   const {
     addNode,
@@ -207,7 +216,7 @@ const ResultPage: React.FC = () => {
       }
     }
   }, [highlightedConversation]);
-  
+
   const keyframesStyle = `
   @keyframes fade-in {
     from { opacity: 0; }
@@ -215,34 +224,34 @@ const ResultPage: React.FC = () => {
   }
 `;
 
-const popoverStyle: CSSProperties = {
-  position: 'absolute',
-  top: `${popoverState.y - 20}px`,
-  left: `${popoverState.x - 100}px`,
-  backgroundColor: '#333', // 더 어두운 회색으로 변경
-  color: 'white',
-  padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
-  borderRadius: '8px', // 테두리 둥글게
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
-  zIndex: 10,
-  visibility: popoverState.visible ? 'visible' : 'hidden',
-  opacity: popoverState.visible ? 1 : 0,
-  animation: popoverState.visible ? 'fade-in 300ms ease' : 'none', // 애니메이션 추가
-  fontFamily: 'Arial, sans-serif', // 폰트 변경
-  fontSize: '14px', // 폰트 크기 조정
-};
+  const popoverStyle: CSSProperties = {
+    position: 'absolute',
+    top: `${popoverState.y - 20}px`,
+    left: `${popoverState.x}px`, // 중앙 정렬을 위해 수정
+    backgroundColor: '#333', // 더 어두운 회색으로 변경
+    color: 'white',
+    padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
+    borderRadius: '8px', // 테두리 둥글게
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
+    zIndex: 1000,
+    visibility: popoverState.visible ? 'visible' : 'hidden',
+    opacity: popoverState.visible ? 1 : 0,
+    animation: popoverState.visible ? 'fade-in 300ms ease' : 'none', // 애니메이션 추가
+    fontFamily: 'Arial, sans-serif', // 폰트 변경
+    fontSize: '14px', // 폰트 크기 조정
+  };
 
-const arrowStyle: CSSProperties = {
-  position: 'absolute',
-  width: '10px',
-  height: '10px',
-  backgroundColor: '#333', // 같은 배경색 적용
-  transform: 'rotate(45deg)',
-  zIndex: -1,
-  top: 'calc(100% - 5px)', // 화살표 위치 조정
-  left: '50%',
-  marginLeft: '-5px',
-};
+  const arrowStyle: CSSProperties = {
+    position: 'absolute',
+    width: '10px',
+    height: '10px',
+    backgroundColor: '#333', // 같은 배경색 적용
+    transform: 'rotate(45deg)',
+    zIndex: -1,
+    top: 'calc(100% - 5px)', // 화살표 위치 조정
+    left: '50%',
+    marginLeft: '-5px',
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -325,7 +334,7 @@ const arrowStyle: CSSProperties = {
             />
             {/* 팝오버 요소 */}
             {popoverState.visible && (
-              <div style={popoverStyle}>
+              <div style={popoverStyle} ref={popoverRef}>
                 <p>{popoverState.content}</p>
                 <div style={arrowStyle} data-popper-arrow></div>
               </div>
