@@ -58,7 +58,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         console.log("마이크 접근 허용됨:", stream);
 
         const audioContext = new (window.AudioContext ||
-          window.webkitAudioContext)();
+            window.webkitAudioContext)();
         audioContextRef.current = audioContext;
 
         const gainNode = audioContext.createGain();
@@ -69,7 +69,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         try {
           console.log("AudioWorklet 모듈 로드 중...");
           await audioContext.audioWorklet.addModule(
-            new URL("../_components/VoiceRecorder/worklet-processor.js", import.meta.url).toString()
+              new URL("../_components/VoiceRecorder/worklet-processor.js", import.meta.url).toString()
           );
           console.log("AudioWorklet 모듈 로드 성공.");
         } catch (err) {
@@ -84,7 +84,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         mediaStreamSource.connect(gainNode).connect(workletNodeRef.current!);
         workletNodeRef.current!.connect(audioContext.destination);
 
-        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus' });
         mediaRecorderRef.current.ondataavailable = (event) => {
           if (event.data.size > 0) {
             audioChunksRef.current.push(event.data);
@@ -92,13 +92,13 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
           }
         };
 
-        mediaRecorderRef.current.onstop = () => {
+        mediaRecorderRef.current.onstop = async () => {
           if (audioChunksRef.current.length > 0) {
-            const blob = new Blob(audioChunksRef.current, {
-              type: "audio/wav",
-            });
-
-            const url = URL.createObjectURL(blob);
+            const webmBlob = new Blob(audioChunksRef.current, { type: 'audio/webm; codecs=opus' });
+            const arrayBuffer = await webmBlob.arrayBuffer();
+            const audioBuffer = await decodeAudioData(arrayBuffer);
+            const wavBlob = audioBufferToWavBlob(audioBuffer);
+            const url = URL.createObjectURL(wavBlob);
             setAudioURLs((prev) => [...prev, url]);
             audioChunksRef.current = [];
             console.log("녹음 저장됨:", url);
@@ -148,20 +148,20 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   }, [recordingMode]);
 
   const createWorkletNode = (
-    audioContext: AudioContext,
-    threshold: number,
-    duration: number
+      audioContext: AudioContext,
+      threshold: number,
+      duration: number
   ) => {
     if (workletNodeRef.current) {
       workletNodeRef.current.disconnect();
     }
 
     const workletNode = new AudioWorkletNode(
-      audioContext,
-      "silence-detector-processor",
-      {
-        processorOptions: { threshold, duration },
-      }
+        audioContext,
+        "silence-detector-processor",
+        {
+          processorOptions: { threshold, duration },
+        }
     );
 
     workletNode.port.onmessage = (event) => {
@@ -179,8 +179,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   const startRecording = () => {
     if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "recording"
+        mediaRecorderRef.current &&
+        mediaRecorderRef.current.state !== "recording"
     ) {
       mediaRecorderRef.current.start();
       setRecording(true);
@@ -198,25 +198,93 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   const stopRecording = (save: boolean = false) => {
     if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state === "recording"
+        mediaRecorderRef.current &&
+        mediaRecorderRef.current.state === "recording"
     ) {
       mediaRecorderRef.current.stop();
       setRecording(false);
       console.log("녹음 중지됨");
 
       if (save && audioChunksRef.current.length > 0) {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-        const url = URL.createObjectURL(blob);
-        setAudioURLs((prev) => [...prev, url]);
-        audioChunksRef.current = [];
-        console.log("녹음 저장됨");
+        const webmBlob = new Blob(audioChunksRef.current, { type: 'audio/webm; codecs=opus' });
+        convertWebmToWav(webmBlob).then(wavBlob => {
+          const url = URL.createObjectURL(wavBlob);
+          setAudioURLs((prev) => [...prev, url]);
+          audioChunksRef.current = [];
+          console.log("녹음 저장됨:", url);
+        });
       } else {
         audioChunksRef.current = []; // Save false 시, 버퍼 비우기
       }
     }
   };
 
+  const decodeAudioData = async (arrayBuffer: ArrayBuffer): Promise<AudioBuffer> => {
+    const audioContext = audioContextRef.current!;
+    return await audioContext.decodeAudioData(arrayBuffer);
+  };
+
+  const audioBufferToWavBlob = (audioBuffer: AudioBuffer): Blob => {
+    const numberOfChannels = audioBuffer.numberOfChannels;
+    const length = audioBuffer.length * numberOfChannels * 2 + 44;
+    const buffer = new ArrayBuffer(length);
+    const view = new DataView(buffer);
+    const channels = [];
+    let offset = 0;
+    let pos = 0;
+
+    // Write WAV container
+    setUint32(0x46464952); // "RIFF"
+    setUint32(length - 8); // file length - 8
+    setUint32(0x45564157); // "WAVE"
+
+    // Write format chunk
+    setUint32(0x20746d66); // "fmt " chunk
+    setUint32(16); // length = 16
+    setUint16(1); // PCM (uncompressed)
+    setUint16(numberOfChannels);
+    setUint32(audioBuffer.sampleRate);
+    setUint32(audioBuffer.sampleRate * 2 * numberOfChannels); // avg. bytes/sec
+    setUint16(numberOfChannels * 2); // block-align
+    setUint16(16); // 16-bit (hardcoded in this demo)
+
+    // Write data chunk
+    setUint32(0x61746164); // "data" - chunk
+    setUint32(length - pos - 4); // chunk length
+
+    // Write interleaved data
+    for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+      channels.push(audioBuffer.getChannelData(i));
+    }
+
+    while (pos < length) {
+      for (let i = 0; i < numberOfChannels; i++) { // interleave channels
+        let sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
+        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767); // scale to 16-bit signed int
+        view.setInt16(pos, sample, true); // write 16-bit sample
+        pos += 2;
+      }
+      offset++; // next source sample
+    }
+
+    return new Blob([buffer], { type: 'audio/wav' });
+
+    function setUint16(data: number) {
+      view.setUint16(pos, data, true);
+      pos += 2;
+    }
+
+    function setUint32(data: number) {
+      view.setUint32(pos, data, true);
+      pos += 4;
+    }
+  };
+
+  const convertWebmToWav = async (webmBlob: Blob): Promise<Blob> => {
+    const arrayBuffer = await webmBlob.arrayBuffer();
+    const audioBuffer = await decodeAudioData(arrayBuffer);
+    return audioBufferToWavBlob(audioBuffer);
+  };
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSilenceThreshold(parseFloat(event.target.value));
