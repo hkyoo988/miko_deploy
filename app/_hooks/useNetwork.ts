@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Network, DataSet } from "vis-network/standalone";
 import { Node, Edge } from "../_types/types";
 import { Socket } from "socket.io-client";
@@ -6,7 +6,8 @@ import { Socket } from "socket.io-client";
 const useNetwork = (
   containerRef: React.RefObject<HTMLDivElement>,
   socket: Socket | null,
-  sessionId: string | null | undefined
+  sessionId: string | null | undefined,
+  setPopoverState: React.Dispatch<React.SetStateAction<any>> | null// 상태 업데이트 함수 추가
 ) => {
   const [network, setNetwork] = useState<Network | null>(null);
   const [nodes] = useState<DataSet<Node>>(new DataSet<Node>([]));
@@ -31,7 +32,6 @@ const useNetwork = (
             from: tempEdgeFrom!,
             to: nodeId,
           };
-          // edges.add(newEdge);
           console.log("edge요청 보냄", nodeId, tempEdgeFrom);
           if (sessionId && socket) {
             socket.emit("edge", [
@@ -56,12 +56,6 @@ const useNetwork = (
               (edge.from === nodeId && edge.to === tempEdgeFrom),
           });
           if (edgeToRemove.length > 0) {
-            // edges.remove(edgeToRemove[0].id);
-            const newEdge: Edge = {
-              id: nextEdgeId,
-              from: tempEdgeFrom!,
-              to: nodeId,
-            };
             console.log("edge요청 보냄", nodeId, tempEdgeFrom);
             if (sessionId && socket) {
               socket.emit("edge", [
@@ -83,7 +77,6 @@ const useNetwork = (
             nodes.update({
               id: nodeId,
               label: node.label,
-              title: node.title, // 노드의 content를 title로 설정
             });
           }
         }
@@ -91,6 +84,43 @@ const useNetwork = (
     },
     [action, edges, nextEdgeId, tempEdgeFrom, nodes, sessionId, socket]
   );
+
+  const handleNodeHover = useCallback(
+    (nodeId: number | null) => {
+      if (nodeId !== null) {
+        const node = nodes.get(nodeId);
+        if (node && network) {
+          const nodePosition = network.getPositions([nodeId])[nodeId];
+          const canvasPosition = network.canvasToDOM({ x: nodePosition.x, y: nodePosition.y });
+  
+          console.log("Node Position:", nodePosition);
+          console.log("Canvas Position:", canvasPosition);
+          
+          if(setPopoverState)
+          setPopoverState({
+            visible: true,
+            x: canvasPosition.x,
+            y: canvasPosition.y,
+            content: node.content,
+          });
+          console.log("popvoerqeq");
+        }
+      } else {
+        if(setPopoverState)
+        setPopoverState((prev : any) => ({ ...prev, visible: false }));
+      }
+    },
+    [network, nodes, setPopoverState]
+  );
+  
+  const handleNodeBlur = useCallback(
+    () => {
+      if(setPopoverState)
+      setPopoverState((prev : any) => ({ ...prev, visible: false }));
+    },
+    [setPopoverState]
+  );
+
 
   const initializeNetwork = (container: HTMLDivElement) => {
     const data = {
@@ -124,17 +154,12 @@ const useNetwork = (
           damping: 0.4,
           avoidOverlap: 1,
         },
-        boundingBox: {
-          left: -300,
-          right: 300,
-          top: -300,
-          bottom: 300,
-        },
       },
       interaction: {
         dragNodes: true,
         dragView: true,
         zoomView: true,
+        hover: true,
       },
     };
     const net = new Network(container, data, options);
@@ -147,6 +172,20 @@ const useNetwork = (
       } else {
         handleNodeClick(null);
       }
+    });
+
+    net.on("hoverNode", (params) => {
+      console.log(params);
+      if (params.node) {
+        handleNodeHover(params.node);
+      } else {
+        handleNodeHover(null);
+      }
+    });
+
+    net.on("blurNode", (params) => {
+      console.log("Blur Node:", params);
+      handleNodeBlur();
     });
   };
 
@@ -175,34 +214,14 @@ const useNetwork = (
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
   const addNode = (nid: any, label: string, content: string, color: string) => {
-
-    var popoverElement = document.createElement("div");
-    popoverElement.setAttribute("data-popover", "");
-    popoverElement.id = `popover-${nid || nextNodeId}`;
-    popoverElement.setAttribute("role", "tooltip");
-    popoverElement.className = "static z-10 inline-block w-auto max-w-xs max-h-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800";
-    // Add inner content to the popover element
-    popoverElement.innerHTML = `
-    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-      <h3 class="font-semibold text-gray-900 dark:text-white">${label}</h3>
-    </div>
-    <div class="px-3 py-2" style="word-wrap: break-word; overflow-wrap: break-word;">
-      <p>${content}</p>
-    </div>
-    <div data-popper-arrow></div>
-  `;
-
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
       content,
       color,
-      title: popoverElement, // 추가: 노드 생성 시 content를 title로 설정
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
-
-    document.body.appendChild(popoverElement);
   };
 
   const fitToScreen = () => {
@@ -226,6 +245,7 @@ const useNetwork = (
     handleNodeClick,
     fitToScreen,
     initializeNetwork,
+    handleNodeHover,
   };
 };
 

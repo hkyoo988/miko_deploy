@@ -4,7 +4,7 @@ import {
   FaMicrophone,
   FaComments,
 } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
@@ -49,6 +49,8 @@ const HomeContent: React.FC = () => {
     setAction,
     publisher,
     subscriber,
+    handleNodeHover,
+    popoverState
   } = useHomeContent();
 
   // Add useEffect to handle window close event
@@ -78,6 +80,35 @@ const HomeContent: React.FC = () => {
     setIsRecorderVisible((prev) => !prev);
   };
 
+const popoverStyle: CSSProperties = {
+  position: 'absolute',
+  top: `${popoverState.y - 65}px`,
+  left: `${popoverState.x - 75}px`,
+  backgroundColor: '#333', // 더 어두운 회색으로 변경
+  color: 'white',
+  padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
+  borderRadius: '8px', // 테두리 둥글게
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
+  zIndex: 10,
+  visibility: popoverState.visible ? 'visible' : 'hidden',
+  opacity: popoverState.visible ? 1 : 0,
+  animation: popoverState.visible ? 'fade-in 300ms ease' : 'none', // 애니메이션 추가
+  fontFamily: 'Arial, sans-serif', // 폰트 변경
+  fontSize: '14px', // 폰트 크기 조정
+};
+
+const arrowStyle: CSSProperties = {
+  position: 'absolute',
+  width: '10px',
+  height: '10px',
+  backgroundColor: '#333', // 같은 배경색 적용
+  transform: 'rotate(45deg)',
+  zIndex: -1,
+  top: 'calc(100% - 5px)', // 화살표 위치 조정
+  left: '50%',
+  marginLeft: '-5px',
+};
+
   return (
     <div className="flex flex-col items-center h-[calc(100vh-3vh)] overflow-hidden">
       <div className="relative w-full h-screen">
@@ -86,8 +117,16 @@ const HomeContent: React.FC = () => {
             containerRef={containerRef}
             selectedNodeId={selectedNodeId}
             handleNodeClick={handleNodeClick}
+            handleNodeHover={handleNodeHover}
             socket={socket}
           />
+          {/* 팝오버 요소 */}
+          {popoverState.visible && (
+              <div style={popoverStyle}>
+                <p>{popoverState.content}</p>
+                <div style={arrowStyle} data-popper-arrow></div>
+              </div>
+            )}
         </div>
 
         <div className="relative w-full h-full">

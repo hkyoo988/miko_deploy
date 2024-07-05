@@ -3,7 +3,6 @@ export interface Node {
   label: string;
   content: string;
   color?: string;
-  title: HTMLDivElement;
 }
 
 export interface Edge {

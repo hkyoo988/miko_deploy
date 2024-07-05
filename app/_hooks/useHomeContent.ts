@@ -17,6 +17,13 @@ const useHomeContent = () => {
 
   const { sessionId, userName, token, isConnected } = socketContext || {};
 
+  const [popoverState, setPopoverState] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    content: '',
+  });
+
   const {
     nodes,
     edges,
@@ -25,7 +32,21 @@ const useHomeContent = () => {
     setAction,
     handleNodeClick,
     fitToScreen,
-  } = useNetwork(containerRef, socket, sessionId);
+    handleNodeHover,
+    network
+  } = useNetwork(containerRef, socket, sessionId, setPopoverState);
+
+  useEffect(() => {
+    if (network) {
+      network.on("hoverNode", (params) => {
+        if (params.node) {
+          handleNodeHover(params.node);
+        } else {
+          handleNodeHover(null);
+        }
+      });
+    }
+  }, [network, handleNodeHover]);
 
   const [controlNodeLabel, setControlNodeLabel] = useState<string>("");
   const [controlNodeContent, setControlNodeContent] = useState<string>("");
@@ -137,6 +158,8 @@ const useHomeContent = () => {
     setAction,
     publisher,
     subscriber,
+    handleNodeHover,
+    popoverState
   };
 };
 

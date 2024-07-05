@@ -6,6 +6,7 @@ import React, {
   useRef,
   Suspense,
   useCallback,
+  CSSProperties,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
@@ -66,6 +67,13 @@ const ResultPage: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const [popoverState, setPopoverState] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    content: '',
+  });
+
   const {
     addNode,
     selectedNodeId,
@@ -75,8 +83,25 @@ const ResultPage: React.FC = () => {
     nodes,
     network,
     initializeNetwork,
-  } = useNetwork(containerRef, null, null);
+    handleNodeHover
+  } = useNetwork(containerRef, null, null, setPopoverState);
   const { disconnectSocket } = useSocket();
+
+  useEffect(() => {
+    if (network) {
+      network.on("hoverNode", (params) => {
+        if (params.node) {
+          handleNodeHover(params.node);
+        } else {
+          handleNodeHover(null);
+        }
+      });
+    }
+  }, [network, handleNodeHover]);
+
+  useEffect(() => {
+    console.log("Popover State:", popoverState);
+  }, [popoverState]);
 
   useEffect(() => {
     disconnectSocket();
@@ -182,6 +207,42 @@ const ResultPage: React.FC = () => {
       }
     }
   }, [highlightedConversation]);
+  
+  const keyframesStyle = `
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`;
+
+const popoverStyle: CSSProperties = {
+  position: 'absolute',
+  top: `${popoverState.y - 20}px`,
+  left: `${popoverState.x - 100}px`,
+  backgroundColor: '#333', // 더 어두운 회색으로 변경
+  color: 'white',
+  padding: '10px', // 패딩을 늘려 더 보기 좋게 만듦
+  borderRadius: '8px', // 테두리 둥글게
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 박스 그림자 추가
+  zIndex: 10,
+  visibility: popoverState.visible ? 'visible' : 'hidden',
+  opacity: popoverState.visible ? 1 : 0,
+  animation: popoverState.visible ? 'fade-in 300ms ease' : 'none', // 애니메이션 추가
+  fontFamily: 'Arial, sans-serif', // 폰트 변경
+  fontSize: '14px', // 폰트 크기 조정
+};
+
+const arrowStyle: CSSProperties = {
+  position: 'absolute',
+  width: '10px',
+  height: '10px',
+  backgroundColor: '#333', // 같은 배경색 적용
+  transform: 'rotate(45deg)',
+  zIndex: -1,
+  top: 'calc(100% - 5px)', // 화살표 위치 조정
+  left: '50%',
+  marginLeft: '-5px',
+};
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -227,11 +288,10 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${
-                    highlightedConversation === conversation._id
-                      ? styles.highlighted
-                      : ""
-                  }`}
+                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id
+                    ? styles.highlighted
+                    : ""
+                    }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -260,8 +320,16 @@ const ResultPage: React.FC = () => {
               containerRef={containerRef}
               selectedNodeId={selectedNodeId}
               handleNodeClick={handleNodeClick}
+              handleNodeHover={handleNodeHover}
               socket={null}
             />
+            {/* 팝오버 요소 */}
+            {popoverState.visible && (
+              <div style={popoverStyle}>
+                <p>{popoverState.content}</p>
+                <div style={arrowStyle} data-popper-arrow></div>
+              </div>
+            )}
           </div>
         );
       default:
@@ -281,6 +349,7 @@ const ResultPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <style>{keyframesStyle}</style>
       <Header>MIKO</Header>
       <main className={styles.main}>
         <section className={styles.left}>
@@ -298,11 +367,11 @@ const ResultPage: React.FC = () => {
                 <strong>Participants:</strong>{" "}
                 {Array.isArray(meetingDetails.participants)
                   ? meetingDetails.participants
-                      .map(
-                        (participant) =>
-                          `${participant.name} (${participant.role})`
-                      )
-                      .join(", ")
+                    .map(
+                      (participant) =>
+                        `${participant.name} (${participant.role})`
+                    )
+                    .join(", ")
                   : "No participants"}
               </p>
               <p>
@@ -317,33 +386,29 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab1" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
+                }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab2" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
+                }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab3" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
+                }`}
             >
               음성 기록
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab4" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
+                }`}
             >
               네트워크 그래프
             </button>

@@ -42,6 +42,7 @@ const HomeContent: React.FC = () => {
     setAction,
     publisher,
     subscriber,
+    handleNodeHover
   } = useHomeContent();
 
   if (!socketContext) {
@@ -57,6 +58,7 @@ const HomeContent: React.FC = () => {
             containerRef={containerRef}
             selectedNodeId={selectedNodeId}
             handleNodeClick={handleNodeClick}
+            handleNodeHover={handleNodeHover}
             socket={socket}
           />
         </div>
