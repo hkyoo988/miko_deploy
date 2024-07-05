@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 import styles from "../styles/AudioPlayer.module.css";
 
+const APPLICATION_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+
 interface AudioPlayerProps {
   meetingId: string;
   seekTime: number | null;
@@ -24,7 +27,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const fetchAudio = async () => {
       try {
         const response = await fetch(
-          `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}/record`
+          `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/record`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

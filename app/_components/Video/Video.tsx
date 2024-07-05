@@ -43,10 +43,10 @@ const Video: React.FC<Props> = ({
       console.log("Leave session: ", data);
       const url = `/result?meetingId=${encodeURIComponent(data)}`;
       if (session) {
-        session.unpublish(publisher);
+        // session.unpublish(publisher); // 이미 session disconnect이므로 필요 없음
         session.disconnect();
         setSession(undefined);
-        setSubscribers([]);
+        // setSubscribers([]); // 이미 session disconnect이므로 필요 없음
         // socket.disconnect(); // end_meeting이 대신 처리함
         router.push(url);
       }

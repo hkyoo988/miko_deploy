@@ -4,6 +4,9 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
 
+const APPLICATION_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+
 interface Meeting {
   meeting_id: string;
   title: string;
@@ -37,7 +40,7 @@ const BoardPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/owner/${ownerId}`
+        `${APPLICATION_SERVER_URL}/api/meeting/owner/${ownerId}`
       );
       const data = await response.json();
       const sortedData = data.sort((a: Meeting, b: Meeting) => {
@@ -66,7 +69,7 @@ const BoardPage: React.FC = () => {
     }
     try {
       const response = await fetch(
-        `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}`,
+        `${APPLICATION_SERVER_URL}api/meeting/${meetingId}`,
         {
           method: "DELETE",
         }

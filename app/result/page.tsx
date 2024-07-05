@@ -20,6 +20,9 @@ import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
 import ReactMarkdown from "react-markdown";
 
+const APPLICATION_SERVER_URL =
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+
 interface Vertex {
   _id: string;
   keyword: string;
@@ -125,7 +128,7 @@ const ResultPage: React.FC = () => {
       if (meetingId) {
         try {
           const response = await fetch(
-            `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}`
+            `${APPLICATION_SERVER_URL}api/meeting/${meetingId}`
           );
           if (response.ok) {
             const data = await response.json();
@@ -144,19 +147,24 @@ const ResultPage: React.FC = () => {
   }, [searchParams, router]);
 
   useEffect(() => {
-    const fetchMeetingDetails = async () => {
+    const fetchMeetingDetails = () => {
       if (meetingId) {
-        try {
-          const response = await fetch(
-            `https://miko-dev-a7d3f7eaf040.herokuapp.com/api/meeting/${meetingId}/mom`
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setMeetingDetails(data.momResponseDto);
-          }
-        } catch (error) {
-          console.error("Error fetching meeting details: ", error);
-        }
+        const eventSource = new EventSource(`${APPLICATION_SERVER_URL}api/meeting/${meetingId}/mom`);
+
+        eventSource.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          setMeetingDetails(data);
+          eventSource.close();
+        };
+
+        eventSource.onerror = (error) => {
+          console.error("SSE error: ", error);
+          eventSource.close();
+        };
+
+        return () => {
+          eventSource.close();
+        };
       }
     };
 
