@@ -17,8 +17,8 @@ const Home: React.FC = () => {
   return (
     <RoomSocketProvider>
       <VideoProvider>
-      <style>{keyframesStyle}</style>
-        <Header>MIKO</Header>
+        <style>{keyframesStyle}</style>
+
         <HomeContent />
       </VideoProvider>
     </RoomSocketProvider>

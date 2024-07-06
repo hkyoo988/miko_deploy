@@ -4,7 +4,7 @@ import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
 import NodeConversation from "../Network/NodeConversation";
 import Video from "../Video/Video";
-import Footer from "../common/Footer";
+import Header from "../common/Header";
 import SharingRoom from "../sharingRoom";
 import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
 import useHomeContent from "../../_hooks/useHomeContent";
@@ -106,6 +106,7 @@ const HomeContent: React.FC = () => {
   return (
     <div className="flex flex-col items-center h-screen overflow-hidden">
       <div className="relative w-full h-full">
+        <Header>MIKO</Header>
         <div className="fixed left-0 w-full h-[calc(100%-3%)] z-20">
           <NetworkGraph
             containerRef={containerRef}
@@ -122,7 +123,7 @@ const HomeContent: React.FC = () => {
           )}
         </div>
 
-        <div className="absolute w-full h-full top-0 left-0 z-10">
+        <div className="absolute w-full h-full top-10 left-0 z-10">
           {isConnected ? (
             <>
               <div className="relative w-full h-full">
@@ -143,7 +144,7 @@ const HomeContent: React.FC = () => {
           )}
         </div>
 
-        <div className="absolute right-0 top-0 mt-2 mr-5 z-30">
+        <div className="absolute right-0 top-20 mt-2 mr-5 z-30">
           <button
             className="bg-blue-500 text-white p-2 rounded flex items-center justify-center mb-2"
             onClick={toggleRecorderVisibility}
@@ -159,7 +160,7 @@ const HomeContent: React.FC = () => {
         </div>
 
         <div
-          className={`absolute right-0 top-12 mt-10 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+          className={`absolute right-0 top-32 mt-10 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isRecorderVisible ? "translate-x-0" : "translate-x-full"
           } w-[20%] h-[20%] p-4`}
         >
@@ -173,7 +174,7 @@ const HomeContent: React.FC = () => {
         </div>
 
         <div
-          className={`absolute right-0 top-[32%] mt-2 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+          className={`absolute right-0 top-[38%] mt-2 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isConversationVisible ? "translate-x-0" : "translate-x-full"
           } w-[30%] h-[50%] p-4`}
         >

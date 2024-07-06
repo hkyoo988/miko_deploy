@@ -1,5 +1,4 @@
-// NodeList.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Node, Edge } from "../../_types/types";
 
 interface NodeListProps {
@@ -23,6 +22,7 @@ const NodeList: React.FC<NodeListProps> = ({
   const [groupedNodes, setGroupedNodes] = useState<{ [key: number]: Node[] }>(
     {}
   );
+  const nodeRefs = useRef<{ [key: number]: HTMLLIElement | null }>({});
 
   const toggleGroup = (groupId: number) => {
     setExpandedGroups((prevExpandedGroups) => ({
@@ -75,6 +75,30 @@ const NodeList: React.FC<NodeListProps> = ({
     setGroupedNodes(groups);
   }, [nodes, edges]);
 
+  useEffect(() => {
+    if (selectedNodeId !== null) {
+      let groupId: number | null = null;
+      for (const [id, group] of Object.entries(groupedNodes)) {
+        if (group.some((node) => node.id === selectedNodeId)) {
+          groupId = Number(id);
+          break;
+        }
+      }
+      if (groupId !== null) {
+        setExpandedGroups((prevExpandedGroups) => ({
+          ...prevExpandedGroups,
+          [groupId!]: true,
+        }));
+        if (nodeRefs.current[selectedNodeId]) {
+          nodeRefs.current[selectedNodeId]!.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    }
+  }, [selectedNodeId, groupedNodes]);
+
   return (
     <ul
       className={`list-none p-0 w-full max-h-[calc(100%-3rem)] overflow-y-auto overflow-x-hidden ${className}`}
@@ -98,6 +122,9 @@ const NodeList: React.FC<NodeListProps> = ({
               {groupedNodes[Number(groupId)].map((node) => (
                 <li
                   key={node.id}
+                  ref={(el) => {
+                    nodeRefs.current[node.id] = el;
+                  }}
                   onClick={() => onNodeClick(node.id)}
                   className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
                     node.id === selectedNodeId
@@ -119,6 +146,9 @@ const NodeList: React.FC<NodeListProps> = ({
         .map((node) => (
           <li
             key={node.id}
+            ref={(el) => {
+              nodeRefs.current[node.id] = el;
+            }}
             onClick={() => onNodeClick(node.id)}
             className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
               node.id === selectedNodeId
