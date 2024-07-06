@@ -3,7 +3,7 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import logo from "../../public/MIKO_LOGO_Square.png";
 import styles from "./Waiting.module.css";
@@ -228,9 +228,18 @@ const WaitingPage: React.FC = () => {
                     <span className={styles.bold}>{session.user?.name}</span>님
                     반갑습니다!
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => signOut()}
+                    className={styles.logoutButton}
+                  >
+                    로그아웃
+                  </button>
                 </div>
               ) : (
-                <p className={styles.info}>Not logged in</p>
+                <p className={styles.info}>
+                  Not logged in. <a href="/">Go to Login</a>
+                </p>
               )}
               <form className={styles.form}>
                 <div className={styles.formGroup}>
