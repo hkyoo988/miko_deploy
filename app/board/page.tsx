@@ -40,7 +40,7 @@ const BoardPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${APPLICATION_SERVER_URL}/api/meeting/owner/${ownerId}`
+        `${APPLICATION_SERVER_URL}api/meeting/owner/${ownerId}`
       );
       const data = await response.json();
       const sortedData = data.sort((a: Meeting, b: Meeting) => {
