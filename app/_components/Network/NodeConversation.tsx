@@ -22,7 +22,6 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   const [activeTab, setActiveTab] = useState<string>("nodes");
   const [messages, setMessages] = useState<string[]>([]);
   const { socket } = useSocket();
-  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   const handleNewMessage = useRef((message: string) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -41,12 +40,6 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
     };
   }, [socket]);
 
-  useEffect(() => {
-    if (endOfMessagesRef.current) {
-      endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
   const renderContent = () => {
     switch (activeTab) {
       case "nodes":
@@ -60,12 +53,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           />
         );
       case "conversation":
-        return (
-          <div className="relative h-full overflow-auto">
-            <Conversation messages={messages} />
-            <div ref={endOfMessagesRef} />
-          </div>
-        );
+        return <Conversation messages={messages} className="h-full" />;
       default:
         return null;
     }
