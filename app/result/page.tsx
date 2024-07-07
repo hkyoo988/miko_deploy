@@ -421,8 +421,8 @@ const ResultPage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   회의 내용
                 </label>
-                <div className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-500px overflow-y-auto overflow-x-hidden">
-                <Tiptap content={meetingDetails.mom} />
+                <div style={{ marginTop: "0.25rem", display: "block", width: "100%", borderRadius: "0.375rem", borderColor: "#d1d5db", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)", overflowY: "auto", overflowX: "hidden", height: "500px" }}>
+                  <Tiptap content={meetingDetails.mom} />
                 </div>
               </div>
             </div>
