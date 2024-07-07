@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -6,7 +6,6 @@ import axios from "axios";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import logo from "../../public/MIKO_LOGO_Square.png";
-import styles from "./Waiting.module.css";
 import WaitingVideoComponent from "./WaitingVideoComponent";
 
 const APPLICATION_SERVER_URL =
@@ -205,83 +204,82 @@ const WaitingPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
+    <div className="flex justify-center items-center min-h-screen bg-[#96A0FE] m-0 font-sans">
+      <div className="bg-white p-5 rounded-lg shadow-lg text-center w-full max-w-5xl flex flex-col md:flex-row items-center h-auto md:h-auto">
         <WaitingVideoComponent
           selectedVideoDeviceId={selectedVideoDeviceId}
           selectedAudioDeviceId={selectedAudioDeviceId}
         />
-        <div className={styles.formContainer}>
+        <div className="w-full max-w-xl flex-1 p-5 md:p-3">
           <Image
             src={logo}
             alt="MIKO Logo"
             width={100}
             height={100}
-            className={styles.logo}
+            className="mx-auto"
           />
-          <h1 className={styles.title}>Welcome to MIKO</h1>
-          <div id="join" className={styles.join}>
+          <h1 className="text-3xl mb-5 text-gray-800">Welcome to MIKO</h1>
+          <div id="join" className="join">
             <div id="join-dialog">
               {session ? (
                 <div>
-                  <p className={styles.info}>
-                    <span className={styles.bold}>{session.user?.name}</span>님
-                    반갑습니다!
+                  <p className="text-lg text-gray-700 mb-3">
+                    <span className="font-bold text-gray-900">{session.user?.name}</span>님 반갑습니다!
                   </p>
                   <button
                     type="button"
                     onClick={() => signOut()}
-                    className={styles.logoutButton}
+                    className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
                   >
                     로그아웃
                   </button>
                 </div>
               ) : (
-                <p className={styles.info}>
+                <p className="text-lg text-gray-700 mb-3">
                   Not logged in. <a href="/">Go to Login</a>
                 </p>
               )}
-              <form className={styles.form}>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>이름</label>
+              <form className="flex flex-col items-center">
+                <div className="w-full mb-4 text-left">
+                  <label className="block mb-2 text-gray-700">이름</label>
                   <input
                     type="text"
                     id="userName"
                     value={myUserName}
                     onChange={handleChangeUserName}
                     required
-                    className={styles.input}
+                    className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>방 제목</label>
+                <div className="w-full mb-4 text-left">
+                  <label className="block mb-2 text-gray-700">방 제목</label>
                   <input
                     type="text"
                     id="sessionId"
                     placeholder={mySessionId}
                     onChange={handleChangeSessionId}
                     required
-                    className={styles.input}
+                    className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>비밀번호</label>
+                <div className="w-full mb-4 text-left">
+                  <label className="block mb-2 text-gray-700">비밀번호</label>
                   <input
                     type="password"
                     id="password"
                     value={password}
                     onChange={handleChangePassword}
                     required
-                    className={styles.input}
+                    className="w-full p-2 border border-gray-300 rounded"
                   />
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>비디오 장치</label>
+                <div className="w-full mb-4 text-left">
+                  <label className="block mb-2 text-gray-700">비디오 장치</label>
                   <select
                     id="videoDevice"
                     onChange={(e) => setSelectedVideoDeviceId(e.target.value)}
                     value={selectedVideoDeviceId || ""}
-                    className={styles.input}
+                    className="w-full p-2 border border-gray-300 rounded"
                   >
                     <option value="off">끄기</option>
                     {videoDevices.map((device) => (
@@ -291,13 +289,13 @@ const WaitingPage: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>오디오 장치</label>
+                <div className="w-full mb-4 text-left">
+                  <label className="block mb-2 text-gray-700">오디오 장치</label>
                   <select
                     id="audioDevice"
                     onChange={(e) => setSelectedAudioDeviceId(e.target.value)}
                     value={selectedAudioDeviceId || ""}
-                    className={styles.input}
+                    className="w-full p-2 border border-gray-300 rounded"
                   >
                     <option value="off">끄기</option>
                     {audioDevices.map((device) => (
@@ -307,18 +305,18 @@ const WaitingPage: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <div className={styles.buttonGroup}>
+                <div className="flex flex-wrap justify-center gap-4">
                   <button
                     type="button"
                     onClick={handleCreateSession}
-                    className={styles.button}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                   >
                     방 생성
                   </button>
                   <button
                     type="button"
                     onClick={handleJoinSession}
-                    className={styles.button}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                   >
                     방 참가
                   </button>
@@ -326,7 +324,7 @@ const WaitingPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleViewMeetings}
-                      className={styles.button}
+                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                     >
                       회의록 보기
                     </button>
