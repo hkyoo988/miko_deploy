@@ -37,7 +37,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-transparent shadow-md border-t border-gray-200 backdrop-blur-lg">
+    <div className="bottom-0 left-0 w-full bg-transparent shadow-md border-t border-gray-200 backdrop-blur-lg">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center w-full h-10 text-indigo-500 cursor-pointer transition duration-300 bg-white bg-opacity-50 hover:bg-gray-100"
