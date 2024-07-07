@@ -65,7 +65,7 @@ const Video: React.FC<Props> = ({
 
   const handlerErrorEvent = (error: any) => {
     console.log("Error in session", error);
-    alert("세션 연결 실패!");
+    // alert("세션 연결 실패!");
   };
 
   const initializeSession = async (token: string) => {
