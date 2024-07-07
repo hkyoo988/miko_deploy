@@ -29,7 +29,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #ddd;
 }
 
 .tabs {
@@ -150,9 +149,3 @@
   background-color: yellow;
 }
 
-.scroll-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 600px;
-}
