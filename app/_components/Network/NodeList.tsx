@@ -7,6 +7,7 @@ interface NodeListProps {
   selectedNodeId: number | null;
   onNodeClick: (nodeId: number) => void;
   className?: string;
+  autoScroll?: boolean; // New prop to enable/disable auto scroll
 }
 
 const NodeList: React.FC<NodeListProps> = ({
@@ -15,6 +16,7 @@ const NodeList: React.FC<NodeListProps> = ({
   selectedNodeId,
   onNodeClick,
   className,
+  autoScroll = true, // Default value is true to maintain current behavior
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<{
     [key: number]: boolean;
@@ -76,7 +78,7 @@ const NodeList: React.FC<NodeListProps> = ({
   }, [nodes, edges]);
 
   useEffect(() => {
-    if (selectedNodeId !== null) {
+    if (selectedNodeId !== null && autoScroll) {
       let groupId: number | null = null;
       for (const [id, group] of Object.entries(groupedNodes)) {
         if (group.some((node) => node.id === selectedNodeId)) {
@@ -97,7 +99,7 @@ const NodeList: React.FC<NodeListProps> = ({
         }
       }
     }
-  }, [selectedNodeId, groupedNodes]);
+  }, [selectedNodeId, groupedNodes, autoScroll]);
 
   return (
     <ul

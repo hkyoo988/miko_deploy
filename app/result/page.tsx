@@ -150,7 +150,9 @@ const ResultPage: React.FC = () => {
   useEffect(() => {
     const fetchMeetingDetails = () => {
       if (meetingId) {
-        const eventSource = new EventSource(`${APPLICATION_SERVER_URL}api/meeting/${meetingId}/mom`);
+        const eventSource = new EventSource(
+          `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/mom`
+        );
 
         eventSource.onmessage = (event) => {
           const data = JSON.parse(event.data);
@@ -274,6 +276,7 @@ const ResultPage: React.FC = () => {
                 edges={edges.get()}
                 selectedNodeId={selectedNodeId}
                 onNodeClick={handleNodeClick}
+                autoScroll={false} // Disable auto scroll
               />
             ) : (
               <div>No vertexes available</div>
@@ -425,7 +428,7 @@ const ResultPage: React.FC = () => {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 overflow-y-auto"
                   style={{ height: "calc(100% - 2rem)" }} // Adjusted height
                 >
-                  <Tiptap content={meetingDetails.mom}/>
+                  <Tiptap content={meetingDetails.mom} />
                 </div>
               </div>
             </div>
