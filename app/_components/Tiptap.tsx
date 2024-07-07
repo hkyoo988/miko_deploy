@@ -7,6 +7,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import './tiptap.css'
 
 import { common, createLowlight } from 'lowlight';
 
@@ -19,8 +20,7 @@ const Tiptap = ({ content }: TiptapProps) => {
   const editor = useEditor({
     editorProps: {
         attributes: {
-          class:
-            "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
+          class: 'prose m-5 focus:outline-none',
         },
       },
     extensions: [

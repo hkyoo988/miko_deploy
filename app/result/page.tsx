@@ -18,7 +18,6 @@ import NetworkGraph from "../_components/Network/NetworkGraph";
 import useNetwork from "../_hooks/useNetwork";
 import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
-import ReactMarkdown from "react-markdown";
 import Tiptap from "../_components/Tiptap";
 
 const APPLICATION_SERVER_URL =
@@ -331,11 +330,10 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${
-                    highlightedConversation === conversation._id
-                      ? styles.highlighted
-                      : ""
-                  }`}
+                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id
+                    ? styles.highlighted
+                    : ""
+                    }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -378,6 +376,9 @@ const ResultPage: React.FC = () => {
           {meetingDetails ? (
             <div className="h-full flex flex-col">
               <div>
+
+              </div>
+              <div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     회의 제목
@@ -409,11 +410,11 @@ const ResultPage: React.FC = () => {
                     value={
                       Array.isArray(meetingDetails.participants)
                         ? meetingDetails.participants
-                            .map(
-                              (participant) =>
-                                `${participant.name} (${participant.role})`
-                            )
-                            .join(", ")
+                          .map(
+                            (participant) =>
+                              `${participant.name} (${participant.role})`
+                          )
+                          .join(", ")
                         : "No participants"
                     }
                     readOnly
@@ -424,11 +425,8 @@ const ResultPage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   회의 내용
                 </label>
-                <div
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 overflow-y-auto"
-                  style={{ height: "calc(100% - 2rem)" }} // Adjusted height
-                >
-                  <Tiptap content={meetingDetails.mom} />
+                <div className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-[70%] overflow-y-auto overflow-x-hidden">
+                <Tiptap content={meetingDetails.mom} />
                 </div>
               </div>
             </div>
@@ -440,33 +438,29 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab1" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
+                }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab2" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
+                }`}
             >
               키워드 맵
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab3" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
+                }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
-              className={`${styles.tabButton} ${
-                activeTab === "tab4" ? styles.activeTab : ""
-              }`}
+              className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
+                }`}
             >
               음성 기록
             </button>

@@ -149,3 +149,10 @@
 .conversationItem.highlighted {
   background-color: yellow;
 }
+
+.scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 600px;
+}
