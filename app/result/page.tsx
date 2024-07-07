@@ -113,10 +113,6 @@ const ResultPage: React.FC = () => {
   }, [network, handleNodeHover]);
 
   useEffect(() => {
-    console.log("Popover State:", popoverState);
-  }, [popoverState]);
-
-  useEffect(() => {
     disconnectSocket();
   }, [disconnectSocket]);
 

@@ -4,13 +4,13 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 200px; /* 사이드바 너비 설정 */
+  width: 220px; /* 사이드바 너비 설정 */
   height: 70vh;
   padding: 10px;
   overflow: hidden;
   position: relative;
   background-color: transparent; /* 배경색을 투명으로 설정 */
-  margin-top: 20px;
+  margin-top: 50px;
   margin-left: 20px;
   z-index: 5;
 }
@@ -22,13 +22,17 @@
   align-items: center;
   width: 100%;
   height: 150px; /* 고정된 높이 */
+  padding-left: 10px;
+  padding-right: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
 }
 
 #local-video video {
   width: 100%;
   height: 100%;
   border-radius: 10px;
+  object-fit: cover;
 }
 
 #remote-videos-container {
@@ -37,8 +41,8 @@
   align-items: center;
   width: 100%;
   overflow-y: auto; /* 세로 스크롤 허용 */
+  padding: 10px;
   overflow-x: hidden;
-  padding: 5px;
 }
 
 .remote-video {
@@ -48,7 +52,6 @@
   align-items: center;
   width: 100%;
   height: 150px; /* 고정된 높이 */
-  margin-bottom: 10px;
   border-radius: 10px;
 }
 
@@ -57,6 +60,7 @@
   height: 100%;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
 }
 
 .nicknameContainer {
@@ -74,5 +78,10 @@
 .speaking {
   /* border: 3px solid green; */
   /* background-color: rgba(13, 209, 13, 0.329); */
-  box-shadow: 0 0 20px rgb(1, 190, 1);
+  box-shadow: 0 0 10px rgb(1, 190, 1);
+}
+
+.streamcomponent {
+  width: 100%;
+  height: 100%;
 }

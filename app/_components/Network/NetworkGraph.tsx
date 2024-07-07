@@ -54,9 +54,6 @@ const NetworkGraph: React.FC<Props> = ({
     }
   }, [network, handleNodeHover]);
 
-  useEffect(() => {
-    console.log("Popover State:", popoverState);
-  }, [popoverState]);
 
   return (
     <div
