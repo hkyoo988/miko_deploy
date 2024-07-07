@@ -69,12 +69,6 @@ const Video: React.FC<Props> = ({
   };
 
   const initializeSession = async (token: string) => {
-    // 한번만 실행되도록 수정
-    if (sessionInitializedRef.current) {
-      return;
-    }
-    sessionInitializedRef.current = true;
-    
     console.log("initializeSession called");
     const openvidu = new OpenVidu();
     const mySession = openvidu.initSession();
