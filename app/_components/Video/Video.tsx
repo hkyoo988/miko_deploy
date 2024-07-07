@@ -31,8 +31,6 @@ const Video: React.FC<Props> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const currentPublisherRef = useRef<any>(null);
 
-  // Ref to track if initializeSession has already been called
-  const sessionInitializedRef = useRef(false);
 
   const handlerJoinSessionEvent = () => {
     console.log("Join session");
@@ -189,7 +187,7 @@ const Video: React.FC<Props> = ({
     if (token) {
       initializeSession(token);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     subscribers.forEach((subscriber) => {

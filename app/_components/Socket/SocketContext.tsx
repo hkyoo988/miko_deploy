@@ -30,22 +30,15 @@ export const MainSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       console.log("connected");
     };
 
-    const handleDisconnect = () => {
-      setIsConnected(false);
-      console.log("disconnected");
-    };
-
     const handleError = (error: any) => {
       console.error('Error from server:', error);
     };
 
     socket.on('connect', handleConnect);
-    socket.on('disconnect', handleDisconnect);
     socket.on('error', handleError);
 
     return () => {
       socket.off('connect', handleConnect);
-      socket.off('disconnect', handleDisconnect);
       socket.off('error', handleError);
     };
   }, []);
