@@ -425,42 +425,7 @@ const ResultPage: React.FC = () => {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 overflow-y-auto"
                   style={{ height: "calc(100% - 2rem)" }} // Adjusted height
                 >
-                  <Tiptap content={`<h2>위치 데이터 정확성에 대한 회의</h2>
-    <ul>
-        <li>짝쳐 위치값이 정확하지 않음</li>
-        <li>위치 데이터를 받아와서 키우는 중</li>
-        <li><strong>화재 위험</strong></li>
-        <ul>
-            <li>화재 예방 조치 및 안전 대책 토의</li>
-            <li>일산 오른쪽에 있는 화재 취약 지역 인지</li>
-            <li>일산 우측에 위치 확인</li>
-            <li>왜 해당 지역을 의심하는지 의문 제기</li>
-        </ul>
-    </ul>
-
-    <h2>술자리 주문</h2>
-    <ul>
-        <li>주문 및 음식 지시</li>
-        <li>치가, 51번을 주문하고 메인 메뉴 결정</li>
-        <li>위에 되아 망지를 주문함</li>
-    </ul>
-
-    <h2>코딩 피드백</h2>
-    <ul>
-        <li>코딩 관련 대화</li>
-        <li>100포인트 이상을 얻는 방법에 대한 논의</li>
-        <li>맞심 코드에 대한 피드백과 수정 제안</li>
-    </ul>
-
-    <h2>움직임 권장</h2>
-    <ul>
-        <li>움직이는 습관 유지 권장</li>
-        <li>한지 업무 진행</li>
-        <li>자세한 움직임 확인 요청</li>
-        <li>한지 움직임에 대한 토론</li>
-        <li>움직임 방향 조정 필요</li>
-        <li>언니 웨이지를 통한 한지 움직임 방법에 대한 논의</li>
-    </ul>`}/>
+                  <Tiptap content={meetingDetails.mom}/>
                 </div>
               </div>
             </div>
