@@ -1,3 +1,7 @@
+.prose {
+  max-width: none;
+}
+
 .prose p,
 .prose h1,
 .prose h2,
