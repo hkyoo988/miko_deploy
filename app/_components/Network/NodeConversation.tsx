@@ -22,6 +22,8 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   const [activeTab, setActiveTab] = useState<string>("nodes");
   const [messages, setMessages] = useState<string[]>([]);
   const { socket } = useSocket();
+  const [queue, setQueue] = useState<any[]>([]);
+  const [processing, setProcessing] = useState(false);
 
   const handleNewMessage = useRef((message: string) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -33,12 +35,38 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
       handleNewMessage.current(message);
     };
 
+    const handleBatchMessage = (data: { user: string; script: string }[]) => {
+      console.log("Received batch message from server:", data);
+      setQueue((prevQueue) => [
+        ...prevQueue,
+        ...data.map((item) => ({ type: "script", data: `${item.user}: ${item.script}` })),
+      ]);
+    };
+
     socket.on("script", handleMessage);
+    socket.on("scriptBatch", handleBatchMessage);
 
     return () => {
       socket.off("script", handleMessage);
+      socket.off("scriptBatch", handleBatchMessage);
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (!processing && queue.length > 0) {
+      setProcessing(true);
+      const { type, data } = queue[0];
+
+      if (type === "script") {
+        handleNewMessage.current(data);
+      }
+
+      setTimeout(() => {
+        setQueue((prevQueue) => prevQueue.slice(1));
+        setProcessing(false);
+      }, 50); // 각 데이터를 50ms 간격으로 처리
+    }
+  }, [queue, processing]);
 
   const renderContent = () => {
     switch (activeTab) {
