@@ -3,17 +3,18 @@
   align-items: center;
   width: 100%;
   max-width: 500px;
+  /* padding: px; */
 }
 
 .sliderLabel {
   flex: 1;
-  font-size: 10px;
+  font-size: 15px;
   color: black;
   font-weight: bold;
 }
 
 .slider {
-  flex: 2;
+  flex: 1;
   -webkit-appearance: none;
   width: 100%;
   height: 8px;

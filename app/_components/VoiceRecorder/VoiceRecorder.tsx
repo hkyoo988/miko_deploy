@@ -267,7 +267,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         <p>{error}</p>
       ) : (
         <div className="flex flex-col items-center gap-4 w-full">
-          <div className="flex flex-col items-center gap-4 w-full max-w-md">
+          <div className="flex flex-col items-center gap-3 w-full max-w-md ml-5 mr-5">
             <SettingsSlider
               label="음성 인식 감도 :"
               min={0.01}

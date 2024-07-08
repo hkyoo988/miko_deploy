@@ -136,18 +136,21 @@ const HomeContent: React.FC = () => {
                     setLeaveSessionCallback={setLeaveSessionCallback}
                   />
                 ) : (
-                  <Loading disabled={true} text={"Loading..."}/>
+                  <Loading disabled={true} text={"Loading..."} />
                 )}
               </div>
             </>
           ) : (
-            <Loading disabled={true} text={"Socket is not connected. Please check your connection."}/>
+            <Loading
+              disabled={true}
+              text={"Socket is not connected. Please check your connection."}
+            />
           )}
         </div>
 
-        <div className="absolute right-0 top-20 mt-2 mr-5 z-30">
+        <div className="absolute right-0 top-0 mt-2 mr-5 z-30 flex space-x-2">
           <button
-            className="bg-blue-500 text-white p-2 rounded flex items-center justify-center mb-2"
+            className="bg-blue-500 text-white p-2 rounded flex items-center justify-center"
             onClick={toggleRecorderVisibility}
           >
             <FaMicrophone />
@@ -161,9 +164,9 @@ const HomeContent: React.FC = () => {
         </div>
 
         <div
-          className={`absolute right-0 top-3 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
+          className={`absolute right-0 top-12 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isRecorderVisible ? "translate-x-0" : "translate-x-full"
-          } w-[20%]`}
+          } w-[25%]`}
         >
           {sessionId && (
             <VoiceRecorder
@@ -177,7 +180,7 @@ const HomeContent: React.FC = () => {
         <div
           className={`absolute right-0 top-40 z-20 bg-[rgba(249,249,249,0.7)] backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg transition-transform duration-300 ${
             isConversationVisible ? "translate-x-0" : "translate-x-full"
-          } w-[30%] h-[80%]`}
+          } w-[25%] h-[78%]`}
         >
           <NodeConversation
             nodes={nodes.get()}
@@ -187,7 +190,7 @@ const HomeContent: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex justify-between items-center w-full p-2.5 z-50">
+      <div className="flex justify-between items-center w-full p-2 z-50">
         <ControlPanel
           newNodeLabel={controlNodeLabel}
           newNodeContent={controlNodeContent}
