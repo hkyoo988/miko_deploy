@@ -105,44 +105,47 @@ const NodeList: React.FC<NodeListProps> = ({
     <ul
       className={`list-none p-0 w-full max-h-[calc(100%-3rem)] overflow-y-auto overflow-x-hidden ${className}`}
     >
-      {Object.keys(groupedNodes).map((groupId) => (
-        <li key={groupId} className="mb-4">
-          <div
-            onClick={() => toggleGroup(Number(groupId))}
-            className={`cursor-pointer p-4 border rounded-md flex justify-between items-center w-full box-border ${
-              expandedGroups[Number(groupId)]
-                ? "bg-[#96A0FE] text-white"
-                : "bg-white text-[#96A0FE] border-gray-300"
-            } transition-colors duration-300 shadow-md`}
-            aria-expanded={expandedGroups[Number(groupId)]}
-          >
-            <span>Group {groupId}</span>
-            <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
-          </div>
-          {expandedGroups[Number(groupId)] && (
-            <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
-              {groupedNodes[Number(groupId)].map((node) => (
-                <li
-                  key={node.id}
-                  ref={(el) => {
-                    nodeRefs.current[node.id] = el;
-                  }}
-                  onClick={() => onNodeClick(node.id)}
-                  className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
-                    node.id === selectedNodeId
-                      ? "bg-[#96A0FE] text-white border-[#96A0FE]"
-                      : "bg-white text-gray-800 border-gray-300"
-                  } shadow-sm hover:shadow-md`}
-                >
-                  <strong>Label:</strong> {node.label} <br />
-                  <strong>Content:</strong>
-                  <div dangerouslySetInnerHTML={{ __html: node.content }} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
+      {Object.keys(groupedNodes).map((groupId) => {
+        const groupNodes = groupedNodes[Number(groupId)];
+        const groupLabel = groupNodes[0]?.label || `Group ${groupId}`;
+        return (
+          <li key={groupId} className="mb-4">
+            <div
+              onClick={() => toggleGroup(Number(groupId))}
+              className={`cursor-pointer p-4 border rounded-md flex justify-between items-center w-full box-border ${
+                expandedGroups[Number(groupId)]
+                  ? "bg-[#96A0FE] text-white"
+                  : "bg-white text-[#96A0FE] border-gray-300"
+              } transition-colors duration-300 shadow-md`}
+              aria-expanded={expandedGroups[Number(groupId)]}
+            >
+              <span>{groupLabel}</span>
+              <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
+            </div>
+            {expandedGroups[Number(groupId)] && (
+              <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
+                {groupNodes.map((node) => (
+                  <li
+                    key={node.id}
+                    ref={(el) => {
+                      nodeRefs.current[node.id] = el;
+                    }}
+                    onClick={() => onNodeClick(node.id)}
+                    className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
+                      node.id === selectedNodeId
+                        ? "bg-[#96A0FE] text-white border-[#96A0FE]"
+                        : "bg-white text-gray-800 border-gray-300"
+                    } shadow-sm hover:shadow-md`}
+                  >
+                    <strong>제목:</strong> {node.label} <br />
+                    <strong>내용:</strong> {node.content}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        );
+      })}
       {nodes
         .filter((node) => !Object.values(groupedNodes).flat().includes(node))
         .map((node) => (
@@ -158,9 +161,8 @@ const NodeList: React.FC<NodeListProps> = ({
                 : "bg-white text-gray-800 border-gray-300"
             } shadow-sm hover:shadow-md`}
           >
-            <strong>Label:</strong> {node.label} <br />
-            <strong>Content:</strong>
-            <div dangerouslySetInnerHTML={{ __html: node.content }} />
+            <strong>제목:</strong> {node.label} <br />
+            <strong>내용:</strong> {node.content}
           </li>
         ))}
     </ul>

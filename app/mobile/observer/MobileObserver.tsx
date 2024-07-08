@@ -18,7 +18,7 @@ const HomeContent: React.FC = () => {
     fitToScreen,
     handleLeaveSession,
     handleNodeHover
-  } = useHomeContent();
+  } = useHomeContent(null);
 
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;

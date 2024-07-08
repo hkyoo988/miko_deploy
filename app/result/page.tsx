@@ -263,10 +263,10 @@ const ResultPage: React.FC = () => {
               vertexes.map((vertex) => (
                 <div key={vertex._id} className={styles.keywordItem}>
                   <div className={styles.keywordLabel}>
-                    Label: {vertex.keyword}
+                    제목: {vertex.keyword}
                   </div>
                   <div className={styles.keywordContent}>
-                    Content: {vertex.subject}
+                    내용: {vertex.subject}
                   </div>
                 </div>
               ))

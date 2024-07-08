@@ -1,4 +1,4 @@
-import React, { useEffect, useState, CSSProperties } from "react";
+import React, { useEffect, useState, CSSProperties, useRef} from "react";
 import { FaMicrophone, FaComments } from "react-icons/fa";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
@@ -14,6 +14,7 @@ const HomeContent: React.FC = () => {
   const [isConversationVisible, setIsConversationVisible] = useState(false);
   const [isRecorderVisible, setIsRecorderVisible] = useState(false);
 
+  const popoverRef = useRef<HTMLDivElement>(null);
   const {
     socket,
     socketContext,
@@ -47,7 +48,8 @@ const HomeContent: React.FC = () => {
     subscriber,
     handleNodeHover,
     popoverState,
-  } = useHomeContent();
+    setPopoverState
+  } = useHomeContent(popoverRef);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -62,6 +64,14 @@ const HomeContent: React.FC = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [socket, sessionId]);
+
+  useEffect(() => {
+    if (popoverRef.current && popoverState.visible) {
+      const popoverWidth = popoverRef.current.offsetWidth;
+      const newX = popoverState.x - popoverWidth / 2;
+      setPopoverState((prev) => ({ ...prev, x: newX }));
+    }
+  }, [popoverState.visible]);
 
   if (!socketContext) {
     return <p>Error: Socket context is not available.</p>;
@@ -78,7 +88,7 @@ const HomeContent: React.FC = () => {
   const popoverStyle: CSSProperties = {
     position: "absolute",
     top: `${popoverState.y - 65}px`,
-    left: `${popoverState.x - 75}px`,
+    left: `${popoverState.x}px`,
     backgroundColor: "#333",
     color: "white",
     padding: "10px",
@@ -117,7 +127,7 @@ const HomeContent: React.FC = () => {
             socket={socket}
           />
           {popoverState.visible && (
-            <div style={popoverStyle}>
+            <div style={popoverStyle} ref={popoverRef}>
               <p>{popoverState.content}</p>
               <div style={arrowStyle} data-popper-arrow></div>
             </div>

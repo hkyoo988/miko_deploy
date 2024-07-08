@@ -9,14 +9,14 @@ import { RoomuseSocketContext } from "../_components/Socket/SocketProvider";
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
-const useHomeContent = () => {
+const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
   const socketContext = RoomuseSocketContext();
   const { socket } = useSocket();
   const { publisher, subscriber } = useVideoContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { sessionId, userName, token, isConnected } = socketContext || {};
-
+  
   const [popoverState, setPopoverState] = useState({
     visible: false,
     x: 0,
@@ -159,7 +159,8 @@ const useHomeContent = () => {
     publisher,
     subscriber,
     handleNodeHover,
-    popoverState
+    popoverState,
+    setPopoverState
   };
 };
 

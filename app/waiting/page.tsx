@@ -114,7 +114,7 @@ const WaitingPage: React.FC = () => {
 
   const handleCreateSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setIsLoading(true); // 로딩 시작
+    // setIsLoading(true); // 로딩 시작
     const encodedPassword = base64Encode(password);
     const requestData = {
       nickname: myUserName,
@@ -140,7 +140,7 @@ const WaitingPage: React.FC = () => {
 
   const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setIsLoading(true); // 로딩 시작
+    // setIsLoading(true); // 로딩 시작
     const encodedPassword = base64Encode(password);
 
     const requestData = {

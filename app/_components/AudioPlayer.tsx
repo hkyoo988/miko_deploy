@@ -138,7 +138,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className={styles.audioPlayer}>
-      {isLoading && <Loading disabled={true} text={"회의가 진행중입니다..."}/>}
+      {isLoading && <Loading disabled={true} text={"Loading..."}/>}
       <audio ref={audioRef} src={audioSrc} className={styles.hiddenAudio} />
       <input
         type="range"
