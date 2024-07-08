@@ -83,7 +83,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
           음성 기록
         </li>
       </ul>
-      <div className="h-[calc(100%-3rem)] overflow-auto">{renderContent()}</div>
+      <div className="h-[calc(100%-5rem)] overflow-auto">{renderContent()}</div>
     </div>
   );
 };

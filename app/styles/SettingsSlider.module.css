@@ -3,8 +3,6 @@
   align-items: center;
   width: 100%;
   max-width: 500px;
-  padding: 10px;
-  box-sizing: border-box;
 }
 
 .sliderLabel {
@@ -59,7 +57,7 @@
 }
 
 .sliderValue {
-  flex: 1;
+  flex: 0.6;
   text-align: right;
   font-size: 1rem;
   color: #333;
