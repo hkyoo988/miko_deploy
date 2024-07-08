@@ -124,7 +124,7 @@ const HomeContent: React.FC = () => {
           )}
         </div>
 
-        <div className="absolute w-full h-full top-10 left-0 z-10">
+        <div className="absolute w-20% h-full top-10 left-0 z-30">
           {isConnected ? (
             <>
               <div className="relative w-full h-full">
