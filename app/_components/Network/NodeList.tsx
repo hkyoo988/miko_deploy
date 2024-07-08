@@ -137,8 +137,8 @@ const NodeList: React.FC<NodeListProps> = ({
                         : "bg-white text-gray-800 border-gray-300"
                     } shadow-sm hover:shadow-md`}
                   >
-                    <strong>제목:</strong> {node.label} <br />
-                    <strong>내용:</strong> {node.content}
+                    <strong>{node.label}</strong> <br />
+                    &nbsp; {node.content}
                   </li>
                 ))}
               </ul>
@@ -161,8 +161,8 @@ const NodeList: React.FC<NodeListProps> = ({
                 : "bg-white text-gray-800 border-gray-300"
             } shadow-sm hover:shadow-md`}
           >
-            <strong>제목:</strong> {node.label} <br />
-            <strong>내용:</strong> {node.content}
+            <strong>{node.label}</strong> <br />
+            &nbsp; {node.content}
           </li>
         ))}
     </ul>
