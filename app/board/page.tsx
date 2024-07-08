@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { FaTrash } from "react-icons/fa"; // React Icons에서 휴지통 아이콘 가져오기
 import Header from "../_components/common/Header";
 import Loading from "../_components/common/Loading";
 
@@ -113,56 +114,90 @@ const BoardPage: React.FC = () => {
   const emptyRowsArray = Array.from({ length: emptyRows }, (_, index) => index);
 
   const renderPageNumbers = () => {
+    const totalPages = Math.ceil(meetings.length / itemsPerPage);
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(meetings.length / itemsPerPage); i++) {
-      pageNumbers.push(i);
+    const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
+    const endPage = Math.min(startPage + 4, totalPages);
+
+    if (startPage > 1) {
+      pageNumbers.push(
+        <button
+          key="prev"
+          onClick={() => handlePageChange(startPage - 1)}
+          className="mx-1 px-3 py-1 border rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        >
+          &laquo;
+        </button>
+      );
     }
-    return (
-      <div className="flex justify-center mt-4">
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            onClick={() => handlePageChange(number)}
-            className={`mx-1 px-3 py-1 border rounded ${
-              number === currentPage
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500 border-blue-500"
-            } hover:bg-blue-500 hover:text-white`}
-          >
-            {number}
-          </button>
-        ))}
-      </div>
-    );
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`mx-1 px-3 py-1 border rounded ${
+            i === currentPage
+              ? "bg-[#96A0FE] text-white"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      pageNumbers.push(
+        <button
+          key="next"
+          onClick={() => handlePageChange(endPage + 1)}
+          className="mx-1 px-3 py-1 border rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        >
+          &raquo;
+        </button>
+      );
+    }
+
+    return <div className="flex justify-center mt-4">{pageNumbers}</div>;
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white-100">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Header>MIKO Board</Header>
-      <main className="flex flex-col items-center p-6 flex-1">
+      <main className="flex flex-col items-center justify-center p-6 flex-1">
+        <div className="w-full max-w-4xl mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-[#96A0FE]">Meetings</h1>
+          <button
+            onClick={() => router.push("/waiting")}
+            className="px-4 py-2 bg-[#96A0FE] text-white rounded-lg shadow-md hover:bg-blue-700"
+          >
+            Back to Waiting Room
+          </button>
+        </div>
         <section className="w-full max-w-4xl">
           {loading ? (
-            <Loading disabled={true} text={"Loading..."}/>
+            <Loading disabled={true} text={"Loading..."} />
           ) : meetings.length > 0 ? (
             <>
-              <div className="overflow-x-auto">
-                <table className="min-w-full border-collapse borde-4 border-gray-200 bg-white">
+              <div className="overflow-x-auto shadow-lg rounded-lg">
+                <table className="min-w-full border-collapse border border-gray-300 bg-white">
                   <thead>
                     <tr>
-                      <th className="border border-gray-200 p-2 bg-[#96A0FE] text-white">
+                      <th className="border border-gray-300 p-3 bg-[#96A0FE] text-white">
                         Title
                       </th>
                       <th
-                        className="border border-gray-200 p-2 bg-[#96A0FE] text-white cursor-pointer"
+                        className="border border-gray-300 p-3 bg-[#96A0FE] text-white cursor-pointer"
                         onClick={handleSort}
                       >
                         Start Time {sortOrder === "asc" ? "↑" : "↓"}
                       </th>
-                      <th className="border border-gray-200 p-2 bg-[#96A0FE] text-white">
-                        Owners
+                      <th className="border border-gray-300 p-3 bg-[#96A0FE] text-white">
+                        Participants
                       </th>
-                      <th className="border border-gray-200 p-2 bg-[#96A0FE] text-white">
-                        Actions
+                      <th className="border border-gray-300 p-3 bg-[#96A0FE] text-white">
+                        Delete
                       </th>
                     </tr>
                   </thead>
@@ -173,35 +208,35 @@ const BoardPage: React.FC = () => {
                         className="hover:bg-gray-100"
                       >
                         <td
-                          className="border border-gray-200 p-2 text-blue-500 cursor-pointer"
+                          className="border border-gray-300 p-3 text-[#96A0FE] cursor-pointer"
                           onClick={() => handleMeetingClick(meeting.meeting_id)}
                         >
                           {meeting.title}
                         </td>
-                        <td className="border border-gray-200 p-2 text-center">
+                        <td className="border border-gray-300 p-3 text-center">
                           {new Date(meeting.startTime).toLocaleString()}
                         </td>
-                        <td className="border border-gray-200 p-2 text-center">
+                        <td className="border border-gray-300 p-3 text-center">
                           {Array.isArray(meeting.owner)
                             ? meeting.owner.join(", ")
                             : meeting.owner}
                         </td>
-                        <td className="border border-gray-200 p-2 text-center">
+                        <td className="border border-gray-300 p-3 text-center">
                           <button
                             onClick={() => handleDelete(meeting.meeting_id)}
                             className="text-red-500 hover:text-red-700"
                           >
-                            🗑️
+                            <FaTrash />
                           </button>
                         </td>
                       </tr>
                     ))}
                     {emptyRowsArray.map((index) => (
                       <tr key={`empty-${index}`} className="hover:bg-gray-100">
-                        <td className="border border-gray-200 p-2">&nbsp;</td>
-                        <td className="border border-gray-200 p-2">&nbsp;</td>
-                        <td className="border border-gray-200 p-2">&nbsp;</td>
-                        <td className="border border-gray-200 p-2">&nbsp;</td>
+                        <td className="border border-gray-300 p-3">&nbsp;</td>
+                        <td className="border border-gray-300 p-3">&nbsp;</td>
+                        <td className="border border-gray-300 p-3">&nbsp;</td>
+                        <td className="border border-gray-300 p-3">&nbsp;</td>
                       </tr>
                     ))}
                   </tbody>
