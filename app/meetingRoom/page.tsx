@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { RoomSocketProvider } from "../_components/Socket/SocketProvider";
 import { VideoProvider } from "../_components/Video/VideoContext";
 import HomeContent from "../_components/meetingRoom/MeetingRoom";
-import Header from "../_components/common/Header";
+import Loading from "../_components/common/Loading";
 
 const Home: React.FC = () => {
   const keyframesStyle = `
@@ -18,11 +18,16 @@ const Home: React.FC = () => {
     <RoomSocketProvider>
       <VideoProvider>
         <style>{keyframesStyle}</style>
-
         <HomeContent />
       </VideoProvider>
     </RoomSocketProvider>
   );
 };
 
-export default Home;
+const Page: React.FC = () => (
+  <Suspense fallback={<Loading disabled={true} text={"Loading..."}/>}>
+    <Home/>
+  </Suspense>
+);
+
+export default Page;

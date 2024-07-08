@@ -8,6 +8,7 @@ import Header from "../common/Header";
 import SharingRoom from "../sharingRoom";
 import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
 import useHomeContent from "../../_hooks/useHomeContent";
+import Loading from "../common/Loading";
 
 const HomeContent: React.FC = () => {
   const [isConversationVisible, setIsConversationVisible] = useState(false);
@@ -135,12 +136,12 @@ const HomeContent: React.FC = () => {
                     setLeaveSessionCallback={setLeaveSessionCallback}
                   />
                 ) : (
-                  <p>Loading...</p>
+                  <Loading disabled={true} text={"Loading..."}/>
                 )}
               </div>
             </>
           ) : (
-            <p>Socket is not connected. Please check your connection.</p>
+            <Loading disabled={true} text={"Socket is not connected. Please check your connection."}/>
           )}
         </div>
 

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
+import Loading from "../_components/common/Loading";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -141,10 +142,7 @@ const BoardPage: React.FC = () => {
       <main className="flex flex-col items-center p-6 flex-1">
         <section className="w-full max-w-4xl">
           {loading ? (
-            <div className="flex justify-center items-center">
-              <div className="w-16 h-16 border-4 border-[#96A0FE] border-dashed rounded-full animate-spin"></div>
-              {/* 로딩 스피너 */}
-            </div>
+            <Loading disabled={true} text={"Loading..."}/>
           ) : meetings.length > 0 ? (
             <>
               <div className="overflow-x-auto">

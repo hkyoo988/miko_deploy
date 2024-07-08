@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../public/styles/globals.css";
+import "./globals.css";
 import SessionProvider from "./_components/SessionProvider";
 import { MainSocketProvider } from "./_components/Socket/SocketContext";
 

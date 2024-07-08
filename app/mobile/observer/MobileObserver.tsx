@@ -1,13 +1,9 @@
 import React from "react";
 import NetworkGraph from "../../_components/Network/NetworkGraph";
-import ControlPanel from "../../_components/Network/ControlPanel";
 import NodeConversation from "../../_components/Network/NodeConversation";
-import Video from "../../_components/Video/Video";
 import styles from "./MobileObserver.module.css";
 import Header from "../../_components/common/Header";
 import Footer from "../../_components/common/Footer";
-import SharingRoom from "../../_components/sharingRoom";
-import VoiceRecorder from "../../_components/VoiceRecorder/VoiceRecorder";
 import useHomeContent from "../../_hooks/useHomeContent";
 
 const HomeContent: React.FC = () => {
@@ -15,33 +11,12 @@ const HomeContent: React.FC = () => {
     socket,
     socketContext,
     containerRef,
-    sessionId,
-    userName,
-    token,
-    isConnected,
     nodes,
     edges,
     selectedNodeId,
     handleNodeClick,
     fitToScreen,
-    controlNodeLabel,
-    setControlNodeLabel,
-    controlNodeContent,
-    setControlNodeContent,
-    controlNodeColor,
-    setControlNodeColor,
-    roomLink,
-    isModalOpen,
-    setIsModalOpen,
-    isListOpen,
-    handleAddNode,
-    handleKeyword,
-    handleSharingRoom,
     handleLeaveSession,
-    setLeaveSessionCallback,
-    setAction,
-    publisher,
-    subscriber,
     handleNodeHover
   } = useHomeContent();
 
@@ -62,7 +37,6 @@ const HomeContent: React.FC = () => {
             socket={socket}
           />
         </div>
-
         {/*<div className={styles.appContainer}>*/}
         {/*  {isConnected ? (*/}
         {/*    <>*/}

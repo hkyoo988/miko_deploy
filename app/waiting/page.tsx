@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import logo from "../../public/MIKO_LOGO_Square.png";
 import WaitingVideoComponent from "./WaitingVideoComponent";
+import LoadingModal from "../_components/common/LoadingModal";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -19,12 +20,9 @@ const WaitingPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
-  const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<
-    string | null
-  >(null);
-  const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState<
-    string | null
-  >(null);
+  const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<string | null>(null);
+  const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 로딩 상태 추가
 
   const router = useRouter();
 
@@ -79,6 +77,7 @@ const WaitingPage: React.FC = () => {
 
   const joinSession = async (event: FormEvent, isCreate: boolean) => {
     event.preventDefault();
+    setIsLoading(true); // 로딩 시작
     if (mySessionId && myUserName) {
       console.log("Joining session with ID:", mySessionId);
       try {
@@ -107,14 +106,15 @@ const WaitingPage: React.FC = () => {
         router.push(url);
       } catch (error) {
         console.error("Error joining session:", error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     }
   };
 
-  const handleCreateSession = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleCreateSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    setIsLoading(true); // 로딩 시작
     const encodedPassword = base64Encode(password);
     const requestData = {
       nickname: myUserName,
@@ -136,13 +136,12 @@ const WaitingPage: React.FC = () => {
       console.error("Failed to create room:", response.statusText);
       alert("Failed to create room");
     }
+    setIsLoading(false); // 로딩 종료
   };
 
-  const handleJoinSession = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
+    setIsLoading(true); // 로딩 시작
     const encodedPassword = base64Encode(password);
 
     const requestData = {
@@ -164,6 +163,7 @@ const WaitingPage: React.FC = () => {
       console.error("Failed to create room:", response.statusText);
       alert("Failed to create room");
     }
+    setIsLoading(false); // 로딩 종료
   };
 
   const getToken = async (isCreate: boolean) => {
@@ -205,6 +205,7 @@ const WaitingPage: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#96A0FE] m-0 font-sans">
+      {isLoading && <LoadingModal />}
       <div className="bg-white p-5 rounded-lg shadow-lg text-center w-full max-w-5xl flex flex-col md:flex-row items-center h-auto md:h-auto">
         <WaitingVideoComponent
           selectedVideoDeviceId={selectedVideoDeviceId}

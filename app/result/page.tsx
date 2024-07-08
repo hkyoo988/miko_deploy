@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  Suspense,
-  useCallback,
-  CSSProperties,
-} from "react";
+import React, { useState, useEffect, useRef, Suspense, useCallback, CSSProperties,} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
@@ -19,6 +12,7 @@ import useNetwork from "../_hooks/useNetwork";
 import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
 import Tiptap from "../_components/Tiptap";
+import Loading from "../_components/common/Loading";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -360,7 +354,7 @@ const ResultPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading disabled={true} text={"Loading..."}/>;
   }
 
   return (
@@ -427,7 +421,7 @@ const ResultPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div>Loading meeting details...</div>
+            <Loading disabled={true} text={"Loading..."}/>
           )}
         </section>
         <section className={styles.right}>
@@ -480,7 +474,7 @@ const ResultPage: React.FC = () => {
 };
 
 const Page: React.FC = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<Loading disabled={true} text={"Loading..."}/>}>
     <ResultPage />
   </Suspense>
 );
