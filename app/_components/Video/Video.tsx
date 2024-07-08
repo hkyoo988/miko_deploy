@@ -227,7 +227,7 @@ const Video: React.FC<Props> = ({
     <div id={styles["video-container"]}>
       <div id={styles["local-video"]}>
         <video ref={localVideoRef} autoPlay={true} />
-        <div className={styles.nicknameContainer}>
+        <div className={styles.localnicknameContainer}>
           <span>{userName}</span>
         </div>
       </div>

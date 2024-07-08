@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 import styles from "../styles/AudioPlayer.module.css";
+import Loading from "./common/Loading";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -22,9 +23,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
 
   useEffect(() => {
     const fetchAudio = async () => {
+      setIsLoading(true); // 로딩 시작
       try {
         const response = await fetch(
           `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/record`
@@ -37,6 +41,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         setAudioSrc(url);
       } catch (error) {
         console.error("Error fetching audio: ", error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     };
 
@@ -132,6 +138,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className={styles.audioPlayer}>
+      {isLoading && <Loading disabled={true} text={"회의가 진행중입니다..."}/>}
       <audio ref={audioRef} src={audioSrc} className={styles.hiddenAudio} />
       <input
         type="range"

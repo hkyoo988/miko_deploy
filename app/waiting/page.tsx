@@ -136,7 +136,6 @@ const WaitingPage: React.FC = () => {
       console.error("Failed to create room:", response.statusText);
       alert("Failed to create room");
     }
-    setIsLoading(false); // 로딩 종료
   };
 
   const handleJoinSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -163,7 +162,6 @@ const WaitingPage: React.FC = () => {
       console.error("Failed to create room:", response.statusText);
       alert("Failed to create room");
     }
-    setIsLoading(false); // 로딩 종료
   };
 
   const getToken = async (isCreate: boolean) => {
