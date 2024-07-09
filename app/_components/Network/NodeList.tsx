@@ -8,7 +8,7 @@ interface NodeListProps {
   selectedNodeId: number | null;
   onNodeClick: (nodeId: number) => void;
   className?: string;
-  autoScroll?: boolean; // New prop to enable/disable auto scroll
+  autoScroll?: boolean; 
 }
 
 const NodeList: React.FC<NodeListProps> = ({

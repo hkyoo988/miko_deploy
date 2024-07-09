@@ -8,8 +8,11 @@ interface NodeConversationProps {
   nodes: Node[];
   edges: Edge[];
   selectedNodeId: number | null;
-  onNodeClick: (nodeId: number) => void;
+  onNodeClick: (nodeId: number | null) => void;
   className?: string;
+  autoScroll: boolean;
+  activeTab: string; // 추가된 속성
+  setActiveTab: (tab: string) => void; // 추가된 속성
 }
 
 const NodeConversation: React.FC<NodeConversationProps> = ({
@@ -18,8 +21,10 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   selectedNodeId,
   onNodeClick,
   className,
+  autoScroll,
+  activeTab,
+  setActiveTab,
 }) => {
-  const [activeTab, setActiveTab] = useState<string>("nodes");
   const [messages, setMessages] = useState<string[]>([]);
   const { socket } = useSocket();
   const [queue, setQueue] = useState<any[]>([]);
@@ -78,6 +83,7 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
             selectedNodeId={selectedNodeId}
             onNodeClick={onNodeClick}
             className="p-4"
+            autoScroll={autoScroll} // autoScroll prop 전달
           />
         );
       case "conversation":

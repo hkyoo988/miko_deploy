@@ -1,4 +1,4 @@
-import React, { useEffect, useState, CSSProperties, useRef} from "react";
+import React, { useEffect, useState, CSSProperties, useRef } from "react";
 import { FaMicrophone, FaComments } from "react-icons/fa";
 import NetworkGraph from "../Network/NetworkGraph";
 import ControlPanel from "../Network/ControlPanel";
@@ -13,6 +13,7 @@ import Loading from "../common/Loading";
 const HomeContent: React.FC = () => {
   const [isConversationVisible, setIsConversationVisible] = useState(false);
   const [isRecorderVisible, setIsRecorderVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("nodes");
 
   const popoverRef = useRef<HTMLDivElement>(null);
   const {
@@ -78,7 +79,12 @@ const HomeContent: React.FC = () => {
   }
 
   const toggleConversationVisibility = () => {
-    setIsConversationVisible((prev) => !prev);
+    setIsConversationVisible((prev) => {
+      if (!prev) {
+        setActiveTab("conversation");
+      }
+      return !prev;
+    });
   };
 
   const toggleRecorderVisibility = () => {
@@ -197,6 +203,9 @@ const HomeContent: React.FC = () => {
             edges={edges.get()}
             selectedNodeId={selectedNodeId}
             onNodeClick={handleNodeClick}
+            autoScroll={isConversationVisible} 
+            activeTab={activeTab} // activeTab prop 추가
+            setActiveTab={setActiveTab} // setActiveTab prop 추가
           />
         </div>
       </div>
