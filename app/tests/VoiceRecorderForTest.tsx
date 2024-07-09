@@ -318,7 +318,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
               <SettingsSlider
                   label="음성 인식 감도:"
                   min={0.01}
-                  max={1}
+                  max={2}
                   step={0.01}
                   value={silenceThreshold}
                   onChange={handleSliderChange}
