@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import NetworkGraph from "../../_components/Network/NetworkGraph";
 import NodeConversation from "../../_components/Network/NodeConversation";
 import styles from "./MobileObserver.module.css";
@@ -7,6 +7,7 @@ import Footer from "../../_components/common/Footer";
 import useHomeContent from "../../_hooks/useHomeContent";
 
 const HomeContent: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<string>("conversation");
   const {
     socket,
     socketContext,
@@ -63,6 +64,9 @@ const HomeContent: React.FC = () => {
             edges={edges.get()}
             selectedNodeId={selectedNodeId}
             onNodeClick={handleNodeClick}
+            autoScroll={false} // 또는 필요한 값으로 설정
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
         </div>
       </div>
