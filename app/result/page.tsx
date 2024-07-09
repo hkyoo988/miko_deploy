@@ -13,6 +13,8 @@ import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
 import Tiptap from "../_components/Tiptap";
 import Loading from "../_components/common/Loading";
+import { Editor } from '@tiptap/react';
+
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -50,6 +52,8 @@ const ResultPage: React.FC = () => {
   const [highlightedConversation, setHighlightedConversation] = useState<string | null>(null);
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const titleRef = useRef<HTMLInputElement>(null); // Ref for title input
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -153,6 +157,12 @@ const ResultPage: React.FC = () => {
 
     fetchMeetingDetails();
   }, [meetingId, router]);
+
+  useEffect(() => {
+    if (editor && meetingDetails) {
+      editor.commands.setContent(meetingDetails.mom);
+    }
+  }, [editor, meetingDetails]);
 
   const handleSeek = useCallback((time: number) => {
     setSeekTime(time);
@@ -347,9 +357,39 @@ const ResultPage: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
-    // 저장 버튼 클릭 시 실행할 로직을 여기에 추가하세요.
-    console.log("저장 버튼이 클릭되었습니다.");
+  const handleSave = async () => {
+    if (editor && meetingId) {
+      const title = titleRef.current?.value; // Use ref to get the title
+      const content = editor.getHTML();
+
+      const requestBody = {
+        id: meetingId,
+        title: title,
+        mom: content
+      };
+      console.log(requestBody);
+      try {
+        const response = await fetch(`${APPLICATION_SERVER_URL}api/meeting/mom/update`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (response.ok) {
+          console.log('Meeting details updated successfully');
+          alert("회의록이 저장되었습니다!");
+        } else {
+          console.error('Failed to update meeting details');
+          alert("회의록이 저장되지 않았습니다!");
+
+        }
+      } catch (error) {
+        console.error('Error updating meeting details: ', error);
+        alert("회의록이 저장되지 않았습니다!");
+      }
+    }
   };
 
   if (isLoading) {
@@ -372,8 +412,8 @@ const ResultPage: React.FC = () => {
                   <input
                     type="text"
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    value={meetingDetails.title}
-                    readOnly
+                    defaultValue={meetingDetails.title} // Use defaultValue
+                    ref={titleRef} // Attach ref
                   />
                 </div>
                 <div className="mb-4">
@@ -410,12 +450,12 @@ const ResultPage: React.FC = () => {
                     회의 내용
                   </label>
                   <div style={{ marginTop: "0.25rem", display: "block", width: "100%", borderRadius: "0.5rem", borderColor: "#d1d5db", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)", overflowY: "auto", overflowX: "hidden", height: "50vh", borderWidth: '2px' }}>
-                    <Tiptap content={meetingDetails.mom} />
+                    <Tiptap content={meetingDetails.mom} setEditor={setEditor} />
                   </div>
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                <button type="button" onClick={handleSave} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
                   저장
                 </button>
               </div>

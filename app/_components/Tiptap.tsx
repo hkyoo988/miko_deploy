@@ -1,6 +1,6 @@
 //Tiptap.tsx
 import React, { useEffect } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor } from '@tiptap/react';
 
 //tiptap
 import StarterKit from '@tiptap/starter-kit';
@@ -13,9 +13,10 @@ import { common, createLowlight } from 'lowlight';
 
 interface TiptapProps {
   content: string;
+  setEditor: (editor: Editor | null) => void;
 }
 
-const Tiptap = ({ content }: TiptapProps) => {
+const Tiptap = ({ content, setEditor }: TiptapProps) => {
   const lowlight = createLowlight(common);
   const editor = useEditor({
     editorProps: {
@@ -35,10 +36,18 @@ const Tiptap = ({ content }: TiptapProps) => {
   });
 
   useEffect(() => {
-    if (content) {
-      editor?.commands.setContent(content);
+    setEditor(editor);
+    return () => {
+      setEditor(null);
+    };
+  }, [editor, setEditor]);
+
+  useEffect(() => {
+    if (content && editor) {
+      editor.commands.setContent(content);
     }
-  }, [content]);
+  }, [content, editor]);
+  
   return (
     <div className="border-2">
       <EditorContent
