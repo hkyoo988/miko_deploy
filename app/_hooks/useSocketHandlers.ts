@@ -6,7 +6,7 @@ import { DataSet } from "vis-network";
 const useSocketHandlers = (
   edges: DataSet<Edge>,
   addNode: (id: any, label: string, content: string, color: string) => void,
-  delay: number = 200
+  delay: number = 100
 ) => {
   const { socket } = useSocket();
   const [nextNodeId, setNextNodeId] = useState<string>("");
@@ -27,11 +27,16 @@ const useSocketHandlers = (
   );
 
   const sleep = (ms: number): Promise<void> => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
   useEffect(() => {
-    const handleSummarize = (data: { _id: string; keyword: string; subject: string; conversationIds: [] }) => {
+    const handleSummarize = (data: {
+      _id: string;
+      keyword: string;
+      subject: string;
+      conversationIds: [];
+    }) => {
       setNextNodeId(data._id);
       setNewNodeLabel(data.keyword);
       setNewNodeContent(data.subject);
@@ -52,7 +57,12 @@ const useSocketHandlers = (
   }, [newNodeLabel, newNodeContent, nextNodeId, handleAddNode]);
 
   useEffect(() => {
-    const handleConnect = (data: { _id: string; vertex1: number; vertex2: number; action: string }) => {
+    const handleConnect = (data: {
+      _id: string;
+      vertex1: number;
+      vertex2: number;
+      action: string;
+    }) => {
       const newEdge: Edge = {
         id: data._id,
         from: data.vertex1,
@@ -61,7 +71,7 @@ const useSocketHandlers = (
 
       if (!edges.get(newEdge.id)) {
         edges.add(newEdge);
-      };
+      }
     };
 
     socket.on("edge", handleConnect);
@@ -72,7 +82,12 @@ const useSocketHandlers = (
   }, [socket, edges]);
 
   useEffect(() => {
-    const handledDisConnect = (data: { _id: string; vertex1: number; vertex2: number; action: string }) => {
+    const handledDisConnect = (data: {
+      _id: string;
+      vertex1: number;
+      vertex2: number;
+      action: string;
+    }) => {
       if (edges.get(data._id)) {
         edges.remove(data._id);
       } else {
@@ -146,7 +161,13 @@ const useSocketHandlers = (
     processQueue();
   }, [queue, processing, delay]);
 
-  return { newNodeLabel, newNodeContent, nextNodeId, setNewNodeLabel, setNewNodeContent };
+  return {
+    newNodeLabel,
+    newNodeContent,
+    nextNodeId,
+    setNewNodeLabel,
+    setNewNodeContent,
+  };
 };
 
 export default useSocketHandlers;
