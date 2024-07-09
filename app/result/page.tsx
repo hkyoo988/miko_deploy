@@ -32,16 +32,11 @@ interface NewEdge {
   __v: number;
 }
 
-interface Participant {
-  name: string;
-  role: string;
-}
-
 interface MeetingDetails {
   title: string;
   startTime: string;
   period: number;
-  participants: Participant[];
+  owner: string[];
   mom: string;
 }
 
@@ -348,10 +343,18 @@ const ResultPage: React.FC = () => {
   };
 
   const formatPeriod = (period: number) => {
-    const minutes = Math.floor(period / 60000);
+    const hours = Math.floor(period / 3600000);
+    const minutes = Math.floor((period % 3600000) / 60000);
     const seconds = Math.floor((period % 60000) / 1000);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    if (hours > 0) {
+      return `${hours}시간 ${minutes}분 ${seconds}초`;
+    } else if (minutes > 0) {
+      return `${minutes}분 ${seconds}초`;
+    } else {
+      return `${seconds}초`;
+    }
   };
+  
 
   if (isLoading) {
     return <Loading disabled={true} text={"Loading..."}/>;
@@ -393,17 +396,27 @@ const ResultPage: React.FC = () => {
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
+                    진행 시간
+                  </label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    value={formatPeriod(meetingDetails.period)}
+                    readOnly
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
                     참가자
                   </label>
                   <input
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     value={
-                      Array.isArray(meetingDetails.participants)
-                        ? meetingDetails.participants
-                          .map(
-                            (participant) =>
-                              `${participant.name} (${participant.role})`
-                          )
+                      Array.isArray(meetingDetails.owner)
+                        ? meetingDetails.owner
+                          .map((owner, index) =>
+                            index === 0 ? `${owner}👑` : `${owner}👤`
+                        )
                           .join(", ")
                         : "No participants"
                     }
