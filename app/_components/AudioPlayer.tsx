@@ -26,28 +26,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
 
-  useEffect(() => {
-    const fetchAudio = async () => {
-      setIsLoading(true); // 로딩 시작
-      try {
-        const response = await fetch(
-          `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/record`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        setAudioSrc(url);
-      } catch (error) {
-        console.error("Error fetching audio: ", error);
-      } finally {
-        setIsLoading(false); // 로딩 종료
-      }
-    };
+  // useEffect(() => {
+  //   const fetchAudio = async () => {
+  //     setIsLoading(true); // 로딩 시작
+  //     try {
+  //       const response = await fetch(
+  //         `${APPLICATION_SERVER_URL}api/meeting/${meetingId}/record`
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       const blob = await response.blob();
+  //       const url = URL.createObjectURL(blob);
+  //       setAudioSrc(url);
+  //     } catch (error) {
+  //       console.error("Error fetching audio: ", error);
+  //     } finally {
+  //       setIsLoading(false); // 로딩 종료
+  //     }
+  //   };
 
-    fetchAudio();
-  }, [meetingId]);
+  //   fetchAudio();
+  // }, [meetingId]);
 
   useEffect(() => {
     if (seekTime !== null && audioRef.current) {
