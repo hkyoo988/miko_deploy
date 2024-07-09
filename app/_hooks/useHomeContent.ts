@@ -99,14 +99,16 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
   const handleSharingRoom = async () => {
     try {
       const token = await getToken();
-      if (sessionId) {
+      const query = new URLSearchParams(window.location.search);
+      const storedPassword = query.get("password");
+      if (sessionId && storedPassword) {
         const link = `${
           window.location.origin
         }/meetingRoom?sessionId=${encodeURIComponent(
           sessionId
         )}&userName=${encodeURIComponent("guest1")}&token=${encodeURIComponent(
           token
-        )}`;
+        )}&password=${encodeURIComponent(storedPassword)}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }
