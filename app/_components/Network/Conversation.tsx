@@ -6,16 +6,16 @@ interface ConversationProps {
 }
 
 const Conversation: React.FC<ConversationProps> = ({ messages, className }) => {
-  const endOfMessagesRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (endOfMessagesRef.current) {
-      endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
   return (
-    <div className={`relative h-full overflow-auto ${className}`}>
+    <div ref={scrollContainerRef} className={`relative h-full overflow-auto ${className}`}>
       <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         {messages.map((message, index) => {
           const [name, ...contentArr] = message.split(": ");
@@ -36,7 +36,6 @@ const Conversation: React.FC<ConversationProps> = ({ messages, className }) => {
           );
         })}
       </ul>
-      <div ref={endOfMessagesRef} />
     </div>
   );
 };

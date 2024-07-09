@@ -96,7 +96,6 @@ const Video: React.FC<Props> = ({
 
     try {
       await mySession.connect(token, { clientData: userName });
-
       const audioDevice = sessionStorage.getItem("Audio");
       const videoDevice = sessionStorage.getItem("Video");
 
@@ -104,8 +103,11 @@ const Video: React.FC<Props> = ({
       let videoSource: any;
       let publishAudio = true;
       let publishVideo = true;
+      console.log("audioDevice", audioDevice);
+      console.log("videoDevice", videoDevice);
 
       if (audioDevice === "off") {
+        console.log("audioDevice is off", audioDevice);
         audioSource = undefined;
         publishAudio = false;
       } else if (audioDevice) {
@@ -113,6 +115,7 @@ const Video: React.FC<Props> = ({
       }
 
       if (videoDevice === "off") {
+        console.log("videoDevice is off", videoDevice);
         videoSource = undefined;
         publishVideo = false;
       } else if (videoDevice) {

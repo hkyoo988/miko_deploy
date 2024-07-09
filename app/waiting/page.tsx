@@ -165,7 +165,8 @@ const WaitingPage: React.FC = () => {
   };
 
   const getToken = async (isCreate: boolean) => {
-    const sessionId = isCreate ? await createSession(mySessionId) : mySessionId;
+    const encodedSessionId = base64Encode(mySessionId);
+    const sessionId = isCreate ? await createSession(encodedSessionId) : mySessionId;
     const token = await createToken(sessionId);
     return token;
   };

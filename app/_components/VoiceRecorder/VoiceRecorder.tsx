@@ -34,9 +34,10 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const startTimestampRef = useRef<number | null>(null);
 
   const [recordingMode, setRecordingMode] = useState<boolean>(() => {
-    const audioState = sessionStorage.getItem("audio");
+    const audioState = sessionStorage.getItem("Audio");
     return audioState === "off" ? false : true;
   });
+
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07);
   const [silenceDuration, setSilenceDuration] = useState<number>(1000);
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000);
