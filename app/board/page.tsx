@@ -16,6 +16,11 @@ interface Meeting {
   owner: string[];
 }
 
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + "...";
+};
+
 const BoardPage: React.FC = () => {
   const [ownerId, setOwnerId] = useState<string>("");
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -175,7 +180,7 @@ const BoardPage: React.FC = () => {
             Back to Waiting Room
           </button>
         </div>
-        <section className="w-full max-w-4xl">
+        <section className="w-full max-w-6xl">
           {loading ? (
             <Loading disabled={true} text={"Loading..."} />
           ) : meetings.length > 0 ? (
@@ -211,15 +216,18 @@ const BoardPage: React.FC = () => {
                           className="border border-gray-300 p-3 text-[#96A0FE] cursor-pointer"
                           onClick={() => handleMeetingClick(meeting.meeting_id)}
                         >
-                          {meeting.title}
+                          {truncateText(meeting.title, 15)}
                         </td>
                         <td className="border border-gray-300 p-3 text-center">
                           {new Date(meeting.startTime).toLocaleString()}
                         </td>
                         <td className="border border-gray-300 p-3 text-center">
-                          {Array.isArray(meeting.owner)
-                            ? meeting.owner.join(", ")
-                            : meeting.owner}
+                          {truncateText(
+                            Array.isArray(meeting.owner)
+                              ? meeting.owner.join(", ")
+                              : meeting.owner,
+                            20
+                          )}
                         </td>
                         <td className="border border-gray-300 p-3 text-center">
                           <button
