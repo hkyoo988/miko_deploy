@@ -45,7 +45,7 @@ const Video: React.FC<Props> = ({
         session.disconnect();
         setSession(undefined);
         // setSubscribers([]); // 이미 session disconnect이므로 필요 없음
-        // socket.disconnect(); // end_meeting이 대신 처리함
+        socket.disconnect(); 
         router.push(url);
       }
     };
