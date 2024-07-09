@@ -79,7 +79,7 @@ const NodeList: React.FC<NodeListProps> = ({
         if (nodeRefs.current[selectedNodeId]) {
           nodeRefs.current[selectedNodeId]!.scrollIntoView({
             behavior: "smooth",
-            block: "center",
+            block: "nearest",
           });
         }
       }
