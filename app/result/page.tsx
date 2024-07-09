@@ -1,6 +1,13 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect, useRef, Suspense, useCallback, CSSProperties } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+  CSSProperties,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
@@ -13,8 +20,7 @@ import { Conversation, Edge } from "../_types/types";
 import NodeList from "../_components/Network/NodeList";
 import Tiptap from "../_components/Tiptap";
 import Loading from "../_components/common/Loading";
-import { Editor } from '@tiptap/react';
-
+import { Editor } from "@tiptap/react";
 
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
@@ -49,8 +55,12 @@ const ResultPage: React.FC = () => {
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [seekTime, setSeekTime] = useState<number | null>(null);
-  const [highlightedConversation, setHighlightedConversation] = useState<string | null>(null);
-  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(null);
+  const [highlightedConversation, setHighlightedConversation] = useState<
+    string | null
+  >(null);
+  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [editor, setEditor] = useState<Editor | null>(null);
   const titleRef = useRef<HTMLInputElement>(null); // Ref for title input
@@ -219,8 +229,7 @@ const ResultPage: React.FC = () => {
     }
   }, [highlightedConversation]);
 
-  const keyframesStyle =
-    `@keyframes fade-in {
+  const keyframesStyle = `@keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
   }`;
@@ -320,7 +329,11 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id ? styles.highlighted : ""}`}
+                  className={`${styles.conversationItem} ${
+                    highlightedConversation === conversation._id
+                      ? styles.highlighted
+                      : ""
+                  }`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -365,30 +378,41 @@ const ResultPage: React.FC = () => {
       const requestBody = {
         id: meetingId,
         title: title,
-        mom: content
+        mom: content,
       };
       console.log(requestBody);
       try {
-        const response = await fetch(`${APPLICATION_SERVER_URL}api/meeting/mom/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody)
-        });
+        const response = await fetch(
+          `${APPLICATION_SERVER_URL}api/meeting/mom/update`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
 
         if (response.ok) {
-          console.log('Meeting details updated successfully');
+          console.log("Meeting details updated successfully");
           alert("회의록이 저장되었습니다!");
         } else {
-          console.error('Failed to update meeting details');
+          console.error("Failed to update meeting details");
           alert("회의록이 저장되지 않았습니다!");
-
         }
       } catch (error) {
-        console.error('Error updating meeting details: ', error);
+        console.error("Error updating meeting details: ", error);
         alert("회의록이 저장되지 않았습니다!");
       }
+    }
+  };
+
+  const handleViewMeetings = () => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      router.push(`/board?ownerId=${encodeURIComponent(userName)}`);
+    } else {
+      alert("User name is not available.");
     }
   };
 
@@ -399,12 +423,20 @@ const ResultPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <style>{keyframesStyle}</style>
-      <Header>MIKO</Header>
+      <Header>
+        MIKO
+        <button
+          onClick={handleViewMeetings}
+          className="absolute right-2 top-7 transform -translate-y-1/2 bg-[#3A2778] text-white py-2 px-4 rounded inline-flex items-center ml-4"
+        >
+          회의록 목록 보기
+        </button>
+      </Header>
       <main className={styles.main}>
         <section className={styles.left}>
           {meetingDetails ? (
             <div className="h-full flex flex-col">
-              <div style={{ flex: 1, overflow: 'hidden' }}>
+              <div style={{ flex: 1, overflow: "hidden" }}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     회의 제목
@@ -436,10 +468,10 @@ const ResultPage: React.FC = () => {
                     value={
                       Array.isArray(meetingDetails.owner)
                         ? meetingDetails.owner
-                          .map((owner, index) =>
-                            index === 0 ? `${owner}👑` : `${owner}👤`
-                          )
-                          .join(", ")
+                            .map((owner, index) =>
+                              index === 0 ? `${owner}👑` : `${owner}👤`
+                            )
+                            .join(", ")
                         : "No participants"
                     }
                     readOnly
@@ -449,13 +481,39 @@ const ResultPage: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700">
                     회의 내용
                   </label>
-                  <div style={{ marginTop: "0.25rem", display: "block", width: "100%", borderRadius: "0.5rem", borderColor: "#d1d5db", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)", overflowY: "auto", overflowX: "hidden", height: "50vh", borderWidth: '2px' }}>
-                    <Tiptap content={meetingDetails.mom} setEditor={setEditor} />
+                  <div
+                    style={{
+                      marginTop: "0.25rem",
+                      display: "block",
+                      width: "100%",
+                      borderRadius: "0.5rem",
+                      borderColor: "#d1d5db",
+                      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                      height: "50vh",
+                      borderWidth: "2px",
+                    }}
+                  >
+                    <Tiptap
+                      content={meetingDetails.mom}
+                      setEditor={setEditor}
+                    />
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                <button type="button" onClick={handleSave} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+                >
                   저장
                 </button>
               </div>
@@ -468,29 +526,33 @@ const ResultPage: React.FC = () => {
           <div className={styles.tabs}>
             <button
               onClick={() => setActiveTab("tab1")}
-              className={`${styles.tabButton} ${activeTab === "tab1" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab1" ? styles.activeTab : ""
+              }`}
             >
               키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
-              className={`${styles.tabButton} ${activeTab === "tab2" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab2" ? styles.activeTab : ""
+              }`}
             >
               키워드 맵
             </button>
             <button
               onClick={() => setActiveTab("tab3")}
-              className={`${styles.tabButton} ${activeTab === "tab3" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab3" ? styles.activeTab : ""
+              }`}
             >
               그룹
             </button>
             <button
               onClick={() => setActiveTab("tab4")}
-              className={`${styles.tabButton} ${activeTab === "tab4" ? styles.activeTab : ""
-                }`}
+              className={`${styles.tabButton} ${
+                activeTab === "tab4" ? styles.activeTab : ""
+              }`}
             >
               음성 기록
             </button>
