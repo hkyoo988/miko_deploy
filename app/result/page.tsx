@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect, useRef, Suspense, useCallback, CSSProperties,} from "react";
+import React, { useState, useEffect, useRef, Suspense, useCallback, CSSProperties } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../_components/common/Header";
 import Footer from "../_components/common/Footer";
@@ -47,12 +47,8 @@ const ResultPage: React.FC = () => {
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [seekTime, setSeekTime] = useState<number | null>(null);
-  const [highlightedConversation, setHighlightedConversation] = useState<
-    string | null
-  >(null);
-  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
-    null
-  );
+  const [highlightedConversation, setHighlightedConversation] = useState<string | null>(null);
+  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const addedNodesRef = useRef<Set<string>>(new Set());
   const addedEdgesRef = useRef<Set<string | number>>(new Set());
@@ -213,12 +209,11 @@ const ResultPage: React.FC = () => {
     }
   }, [highlightedConversation]);
 
-  const keyframesStyle = `
-  @keyframes fade-in {
+  const keyframesStyle =
+    `@keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
-  }
-`;
+  }`;
 
   const popoverStyle: CSSProperties = {
     position: "absolute",
@@ -315,10 +310,7 @@ const ResultPage: React.FC = () => {
                 <div
                   id={conversation._id}
                   key={conversation._id}
-                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id
-                    ? styles.highlighted
-                    : ""
-                    }`}
+                  className={`${styles.conversationItem} ${highlightedConversation === conversation._id ? styles.highlighted : ""}`}
                   onClick={() => handleSeek(conversation.time_offset / 1000)}
                 >
                   <span className={styles.conversationUser}>
@@ -354,10 +346,14 @@ const ResultPage: React.FC = () => {
       return `${seconds}초`;
     }
   };
-  
+
+  const handleSave = () => {
+    // 저장 버튼 클릭 시 실행할 로직을 여기에 추가하세요.
+    console.log("저장 버튼이 클릭되었습니다.");
+  };
 
   if (isLoading) {
-    return <Loading disabled={true} text={"Loading..."}/>;
+    return <Loading disabled={true} text={"Loading..."} />;
   }
 
   return (
@@ -368,10 +364,7 @@ const ResultPage: React.FC = () => {
         <section className={styles.left}>
           {meetingDetails ? (
             <div className="h-full flex flex-col">
-              <div>
-
-              </div>
-              <div>
+              <div style={{ flex: 1, overflow: 'hidden' }}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     회의 제목
@@ -396,17 +389,6 @@ const ResultPage: React.FC = () => {
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
-                    진행 시간
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    value={formatPeriod(meetingDetails.period)}
-                    readOnly
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
                     참가자
                   </label>
                   <input
@@ -416,25 +398,30 @@ const ResultPage: React.FC = () => {
                         ? meetingDetails.owner
                           .map((owner, index) =>
                             index === 0 ? `${owner}👑` : `${owner}👤`
-                        )
+                          )
                           .join(", ")
                         : "No participants"
                     }
                     readOnly
                   />
                 </div>
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700">
-                  회의 내용
-                </label>
-                <div style={{ marginTop: "0.25rem", display: "block", width: "100%", borderRadius: "0.375rem", borderColor: "#d1d5db", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)", overflowY: "auto", overflowX: "hidden", height: "500px" }}>
-                  <Tiptap content={meetingDetails.mom} />
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    회의 내용
+                  </label>
+                  <div style={{ marginTop: "0.25rem", display: "block", width: "100%", borderRadius: "0.5rem", borderColor: "#d1d5db", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)", overflowY: "auto", overflowX: "hidden", height: "50vh", borderWidth: '2px' }}>
+                    <Tiptap content={meetingDetails.mom} />
+                  </div>
                 </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+                <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                  저장
+                </button>
               </div>
             </div>
           ) : (
-            <Loading disabled={true} text={"Loading..."}/>
+            <Loading disabled={true} text={"Loading..."} />
           )}
         </section>
         <section className={styles.right}>
@@ -487,7 +474,7 @@ const ResultPage: React.FC = () => {
 };
 
 const Page: React.FC = () => (
-  <Suspense fallback={<Loading disabled={true} text={"Loading..."}/>}>
+  <Suspense fallback={<Loading disabled={true} text={"Loading..."} />}>
     <ResultPage />
   </Suspense>
 );

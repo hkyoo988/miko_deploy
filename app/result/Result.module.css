@@ -22,6 +22,7 @@
 .left {
   flex: 1;
   overflow: hidden; /* 스크롤 방지 */
+  padding-bottom: 0px;
 }
 
 .right {
