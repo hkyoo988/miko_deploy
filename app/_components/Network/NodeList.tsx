@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Node, Edge } from "../../_types/types";
+import { UnionFind } from "@/app/_utils/unionFind";
 
 interface NodeListProps {
   nodes: Node[];
@@ -33,45 +34,29 @@ const NodeList: React.FC<NodeListProps> = ({
     }));
   };
 
-  const getConnectedNodes = (nodeId: number, edges: Edge[]): Set<number> => {
-    const connectedNodes = new Set<number>();
-    const stack = [nodeId];
-
-    while (stack.length > 0) {
-      const current = stack.pop();
-      if (current && !connectedNodes.has(current)) {
-        connectedNodes.add(current);
-        edges.forEach((edge) => {
-          if (edge.from === current && !connectedNodes.has(edge.to)) {
-            stack.push(edge.to);
-          } else if (edge.to === current && !connectedNodes.has(edge.from)) {
-            stack.push(edge.from);
-          }
-        });
-      }
-    }
-
-    return connectedNodes;
-  };
-
   useEffect(() => {
-    const groups: { [key: number]: Node[] } = {};
-    const nodeGroupMap = new Map<number, number>();
-    let nextGroupId = 1;
+    const uf = new UnionFind(nodes.length);
+    const nodeMap = new Map<number, number>(
+      nodes.map((node, index) => [node.id, index])
+    );
 
-    nodes.forEach((node) => {
-      if (!nodeGroupMap.has(node.id)) {
-        const connectedNodes = Array.from(getConnectedNodes(node.id, edges));
-        if (connectedNodes.length > 1) {
-          const groupId = nextGroupId++;
-          connectedNodes.forEach((connectedNodeId) => {
-            nodeGroupMap.set(connectedNodeId, groupId);
-          });
-          groups[groupId] = connectedNodes.map(
-            (id) => nodes.find((n) => n.id === id)!
-          );
-        }
+    // 모든 에지에 대해 Union 작업 수행
+    edges.forEach((edge) => {
+      const fromIndex = nodeMap.get(edge.from);
+      const toIndex = nodeMap.get(edge.to);
+      if (fromIndex !== undefined && toIndex !== undefined) {
+        uf.union(fromIndex, toIndex);
       }
+    });
+
+    // 그룹화된 노드들을 저장할 객체 생성
+    const groups: { [key: number]: Node[] } = {};
+    nodes.forEach((node) => {
+      const root = uf.find(nodeMap.get(node.id)!);
+      if (!groups[root]) {
+        groups[root] = [];
+      }
+      groups[root].push(node);
     });
 
     setGroupedNodes(groups);
@@ -109,21 +94,23 @@ const NodeList: React.FC<NodeListProps> = ({
         const groupNodes = groupedNodes[Number(groupId)];
         const groupLabel = groupNodes[0]?.label || `Group ${groupId}`;
         return (
-          <li key={groupId} className="mb-4">
+          <li key={groupId} className="mb-6">
             <div
               onClick={() => toggleGroup(Number(groupId))}
               className={`cursor-pointer p-4 border rounded-md flex justify-between items-center w-full box-border ${
                 expandedGroups[Number(groupId)]
                   ? "bg-[#96A0FE] text-white"
-                  : "bg-white text-[#96A0FE] border-gray-300"
-              } transition-colors duration-300 shadow-md`}
+                  : "bg-gray-100 text-[#96A0FE] border-gray-300"
+              } transition-colors duration-300 shadow-md hover:shadow-lg`}
               aria-expanded={expandedGroups[Number(groupId)]}
             >
-              <span>{groupLabel}</span>
-              <span>{expandedGroups[Number(groupId)] ? "-" : "+"}</span>
+              <span className="font-semibold">{groupLabel}</span>
+              <span className="ml-2">
+                {expandedGroups[Number(groupId)] ? "-" : "+"}
+              </span>
             </div>
             {expandedGroups[Number(groupId)] && (
-              <ul className="list-none p-0 m-0 transition-max-height duration-300 pl-4">
+              <ul className="list-none p-0 m-0 mt-2 transition-max-height duration-300 pl-4 border-l-4 border-[#96A0FE]">
                 {groupNodes.map((node) => (
                   <li
                     key={node.id}
@@ -133,12 +120,12 @@ const NodeList: React.FC<NodeListProps> = ({
                     onClick={() => onNodeClick(node.id)}
                     className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
                       node.id === selectedNodeId
-                        ? "bg-[#96A0FE] text-white border-[#96A0FE]"
-                        : "bg-white text-gray-800 border-gray-300"
+                        ? "bg-yellow-200 text-black border-yellow-300"
+                        : "bg-white text-gray-800 border-gray-300 hover:bg-[#f0f4ff]"
                     } shadow-sm hover:shadow-md`}
                   >
-                    <strong>{node.label}</strong> <br />
-                    &nbsp; {node.content}
+                    <strong className="block mb-1">{node.label}</strong>
+                    <span className="text-sm">{node.content}</span>
                   </li>
                 ))}
               </ul>
@@ -146,25 +133,6 @@ const NodeList: React.FC<NodeListProps> = ({
           </li>
         );
       })}
-      {nodes
-        .filter((node) => !Object.values(groupedNodes).flat().includes(node))
-        .map((node) => (
-          <li
-            key={node.id}
-            ref={(el) => {
-              nodeRefs.current[node.id] = el;
-            }}
-            onClick={() => onNodeClick(node.id)}
-            className={`cursor-pointer p-4 border rounded-md mb-2 transition-colors duration-300 w-full box-border ${
-              node.id === selectedNodeId
-                ? "bg-[#96A0FE] text-white border-[#96A0FE]"
-                : "bg-white text-gray-800 border-gray-300"
-            } shadow-sm hover:shadow-md`}
-          >
-            <strong>{node.label}</strong> <br />
-            &nbsp; {node.content}
-          </li>
-        ))}
     </ul>
   );
 };
