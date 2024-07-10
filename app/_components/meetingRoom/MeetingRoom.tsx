@@ -120,6 +120,10 @@ const HomeContent: React.FC = () => {
     marginLeft: "-5px",
   };
 
+  const loadingStyle: CSSProperties = {
+    left: "50%",
+  }
+
   return (
     <div className="flex flex-col items-center h-screen overflow-hidden">
       <Header>MIKO</Header>
@@ -160,6 +164,7 @@ const HomeContent: React.FC = () => {
             <Loading
               disabled={true}
               text={"Socket is not connected. Please check your connection."}
+              style={loadingStyle}
             />
           )}
         </div>
