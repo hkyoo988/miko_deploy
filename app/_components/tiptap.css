@@ -12,3 +12,8 @@
 .prose ul {
   margin: 0;
 }
+
+.prose p,
+.prose ul {
+  margin-bottom: 20px;
+}
