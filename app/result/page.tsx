@@ -214,7 +214,7 @@ const ResultPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeTab === "tab2" && containerRef.current) {
+    if (activeTab === "tab1" && containerRef.current) {
       initializeNetwork(containerRef.current);
       printMap();
     }
@@ -267,25 +267,6 @@ const ResultPage: React.FC = () => {
     switch (activeTab) {
       case "tab1":
         return (
-          <div>
-            {vertexes && vertexes.length > 0 ? (
-              vertexes.map((vertex) => (
-                <div key={vertex._id} className={styles.keywordItem}>
-                  <div className={styles.keywordLabel}>
-                    제목: {vertex.keyword}
-                  </div>
-                  <div className={styles.keywordContent}>
-                    내용: {vertex.subject}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div>No vertexes available</div>
-            )}
-          </div>
-        );
-      case "tab2":
-        return (
           <div style={{ position: "relative", width: "100%", height: "90%" }}>
             <button onClick={fitToScreen} className={styles.button}>
               fitToScreen
@@ -302,6 +283,25 @@ const ResultPage: React.FC = () => {
                 <p>{popoverState.content}</p>
                 <div style={arrowStyle} data-popper-arrow></div>
               </div>
+            )}
+          </div>
+        );
+      case "tab2":
+        return (
+          <div>
+            {vertexes && vertexes.length > 0 ? (
+              vertexes.map((vertex) => (
+                <div key={vertex._id} className={styles.keywordItem}>
+                  <div className={styles.keywordLabel}>
+                    제목: {vertex.keyword}
+                  </div>
+                  <div className={styles.keywordContent}>
+                    내용: {vertex.subject}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No vertexes available</div>
             )}
           </div>
         );
@@ -530,7 +530,7 @@ const ResultPage: React.FC = () => {
                 activeTab === "tab1" ? styles.activeTab : ""
               }`}
             >
-              키워드 요약
+              키워드 맵
             </button>
             <button
               onClick={() => setActiveTab("tab2")}
@@ -538,7 +538,7 @@ const ResultPage: React.FC = () => {
                 activeTab === "tab2" ? styles.activeTab : ""
               }`}
             >
-              키워드 맵
+              키워드 요약
             </button>
             <button
               onClick={() => setActiveTab("tab3")}

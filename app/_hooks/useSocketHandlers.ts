@@ -137,9 +137,7 @@ const useSocketHandlers = (
         setProcessing(true);
         const { type, data } = queue[0];
         if (type === "vertex") {
-          setNextNodeId(data._id);
-          setNewNodeLabel(data.keyword);
-          setNewNodeContent(data.subject);
+          addNode(data._id, data.keyword, data.subject, "#5A5A5A");
         } else if (type === "edge") {
           const newEdge: Edge = {
             id: data._id,
