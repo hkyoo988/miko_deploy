@@ -10,11 +10,11 @@ const APPLICATION_SERVER_URL =
 
 const Share: React.FC = () => {
     const router = useRouter();
-    const query = new URLSearchParams(window.location.search);
-    const storedPassword = query.get("password");
-    const storedSessionId = query.get("sessionId");
 
     useEffect(() => {
+        const query = new URLSearchParams(window.location.search);
+        const storedPassword = query.get("password");
+        const storedSessionId = query.get("sessionId");
         const getTokenAndRedirect = async () => {
             if (storedSessionId) {
                 try {
@@ -48,7 +48,7 @@ const Share: React.FC = () => {
         };
     
         getTokenAndRedirect();
-    }, [storedSessionId, storedPassword, router]);
+    }, []);
     
 
     return (
