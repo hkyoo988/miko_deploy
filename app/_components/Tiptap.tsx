@@ -49,7 +49,7 @@ const Tiptap = ({ content, setEditor }: TiptapProps) => {
   }, [content, editor]);
   
   return (
-    <div className="border-2">
+    <div>
       <EditorContent
         id="tiptap"
         editor={editor}
