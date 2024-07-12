@@ -3,6 +3,7 @@ export interface Node {
   label: string;
   content: string;
   color?: string;
+  size: number;
 }
 
 export interface Edge {

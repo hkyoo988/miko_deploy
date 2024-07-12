@@ -6,9 +6,6 @@ import useNetwork from "../_hooks/useNetwork";
 import useSocketHandlers from "../_hooks/useSocketHandlers";
 import { RoomuseSocketContext } from "../_components/Socket/SocketProvider";
 
-const APPLICATION_SERVER_URL =
-  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
-
 const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
   const socketContext = RoomuseSocketContext();
   const { socket } = useSocket();
@@ -59,11 +56,11 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
     (() => void) | null
   >(null);
 
-  useSocketHandlers(edges, addNode);
+  useSocketHandlers(edges, addNode, nodes);
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor);
+      addNode(id, controlNodeLabel, controlNodeContent, controlNodeColor, false, 10);
       setNextId("");
       setControlNodeLabel("");
       setControlNodeContent("");
@@ -80,20 +77,6 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
 
   const handleKeyword = () => {
     socket.emit("summarize", socketContext?.sessionId);
-  };
-
-  const getToken = async () => {
-    if (sessionId) {
-      const response = await axios.post(
-        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${sessionId}/connections`,
-        {},
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      return response.data.token;
-    }
-    return null;
   };
 
   const handleSharingRoom = async () => {

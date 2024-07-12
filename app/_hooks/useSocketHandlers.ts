@@ -1,27 +1,31 @@
 import { useEffect, useCallback, useState } from "react";
 import { useSocket } from "../_components/Socket/SocketContext";
-import { Edge } from "../_types/types";
+import { Edge, Node } from "../_types/types";
 import { DataSet } from "vis-network";
 
 const useSocketHandlers = (
   edges: DataSet<Edge>,
-  addNode: (id: any, label: string, content: string, color: string) => void,
+  addNode: (id: any, label: string, content: string, color: string, playSound: boolean, d: number) => void,
+  nodes: DataSet<Node>,
   delay: number = 100
 ) => {
   const { socket } = useSocket();
   const [nextNodeId, setNextNodeId] = useState<string>("");
   const [newNodeLabel, setNewNodeLabel] = useState<string>("");
   const [newNodeContent, setNewNodeContent] = useState<string>("");
+  const [newDepth, setNewDepth] = useState<number>(10);
 
   const [queue, setQueue] = useState<any[]>([]);
   const [processing, setProcessing] = useState(false);
+  const depth: number[] = [20, 15, 14, 13, 12, 11];
 
   const handleAddNode = useCallback(
     (id: any) => {
-      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A");
+      addNode(id, newNodeLabel, newNodeContent, "#5A5A5A", true, newDepth);
       setNextNodeId("");
       setNewNodeLabel("");
       setNewNodeContent("");
+      setNewDepth(10);
     },
     [newNodeLabel, newNodeContent, addNode]
   );
@@ -35,11 +39,13 @@ const useSocketHandlers = (
       _id: string;
       keyword: string;
       subject: string;
+      priority: number;
       conversationIds: [];
     }) => {
       setNextNodeId(data._id);
       setNewNodeLabel(data.keyword);
       setNewNodeContent(data.subject);
+      setNewDepth(data.priority);
       console.log("subtitle", data);
     };
 
@@ -54,7 +60,7 @@ const useSocketHandlers = (
     if (newNodeLabel && newNodeContent) {
       handleAddNode(nextNodeId);
     }
-  }, [newNodeLabel, newNodeContent, nextNodeId, handleAddNode]);
+  }, [newNodeLabel, newNodeContent, nextNodeId, newDepth, handleAddNode]);
 
   useEffect(() => {
     const handleConnect = (data: {
@@ -132,12 +138,27 @@ const useSocketHandlers = (
   }, [socket]);
 
   useEffect(() => {
+    const handleUpdateNode = (data: {_id: number, depth: number}) => {
+      let size: number;
+
+      if (data.depth < 0) {
+          size = Math.abs(data.depth) + depth[0];
+      } else {
+          size = depth[data.depth] || 10; // depth[d]가 유효하지 않으면 기본값 10을 사용합니다.
+      }
+      nodes.update({id: data._id, })
+    };
+
+    socket.on("updateNode", handleUpdateNode);
+  }, [socket])
+
+  useEffect(() => {
     const processQueue = async () => {
       if (!processing && queue.length > 0) {
         setProcessing(true);
         const { type, data } = queue[0];
         if (type === "vertex") {
-          addNode(data._id, data.keyword, data.subject, "#5A5A5A");
+          addNode(data._id, data.keyword, data.subject, "#5A5A5A", true, data.priority);
         } else if (type === "edge") {
           const newEdge: Edge = {
             id: data._id,
