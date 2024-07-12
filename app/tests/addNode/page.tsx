@@ -18,21 +18,26 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div>
-            <input
-                type="text"
-                value={nodeLabel}
-                onChange={(e) => setNodeLabel(e.target.value)}
-                placeholder="Enter node label"
-            />
-            <button onClick={handleAddNode}>Add Node</button>
-            <NetworkGraph
-                containerRef={containerRef}
-                selectedNodeId={selectedNodeId}
-                handleNodeClick={handleNodeClick}
-                handleNodeHover={handleNodeHover}
-                socket={null}
-            />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+            <div style={{ marginBottom: '20px' }}>
+                <input
+                    type="text"
+                    value={nodeLabel}
+                    onChange={(e) => setNodeLabel(e.target.value)}
+                    placeholder="Enter node label"
+                    style={{ marginRight: '10px' }}
+                />
+                <button onClick={handleAddNode}>Add Node</button>
+            </div>
+            <div style={{ width: '80%', height: '80%' }}>
+                <NetworkGraph
+                    containerRef={containerRef}
+                    selectedNodeId={selectedNodeId}
+                    handleNodeClick={handleNodeClick}
+                    handleNodeHover={handleNodeHover}
+                    socket={null}
+                />
+            </div>
         </div>
     );
 };
