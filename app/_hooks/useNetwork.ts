@@ -209,7 +209,7 @@ const useNetwork = (
     }
   }, [network, nodes, selectedNodeId, prevSelectedNodeId]);
 
-  const addNode = (nid: any, label: string, content: string, color: string) => {
+  const addNode = (nid: any, label: string, content: string, color: string, playSound = true) => {
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
@@ -218,10 +218,13 @@ const useNetwork = (
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
-
-    const audio = new Audio('/effect.mp3');
-    audio.play();
+  
+    if (playSound) {
+      const audio = new Audio('/effect.mp3');
+      audio.play();
+    }
   };
+  
 
   const fitToScreen = () => {
     if (network) {
