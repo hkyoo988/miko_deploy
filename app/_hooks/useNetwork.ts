@@ -218,6 +218,9 @@ const useNetwork = (
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
+
+    const audio = new Audio('/effect.mp3');
+    audio.play();
   };
 
   const fitToScreen = () => {
