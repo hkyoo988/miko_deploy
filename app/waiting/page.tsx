@@ -30,6 +30,8 @@ const WaitingPage: React.FC = () => {
     if (session?.user?.name) {
       setMyUserName(session.user.name);
       localStorage.setItem("userName", session.user.name); // 유저 이름을 로컬스토리지에 저장
+      if (session?.user?.image)
+        localStorage.setItem("userImage", session.user.image); // 유저 사진을 로컬스토리지에 저장
     } else {
       const randomUserName = "OpenVidu_User_" + Math.floor(Math.random() * 100);
       setMyUserName(randomUserName);
@@ -120,6 +122,7 @@ const WaitingPage: React.FC = () => {
       nickname: myUserName,
       room: mySessionId,
       password: encodedPassword,
+      image: localStorage.getItem('userImage')
     };
     console.log(requestData);
     const response = await fetch(`${APPLICATION_SERVER_URL}create/room`, {

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
   useState,
@@ -7,23 +7,23 @@ import React, {
   Suspense,
   useCallback,
   CSSProperties,
-} from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Header from "../_components/common/Header";
-import Footer from "../_components/common/Footer";
-import AudioPlayer from "../_components/AudioPlayer";
-import styles from "./Result.module.css";
-import { useSocket } from "../_components/Socket/SocketContext";
-import NetworkGraph from "../_components/Network/NetworkGraph";
-import useNetwork from "../_hooks/useNetwork";
-import { Conversation, Edge } from "../_types/types";
-import NodeList from "../_components/Network/NodeList";
-import Tiptap from "../_components/Tiptap";
-import Loading from "../_components/common/Loading";
-import { Editor } from "@tiptap/react";
+} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Header from '../_components/common/Header';
+import Footer from '../_components/common/Footer';
+import AudioPlayer from '../_components/AudioPlayer';
+import styles from './Result.module.css';
+import { useSocket } from '../_components/Socket/SocketContext';
+import NetworkGraph from '../_components/Network/NetworkGraph';
+import useNetwork from '../_hooks/useNetwork';
+import { Conversation, Edge } from '../_types/types';
+import NodeList from '../_components/Network/NodeList';
+import Tiptap from '../_components/Tiptap';
+import Loading from '../_components/common/Loading';
+import { Editor } from '@tiptap/react';
 
 const APPLICATION_SERVER_URL =
-  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
+  process.env.NEXT_PUBLIC_MAIN_SERVER_URL || 'http://localhost:8080/';
 
 interface Vertex {
   _id: string;
@@ -41,16 +41,23 @@ interface NewEdge {
   __v: number;
 }
 
+interface Owner {
+  name: string;
+  role: string;
+  image: string;
+  __v: number;
+}
+
 interface MeetingDetails {
   title: string;
   startTime: string;
   period: number;
-  owner: string[];
+  owner: Owner[];
   mom: string;
 }
 
 const ResultPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState('tab1');
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [vertexes, setVertexes] = useState<Vertex[]>([]);
   const [newEdges, setNewEdges] = useState<NewEdge[]>([]);
@@ -76,7 +83,7 @@ const ResultPage: React.FC = () => {
     visible: false,
     x: 0,
     y: 0,
-    content: "",
+    content: '',
   });
 
   useEffect(() => {
@@ -102,7 +109,7 @@ const ResultPage: React.FC = () => {
 
   useEffect(() => {
     if (network) {
-      network.on("hoverNode", (params) => {
+      network.on('hoverNode', (params) => {
         if (params.node) {
           handleNodeHover(params.node);
         } else {
@@ -118,7 +125,7 @@ const ResultPage: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const meetingId = searchParams.get("meetingId");
+      const meetingId = searchParams.get('meetingId');
       setMeetingId(meetingId);
 
       if (meetingId) {
@@ -134,7 +141,7 @@ const ResultPage: React.FC = () => {
             setIsLoading(false);
           }
         } catch (error) {
-          console.error("Error fetching data: ", error);
+          console.error('Error fetching data: ', error);
         }
       }
     };
@@ -156,7 +163,7 @@ const ResultPage: React.FC = () => {
         };
 
         eventSource.onerror = (error) => {
-          console.error("SSE error: ", error);
+          console.error('SSE error: ', error);
           eventSource.close();
         };
 
@@ -215,7 +222,7 @@ const ResultPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeTab === "tab1" && containerRef.current) {
+    if (activeTab === 'tab1' && containerRef.current) {
       initializeNetwork(containerRef.current);
       printMap();
     }
@@ -225,7 +232,7 @@ const ResultPage: React.FC = () => {
     if (highlightedConversation) {
       const element = document.getElementById(highlightedConversation);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
   }, [highlightedConversation]);
@@ -236,39 +243,39 @@ const ResultPage: React.FC = () => {
   }`;
 
   const popoverStyle: CSSProperties = {
-    position: "absolute",
+    position: 'absolute',
     top: `${popoverState.y - 20}px`,
     left: `${popoverState.x}px`,
-    backgroundColor: "#333",
-    color: "white",
-    padding: "10px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    backgroundColor: '#333',
+    color: 'white',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     zIndex: 1000,
-    visibility: popoverState.visible ? "visible" : "hidden",
+    visibility: popoverState.visible ? 'visible' : 'hidden',
     opacity: popoverState.visible ? 1 : 0,
-    animation: popoverState.visible ? "fade-in 300ms ease" : "none",
-    fontFamily: "Arial, sans-serif",
-    fontSize: "14px",
+    animation: popoverState.visible ? 'fade-in 300ms ease' : 'none',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '14px',
   };
 
   const arrowStyle: CSSProperties = {
-    position: "absolute",
-    width: "10px",
-    height: "10px",
-    backgroundColor: "#333",
-    transform: "rotate(45deg)",
+    position: 'absolute',
+    width: '10px',
+    height: '10px',
+    backgroundColor: '#333',
+    transform: 'rotate(45deg)',
     zIndex: -1,
-    top: "calc(100% - 5px)",
-    left: "50%",
-    marginLeft: "-5px",
+    top: 'calc(100% - 5px)',
+    left: '50%',
+    marginLeft: '-5px',
   };
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "tab1":
+      case 'tab1':
         return (
-          <div style={{ position: "relative", width: "100%", height: "90%" }}>
+          <div style={{ position: 'relative', width: '100%', height: '90%' }}>
             <button onClick={fitToScreen} className={styles.button}>
               fitToScreen
             </button>
@@ -287,7 +294,7 @@ const ResultPage: React.FC = () => {
             )}
           </div>
         );
-      case "tab2":
+      case 'tab2':
         return (
           <div>
             {vertexes && vertexes.length > 0 ? (
@@ -306,7 +313,7 @@ const ResultPage: React.FC = () => {
             )}
           </div>
         );
-      case "tab3":
+      case 'tab3':
         return (
           <div>
             {nodes.length > 0 ? (
@@ -322,32 +329,122 @@ const ResultPage: React.FC = () => {
             )}
           </div>
         );
-      case "tab4":
+      case 'tab4':
         return (
           <div>
             {conversations && conversations.length > 0 ? (
-              conversations.map((conversation) => (
-                <div
-                  id={conversation._id}
-                  key={conversation._id}
-                  className={`${styles.conversationItem} ${
-                    highlightedConversation === conversation._id
-                      ? styles.highlighted
-                      : ""
-                  }`}
-                  onClick={() => handleSeek(conversation.time_offset / 1000)}
-                >
-                  <span className={styles.conversationUser}>
-                    {conversation.user}
-                  </span>
-                  <span className={styles.conversationTimestamp}>
-                    {new Date(conversation.timestamp).toLocaleTimeString()}
-                  </span>
-                  <div className={styles.conversationScript}>
-                    {conversation.script}
-                  </div>
-                </div>
-              ))
+              conversations.map((conversation, index) => {
+                const isMyMessage = conversation.user === localStorage.getItem('userName');
+                const userImage = conversation.image; 
+
+                return (
+                  <ul key={index}>
+                    <li
+                      className={`py-4 sm:py-5 ${
+                        isMyMessage ? 'text-right' : 'text-left'
+                      }`}
+                    >
+                      <div
+                        id={conversation._id}
+                        key={conversation._id}
+                        className={`flex items-center ${
+                          isMyMessage ? 'justify-end' : 'justify-start '
+                        } space-x-2`}
+                        onClick={() =>
+                          handleSeek(conversation.time_offset / 1000)
+                        }
+                      >
+                        {!isMyMessage && (
+                          <img
+                            src={userImage || 'default-user-image.png'}
+                            alt={conversation.user}
+                            className={`${styles.userImage} ${
+                              styles.conversationItem
+                            } ${
+                              highlightedConversation === conversation._id
+                                ? styles.highlighted
+                                : ''
+                            }`}
+                          />
+                        )}
+                        <div className="flex flex-col">
+                          <div>
+                            {isMyMessage ? (
+                              <>
+                                <span
+                                  className={`text-sm text-gray-700 dark:text-white`}
+                                >
+                                  {new Date(
+                                    conversation.timestamp
+                                  ).toLocaleTimeString()}
+                                  &nbsp;
+                                </span>
+                                <span
+                                  className={`text-lg font-semibold text-gray-900 dark:text-white`}
+                                >
+                                  {conversation.user}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span
+                                  className={`text-lg font-semibold text-gray-900 dark:text-white`}
+                                >
+                                  {conversation.user}&nbsp;
+                                </span>
+                                <span
+                                  className={`text-sm text-gray-700 dark:text-white`}
+                                >
+                                  {new Date(
+                                    conversation.timestamp
+                                  ).toLocaleTimeString()}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <div
+                            className={`message ${
+                              isMyMessage
+                                ? 'bg-yellow-300 right'
+                                : 'bg-white left'
+                            } p-3 rounded-lg shadow-md ${
+                              styles.conversationItem
+                            } ${
+                              highlightedConversation === conversation._id
+                                ? styles.highlighted
+                                : ''
+                            }`}
+                          >
+                            <div
+                              className={`text-base ${
+                                isMyMessage ? 'text-right' : 'text-left'
+                              } text-gray-700 dark:text-gray-300 break-words whitespace-pre-wrap`}
+                            >
+                              {conversation.script}
+                            </div>
+                          </div>
+                        </div>
+                        {isMyMessage && (
+                          <img
+                            src={
+                              localStorage.getItem('userImage') ||
+                              'default-user-image.png'
+                            }
+                            alt={conversation.user}
+                            className={`${styles.userImage} ${
+                              styles.conversationItem
+                            } ${
+                              highlightedConversation === conversation._id
+                                ? styles.highlighted
+                                : ''
+                            }`}
+                          />
+                        )}
+                      </div>
+                    </li>
+                  </ul>
+                );
+              })
             ) : (
               <div>No conversations available</div>
             )}
@@ -386,39 +483,39 @@ const ResultPage: React.FC = () => {
         const response = await fetch(
           `${APPLICATION_SERVER_URL}api/meeting/mom/update`,
           {
-            method: "POST",
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody),
           }
         );
 
         if (response.ok) {
-          console.log("Meeting details updated successfully");
-          alert("회의록이 저장되었습니다!");
+          console.log('Meeting details updated successfully');
+          alert('회의록이 저장되었습니다!');
         } else {
-          console.error("Failed to update meeting details");
-          alert("회의록이 저장되지 않았습니다!");
+          console.error('Failed to update meeting details');
+          alert('회의록이 저장되지 않았습니다!');
         }
       } catch (error) {
-        console.error("Error updating meeting details: ", error);
-        alert("회의록이 저장되지 않았습니다!");
+        console.error('Error updating meeting details: ', error);
+        alert('회의록이 저장되지 않았습니다!');
       }
     }
   };
 
   const handleViewMeetings = () => {
-    const userName = localStorage.getItem("userName");
+    const userName = localStorage.getItem('userName');
     if (userName) {
       router.push(`/board?ownerId=${encodeURIComponent(userName)}`);
     } else {
-      alert("User name is not available.");
+      alert('User name is not available.');
     }
   };
 
   if (isLoading) {
-    return <Loading disabled={true} text={"Loading..."} />;
+    return <Loading disabled={true} text={'Loading...'} />;
   }
 
   return (
@@ -437,7 +534,7 @@ const ResultPage: React.FC = () => {
         <section className={styles.left}>
           {meetingDetails ? (
             <div className="h-full flex flex-col">
-              <div style={{ flex: 1, overflow: "hidden" }}>
+              <div style={{ flex: 1, overflow: 'hidden' }}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     회의 제목
@@ -470,10 +567,10 @@ const ResultPage: React.FC = () => {
                       Array.isArray(meetingDetails.owner)
                         ? meetingDetails.owner
                             .map((owner, index) =>
-                              index === 0 ? `${owner}👑` : `${owner}👤`
+                              owner.role === 'host' ? `${owner.name}👑` : `${owner.name}👤`
                             )
-                            .join(", ")
-                        : "No participants"
+                            .join(', ')
+                        : 'No participants'
                     }
                     readOnly
                   />
@@ -484,16 +581,16 @@ const ResultPage: React.FC = () => {
                   </label>
                   <div
                     style={{
-                      marginTop: "0.25rem",
-                      display: "block",
-                      width: "100%",
-                      borderRadius: "0.5rem",
-                      borderColor: "#d1d5db",
-                      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                      overflowY: "auto",
-                      overflowX: "hidden",
-                      height: "50vh",
-                      borderWidth: "2px",
+                      marginTop: '0.25rem',
+                      display: 'block',
+                      width: '100%',
+                      borderRadius: '0.5rem',
+                      borderColor: '#d1d5db',
+                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                      overflowY: 'auto',
+                      overflowX: 'hidden',
+                      height: '50vh',
+                      borderWidth: '2px',
                     }}
                   >
                     <Tiptap
@@ -505,9 +602,9 @@ const ResultPage: React.FC = () => {
               </div>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
                 }}
               >
                 <button
@@ -520,39 +617,39 @@ const ResultPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <Loading disabled={true} text={"Loading..."} />
+            <Loading disabled={true} text={'Loading...'} />
           )}
         </section>
         <section className={styles.right}>
           <div className={styles.tabs}>
             <button
-              onClick={() => setActiveTab("tab1")}
+              onClick={() => setActiveTab('tab1')}
               className={`${styles.tabButton} ${
-                activeTab === "tab1" ? styles.activeTab : ""
+                activeTab === 'tab1' ? styles.activeTab : ''
               }`}
             >
               키워드 맵
             </button>
             <button
-              onClick={() => setActiveTab("tab2")}
+              onClick={() => setActiveTab('tab2')}
               className={`${styles.tabButton} ${
-                activeTab === "tab2" ? styles.activeTab : ""
+                activeTab === 'tab2' ? styles.activeTab : ''
               }`}
             >
               키워드 요약
             </button>
             <button
-              onClick={() => setActiveTab("tab3")}
+              onClick={() => setActiveTab('tab3')}
               className={`${styles.tabButton} ${
-                activeTab === "tab3" ? styles.activeTab : ""
+                activeTab === 'tab3' ? styles.activeTab : ''
               }`}
             >
               그룹
             </button>
             <button
-              onClick={() => setActiveTab("tab4")}
+              onClick={() => setActiveTab('tab4')}
               className={`${styles.tabButton} ${
-                activeTab === "tab4" ? styles.activeTab : ""
+                activeTab === 'tab4' ? styles.activeTab : ''
               }`}
             >
               음성 기록
@@ -577,7 +674,7 @@ const ResultPage: React.FC = () => {
 };
 
 const Page: React.FC = () => (
-  <Suspense fallback={<Loading disabled={true} text={"Loading..."} />}>
+  <Suspense fallback={<Loading disabled={true} text={'Loading...'} />}>
     <ResultPage />
   </Suspense>
 );

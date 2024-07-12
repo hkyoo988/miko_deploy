@@ -9,11 +9,17 @@ import Loading from "../_components/common/Loading";
 const APPLICATION_SERVER_URL =
   process.env.NEXT_PUBLIC_MAIN_SERVER_URL || "http://localhost:8080/";
 
+interface Owner {
+  name: string;
+  role: string;
+  image: string;
+}
+
 interface Meeting {
   meeting_id: string;
   title: string;
   startTime: string;
-  owner: string[];
+  owner: Owner[];
 }
 
 const truncateText = (text: string, maxLength: number) => {
@@ -224,8 +230,9 @@ const BoardPage: React.FC = () => {
                         <td className="border border-gray-300 p-3 text-center">
                           {truncateText(
                             Array.isArray(meeting.owner)
-                              ? meeting.owner.join(", ")
-                              : meeting.owner,
+                              ? meeting.owner.map(o => (o.role === 'host' ? `${o.name}👑` : `${o.name}`))
+                              .join(", ")
+                              : '',
                             20
                           )}
                         </td>

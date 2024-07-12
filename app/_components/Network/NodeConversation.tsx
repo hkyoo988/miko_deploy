@@ -40,11 +40,11 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
       handleNewMessage.current(message);
     };
 
-    const handleBatchMessage = (data: { user: string; script: string }[]) => {
+    const handleBatchMessage = (data: { user: string; image: string; script: string }[]) => {
       console.log("Received batch message from server:", data);
       setQueue((prevQueue) => [
         ...prevQueue,
-        ...data.map((item) => ({ type: "script", data: `${item.user}: ${item.script}` })),
+        ...data.map((item) => ({ type: "script", data: `${item.user}|${item.image}|${item.script}` })),
       ]);
     };
 

@@ -1,12 +1,17 @@
-/* Conversation.module.css */
-.conversationList {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .messageItem {
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-  }
-  
+/* 말풍선 스타일 */
+.message {
+  position: relative;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 75%;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}
+
+.bg-yellow-300 {
+  background-color: #FFEB3B; /* 노란색 배경 */
+}
+
+.bg-white {
+  background-color: #FFFFFF; /* 흰색 배경 */
+}

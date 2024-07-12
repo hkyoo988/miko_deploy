@@ -44,7 +44,8 @@ export const MainSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, []);
 
   const connectSocket = (nickname: string) => {
-    socket.auth = { nickname };
+    const image = localStorage.getItem('userImage');
+    socket.auth = {nickname, image};
     socket.connect();
   };
 

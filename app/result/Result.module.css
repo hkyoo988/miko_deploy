@@ -70,8 +70,7 @@
   }
 }
 
-.keywordItem,
-.conversationItem {
+.keywordItem {
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
   color: #555;
@@ -79,8 +78,7 @@
   word-break: break-word; /* 텍스트 줄바꿈을 위한 설정 */
 }
 
-.keywordItem:hover,
-.conversationItem:hover {
+.keywordItem:hover {
   background-color: rgba(150, 160, 254, 0.3);
 }
 
@@ -90,29 +88,6 @@
 
 .keywordContent {
   color: #555;
-}
-
-.conversationUser {
-  font-weight: bold;
-  color: #333;
-  margin-right: 10px; /* 이름과 타임스탬프 간격 조정 */
-  display: inline-block; /* 인라인 블록으로 변경 */
-}
-
-.conversationTimestamp {
-  font-size: 13px;
-  color: #999;
-  text-align: right;
-  white-space: nowrap;
-  display: inline-block; /* 인라인 블록으로 변경 */
-}
-
-.conversationScript {
-  font-size: 15px;
-  color: #555;
-  display: block; /* 블록 요소로 변경하여 전체 너비 사용 */
-  white-space: normal; /* 줄바꿈을 위한 설정 */
-  margin-top: 5px; /* 대화 내용과 화자/타임스탬프 간격 조정 */
 }
 
 .button {
@@ -141,12 +116,36 @@
 }
 
 .conversationItem {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 트랜지션 추가 */
 }
 
 .conversationItem.highlighted {
-  background-color: yellow;
+  transform: scale(1.07); /* 약간 확대 */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
 }
 
+/* 말풍선 스타일 */
+.message {
+  position: relative;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 75%;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}
+
+.bgYellow300 {
+  background-color: #FFEB3B; /* 노란색 배경 */
+}
+
+.bgWhite {
+  background-color: #FFFFFF; /* 흰색 배경 */
+}
+
+.userImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
