@@ -49,7 +49,8 @@ const HomeContent: React.FC = () => {
     subscriber,
     handleNodeHover,
     popoverState,
-    setPopoverState
+    setPopoverState,
+    handleRemoveNode,
   } = useHomeContent(popoverRef);
 
   useEffect(() => {
@@ -224,6 +225,7 @@ const HomeContent: React.FC = () => {
           fitToScreen={fitToScreen}
           handleSharingRoom={handleSharingRoom}
           handleLeaveSession={handleLeaveSession}
+          handleRemoveNode={handleRemoveNode}
         />
       </div>
       <SharingRoom

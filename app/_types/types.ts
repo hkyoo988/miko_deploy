@@ -4,6 +4,8 @@ export interface Node {
   content: string;
   color?: string;
   size: number;
+  font: { size: number }
+  // mass: number;
 }
 
 export interface Edge {

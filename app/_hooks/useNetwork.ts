@@ -28,6 +28,7 @@ const useNetwork = (
   const [nextEdgeId, setNextEdgeId] = useState<number>(1);
   const [action, setAction] = useState<string | null>(null);
   const [tempEdgeFrom, setTempEdgeFrom] = useState<number | null>(null);
+  const [prevSelectedNodeColor, setPrevSelectedNodeColor] = useState<string | undefined>("");
 
   const depth: number[] = [20, 15, 14, 13, 12, 11];
 
@@ -208,10 +209,13 @@ const useNetwork = (
       if (prevSelectedNodeId !== null) {
         nodes.update({
           id: prevSelectedNodeId,
-          color: "#5A5A5A",
+          color: prevSelectedNodeColor,
         });
+        setPrevSelectedNodeColor("");
       }
       if (selectedNodeId !== null) {
+        const node = nodes.get(selectedNodeId);
+        setPrevSelectedNodeColor(node?.color);
         nodes.update({
           id: selectedNodeId,
           color: "#0CC95B",
@@ -223,6 +227,8 @@ const useNetwork = (
 
   const addNode = (nid: any, label: string, content: string, color: string, playSound = true, d: number) => {
     let size: number;
+    let fontSize: number;
+    // let mass = 1;
 
     if (d < 0) {
         size = Math.abs(d) + depth[0];
@@ -233,12 +239,17 @@ const useNetwork = (
     if (d === 0) {
       color = getRandomColor(); // 랜덤 색상을 할당
     }
+
+    fontSize = Math.max(size * 1.5, 14);
+
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
       content,
       color,
-      size
+      size,
+      font: { size: fontSize }, // 글꼴 크기 설정
+      // mass,
     };
     nodes.add(newNode);
     setNextNodeId(nextNodeId + 1);
@@ -249,6 +260,16 @@ const useNetwork = (
     }
   };
 
+  const removeNode = (nodeId: number) => {
+    nodes.remove(nodeId)
+    const edgesToRemove = edges.get({
+      filter: (edge) => edge.from === nodeId || edge.to === nodeId,
+    }).map(edge => edge.id);
+    edges.remove(edgesToRemove); 
+    setPrevSelectedNodeId(null);
+    setSelectedNodeId(null);
+  };
+  
   const fitToScreen = () => {
     if (network) {
       network.fit({
@@ -271,6 +292,7 @@ const useNetwork = (
     fitToScreen,
     initializeNetwork,
     handleNodeHover,
+    removeNode,
   };
 };
 

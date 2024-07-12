@@ -30,7 +30,8 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
     handleNodeClick,
     fitToScreen,
     handleNodeHover,
-    network
+    network,
+    removeNode
   } = useNetwork(containerRef, socket, sessionId, setPopoverState);
 
   useEffect(() => {
@@ -101,6 +102,15 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
     }
   };
 
+  const handleRemoveNode = () => {
+    if (selectedNodeId !== null) {
+        removeNode(selectedNodeId);
+    } else {
+        alert("Please select a node to remove.");
+    }
+};
+
+
   const toggleList = () => {
     setIsListOpen(!isListOpen);
     console.log(isListOpen);
@@ -140,7 +150,8 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
     subscriber,
     handleNodeHover,
     popoverState,
-    setPopoverState
+    setPopoverState,
+    handleRemoveNode
   };
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
+  faMinus,
   faLink,
   faUnlink,
   faExpand,
@@ -22,6 +23,7 @@ interface ControlPanelProps {
   fitToScreen: () => void;
   handleSharingRoom: () => void;
   handleLeaveSession: () => void;
+  handleRemoveNode: () => void;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -33,6 +35,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   fitToScreen,
   handleSharingRoom,
   handleLeaveSession,
+  handleRemoveNode,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -49,6 +52,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       </button>
       {isOpen && (
         <div className="flex flex-wrap items-center justify-center p-4 bg-gray-50 bg-opacity-75 backdrop-blur-lg space-x-2">
+          <button
+            onClick={handleRemoveNode}
+            className="flex items-center justify-center px-4 py-2 text-white text-sm font-medium cursor-pointer transition duration-300 bg-[#96A0FE] hover:bg-[#7b86e5] rounded-md"
+          >
+            <FontAwesomeIcon icon={faMinus} className="w-5 h-5 mr-2" />
+            Remove
+          </button>
           <button
             onClick={handleKeyword}
             className="flex items-center justify-center px-4 py-2 text-white text-sm font-medium cursor-pointer transition duration-300 bg-[#96A0FE] hover:bg-[#7b86e5] rounded-md"
