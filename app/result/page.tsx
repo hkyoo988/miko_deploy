@@ -30,7 +30,7 @@ interface Vertex {
   keyword: string;
   subject: string;
   conversationIds: string[];
-  depth: number,
+  priority: number,
   __v: number;
 }
 
@@ -200,7 +200,7 @@ const ResultPage: React.FC = () => {
     if (vertexes && vertexes.length > 0) {
       vertexes.forEach((vertex) => {
         if (!addedNodesRef.current.has(vertex._id)) {
-          addNode(vertex._id, vertex.keyword, vertex.subject, "#5A5A5A", false, vertex.depth); // playSound를 false로 설정
+          addNode(vertex._id, vertex.keyword, vertex.subject, "#5A5A5A", false, vertex.priority); // playSound를 false로 설정
           addedNodesRef.current.add(vertex._id);
         }
       });
