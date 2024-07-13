@@ -53,6 +53,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (seekTime !== null && audioRef.current) {
       audioRef.current.currentTime = seekTime;
       audioRef.current.play();
+      setIsPlaying(true); 
     }
   }, [seekTime]);
 
