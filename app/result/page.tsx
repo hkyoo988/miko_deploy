@@ -610,7 +610,7 @@ const ResultPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+                  className="focus:outline-none text-white bg-[#3A2778] hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-1.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
                 >
                   저장
                 </button>
@@ -631,20 +631,12 @@ const ResultPage: React.FC = () => {
               키워드 맵
             </button>
             <button
-              onClick={() => setActiveTab('tab2')}
-              className={`${styles.tabButton} ${
-                activeTab === 'tab2' ? styles.activeTab : ''
-              }`}
-            >
-              키워드 요약
-            </button>
-            <button
               onClick={() => setActiveTab('tab3')}
               className={`${styles.tabButton} ${
                 activeTab === 'tab3' ? styles.activeTab : ''
               }`}
             >
-              그룹
+              키워드
             </button>
             <button
               onClick={() => setActiveTab('tab4')}
