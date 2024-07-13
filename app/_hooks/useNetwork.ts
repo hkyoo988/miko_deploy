@@ -51,6 +51,8 @@ const useNetwork = (
               `${nodeId}`,
               "$push",
             ]);
+          } else {
+            edges.add(newEdge);
           }
 
           setTempEdgeFrom(null);
@@ -75,6 +77,8 @@ const useNetwork = (
                 `${nodeId}`,
                 "$pull",
               ]);
+            } else {
+              edges.remove(edgeToRemove[0].id);
             }
           }
           setTempEdgeFrom(null);

@@ -9,11 +9,12 @@ const Home: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [nodeLabel, setNodeLabel] = useState<string>("");
     const [nodePriority, setNodePriority] = useState<number>(1);
-    const { selectedNodeId, handleNodeClick, handleNodeHover, addNode } = useNetwork(containerRef, null, null, null);
+    const [nodeColor, setNodeColor] = useState<string>("#FF0000");
+    const { selectedNodeId, handleNodeClick, handleNodeHover, addNode, setAction } = useNetwork(containerRef, null, null, null);
 
     const handleAddNode = () => {
         if (nodeLabel.trim() !== "") {
-            addNode(null, nodeLabel, "Sample content", "#FF0000", true, nodePriority); // 기본 값 설정
+            addNode(null, nodeLabel, "Sample content", nodeColor, true, nodePriority); // 기본 값 설정
             setNodeLabel("");
         }
     };
@@ -30,12 +31,20 @@ const Home: React.FC = () => {
                 />
                 <input
                     type="number"
-                    value={nodeLabel}
+                    value={nodePriority}
                     onChange={(e) => setNodePriority(parseInt(e.target.value))}
-                    placeholder="Enter node label"
+                    placeholder="Enter node priority"
                     style={{ marginRight: '10px' }}
                 />
-                <button onClick={handleAddNode}>Add Node</button>
+                <input
+                    type="color"
+                    value={nodeColor}
+                    onChange={(e) => setNodeColor(e.target.value)}
+                    style={{ marginRight: '10px' }}
+                />
+                <button onClick={() => setAction("connect")} style={{ marginRight: '10px', borderWidth: '2px' }}>Connect</button>
+                <button onClick={() => setAction("disconnect")} style={{ marginRight: '10px', borderWidth: '2px' }}>DisConnect</button>
+                <button onClick={handleAddNode} style={{ borderWidth: '2px' }}>Add Node</button>
             </div>
             <div style={{ width: '80%', height: '80%' }}>
                 <NetworkGraph
