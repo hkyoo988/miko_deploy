@@ -30,7 +30,7 @@ const useNetwork = (
   const [tempEdgeFrom, setTempEdgeFrom] = useState<number | null>(null);
   const [prevSelectedNodeColor, setPrevSelectedNodeColor] = useState<string | undefined>("");
 
-  const depth: number[] = [20, 15, 14, 13, 12, 11];
+  const depth: number[] = [40, 30, 20, 15];
 
   const handleNodeClick = useCallback(
     (nodeId: number | null) => {
@@ -162,7 +162,7 @@ const useNetwork = (
         minVelocity: 0.75,
         solver: "forceAtlas2Based",
         forceAtlas2Based: {
-          gravitationalConstant: -45,
+          gravitationalConstant: -70,
           centralGravity: 0.007,
           springLength: 200,
           springConstant: 0.08,

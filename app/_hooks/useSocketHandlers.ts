@@ -17,7 +17,7 @@ const useSocketHandlers = (
 
   const [queue, setQueue] = useState<any[]>([]);
   const [processing, setProcessing] = useState(false);
-  const depth: number[] = [20, 15, 14, 13, 12, 11];
+  const depth: number[] = [40, 30, 20, 15];
 
   const handleAddNode = useCallback(
     (id: any) => {
