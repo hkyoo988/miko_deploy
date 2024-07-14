@@ -163,11 +163,11 @@ const useNetwork = (
         solver: "forceAtlas2Based",
         forceAtlas2Based: {
           gravitationalConstant: -70,
-          centralGravity: 0.007,
+          centralGravity: 0.006,
           springLength: 200,
           springConstant: 0.08,
           damping: 0.4,
-          avoidOverlap: 1,
+          avoidOverlap: 3,
         },
       },
       interaction: {
@@ -242,10 +242,12 @@ const useNetwork = (
     
     if (d === 0) {
       color = getRandomColor(); // 랜덤 색상을 할당
+      fontSize = size*0.9;
+    } else if(d === 1) {
+      fontSize = size;
+    } else {
+      fontSize = size*1.25;
     }
-
-    fontSize = Math.max(size * 1.5, 14);
-
     const newNode: Node = {
       id: nid || nextNodeId,
       label,
