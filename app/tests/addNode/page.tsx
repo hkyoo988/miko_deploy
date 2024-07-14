@@ -8,14 +8,13 @@ import useNetwork from "@/app/_hooks/useNetwork";
 const Home: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [nodeLabel, setNodeLabel] = useState<string>("");
-    const [nodeContent, setNodeContent] = useState<string>("");
     const [nodePriority, setNodePriority] = useState<number>(1);
     const [nodeColor, setNodeColor] = useState<string>("#FF0000");
     const { selectedNodeId, handleNodeClick, handleNodeHover, addNode, setAction } = useNetwork(containerRef, null, null, null);
 
     const handleAddNode = () => {
         if (nodeLabel.trim() !== "") {
-            addNode(null, nodeLabel, nodeContent, nodeColor, true, nodePriority); // 기본 값 설정
+            addNode(null, nodeLabel, "Sample content", nodeColor, true, nodePriority); // 기본 값 설정
             setNodeLabel("");
         }
     };
@@ -28,13 +27,6 @@ const Home: React.FC = () => {
                     value={nodeLabel}
                     onChange={(e) => setNodeLabel(e.target.value)}
                     placeholder="Enter node label"
-                    style={{ marginRight: '10px' }}
-                />
-                <input
-                    type="text"
-                    value={nodeContent}
-                    onChange={(e) => setNodeContent(e.target.value)}
-                    placeholder="Enter node Content"
                     style={{ marginRight: '10px' }}
                 />
                 <input
