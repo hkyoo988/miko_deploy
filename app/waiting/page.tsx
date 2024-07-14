@@ -57,6 +57,9 @@ const WaitingPage: React.FC = () => {
 
   useEffect(() => {
     const getDevices = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      stream.getTracks().forEach(track => track.stop()); // 권한 요청 후 트랙 정지
+
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput"

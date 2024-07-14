@@ -72,7 +72,7 @@ const BoardPage: React.FC = () => {
 
   const handleMeetingClick = (meetingId: string) => {
     router.push(
-      `https://miko-frontend-i3vt.vercel.app/result?meetingId=${meetingId}`
+      `https://mi-ko.site/result?meetingId=${meetingId}`
     );
   };
 
