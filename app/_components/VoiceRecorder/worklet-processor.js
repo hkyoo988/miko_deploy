@@ -1,8 +1,8 @@
 class SilenceDetectorProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
-    this.silenceThreshold = 0.07;  // 기본 침묵 임계값 0.07
-    this.silenceDuration = 1000; // 기본 침묵 시간 1초
+    this.silenceThreshold = 0.34;  // 기본 침묵 임계값 0.34
+    this.silenceDuration = 700; // 기본 침묵 시간 0.7초
     this.lastActiveTime = currentTime;
     this.isSilent = true;
 

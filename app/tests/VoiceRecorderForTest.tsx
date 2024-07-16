@@ -34,8 +34,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
   const gainNodeRef = useRef<GainNode | null>(null);
 
   const [recordingMode, setRecordingMode] = useState<boolean>(false);
-  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.07);
-  const [silenceDuration, setSilenceDuration] = useState<number>(1000);
+  const [silenceThreshold, setSilenceThreshold] = useState<number>(0.34);
+  const [silenceDuration, setSilenceDuration] = useState<number>(700);
   const [maxRecordingDuration, setMaxRecordingDuration] =
     useState<number>(20000);
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -327,7 +327,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
                   label="침묵 인식 시간 (초):"
                   min={0}
                   max={5}
-                  step={0.5}
+                  step={0.1}
                   value={silenceDuration / 1000}
                   onChange={(e) =>
                       handleDurationChange({
