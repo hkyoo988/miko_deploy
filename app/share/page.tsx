@@ -39,7 +39,7 @@ const Share: React.FC = () => {
                     const encodedPassword = encodeURIComponent(storedPassword || "");
     
                     const url = `/meetingRoom?sessionId=${encodeURIComponent(
-                        mySessionId
+                        storedSessionId
                     )}&userName=${encodeURIComponent(randomUserName)}&token=${encodeURIComponent(
                         token
                     )}&p=${encodedPassword}`;
