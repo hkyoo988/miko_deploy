@@ -175,7 +175,7 @@ const WaitingPage: React.FC = () => {
     });
 
     if (response.ok) {
-      await joinSession(event, false);
+      await joinSession(event, true);
     } else {
       console.error("Failed to Join room:", response.statusText);
       alert("Failed to Join room");
