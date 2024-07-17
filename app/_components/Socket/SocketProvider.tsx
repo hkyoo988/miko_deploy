@@ -33,7 +33,7 @@ export const RoomSocketProvider = ({ children }: RoomSocketProviderProps) => {
     const storedSessionId = query.get("sessionId");
     const storedUserName = query.get("userName");
     const storedToken = query.get("token");
-    const storedPassword = query.get("password");
+    const storedPassword = query.get("p");
 
     if (storedUserName) {
       connectSocket(storedUserName);

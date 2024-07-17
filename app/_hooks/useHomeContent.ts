@@ -83,11 +83,11 @@ const useHomeContent = (popoverRef: React.RefObject<HTMLDivElement> | null) => {
   const handleSharingRoom = async () => {
     try {
       const query = new URLSearchParams(window.location.search);
-      const storedPassword = query.get("password");
+      const storedPassword = query.get("p");
       if (sessionId && storedPassword) {
         const link = `${
           window.location.origin
-        }/share?sessionId=${sessionId}&password=${storedPassword}`;
+        }/share?sessionId=${sessionId}&p=${storedPassword}`;
         setRoomLink(link);
         setIsModalOpen(true);
       }

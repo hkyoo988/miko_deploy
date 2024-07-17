@@ -13,16 +13,21 @@ const APPLICATION_SERVER_URL =
 const Share: React.FC = () => {
     const router = useRouter();
 
+    const base64Encode = (str: string) => {
+        return btoa(encodeURIComponent(str));
+      };
+
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
-        const storedPassword = query.get("password");
+        const storedPassword = query.get("p");
         const storedSessionId = query.get("sessionId");
         const getTokenAndRedirect = async () => {
             if (storedSessionId) {
+                const encodedSession = base64Encode(storedSessionId);
                 try {
                     const encodedSessionId = base64Encode(storedSessionId);
                     const response = await axios.post(
-                        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${encodedSessionId}/connections`,
+                        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${encodedSession}/connections`,
                         {},
                         {
                             headers: { "Content-Type": "application/json" },
@@ -38,7 +43,7 @@ const Share: React.FC = () => {
                         mySessionId
                     )}&userName=${encodeURIComponent(randomUserName)}&token=${encodeURIComponent(
                         token
-                    )}&password=${encodedPassword}`;
+                    )}&p=${encodedPassword}`;
     
                     sessionStorage.setItem("Video", "off");
                     sessionStorage.setItem("Audio", "off");

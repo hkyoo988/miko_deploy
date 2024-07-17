@@ -107,7 +107,7 @@ const WaitingPage: React.FC = () => {
           mySessionId
         )}&userName=${encodeURIComponent(
           myUserName
-        )}&token=${encodeURIComponent(token)}&password=${encodeURIComponent(
+        )}&token=${encodeURIComponent(token)}&p=${encodeURIComponent(
           encodedPassword
         )}`;
 
@@ -177,8 +177,8 @@ const WaitingPage: React.FC = () => {
     if (response.ok) {
       await joinSession(event, false);
     } else {
-      console.error("Failed to create room:", response.statusText);
-      alert("Failed to create room");
+      console.error("Failed to Join room:", response.statusText);
+      alert("Failed to Join room");
     }
   };
 
