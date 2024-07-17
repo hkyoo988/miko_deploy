@@ -23,11 +23,10 @@ const Share: React.FC = () => {
         const storedSessionId = query.get("sessionId");
         const getTokenAndRedirect = async () => {
             if (storedSessionId) {
-                const encodedSession = base64Encode(storedSessionId);
                 try {
                     const encodedSessionId = base64Encode(storedSessionId);
                     const response = await axios.post(
-                        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${encodedSession}/connections`,
+                        `${APPLICATION_SERVER_URL}api/openvidu/sessions/${storedPassword}/connections`,
                         {},
                         {
                             headers: { "Content-Type": "application/json" },
