@@ -53,7 +53,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       const timeout = setTimeout(() => {
         setActiveAction(null);
         setAction(null);
-      }, 2000); 
+      }, 5000); 
       return () => clearTimeout(timeout);
     }
   }, [activeAction, setAction]);
