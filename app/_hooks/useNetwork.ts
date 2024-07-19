@@ -262,7 +262,7 @@ const useNetwork = (
   
     if (playSound) {
       const audio = new Audio('/effect.mp3');
-      audio.volume = 0.3;  // 50% 볼륨으로 설정
+      audio.volume = 0.5;  // 50% 볼륨으로 설정
       audio.play();
     }
   };
