@@ -31,7 +31,7 @@ const Conversation: React.FC<ConversationProps> = ({ messages, className }) => {
     <div ref={scrollContainerRef} className={`relative h-full overflow-auto ${className}`}>
       <ul>
         {messages.map((message, index) => {
-          console.log(message);
+          // console.log(message);
           const [name, image, ...contentArr] = message.split("|");
           const content = contentArr.join("|");
           const isMyMessage = name === myUserName;
