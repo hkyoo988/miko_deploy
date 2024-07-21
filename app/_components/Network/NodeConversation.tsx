@@ -37,7 +37,13 @@ const NodeConversation: React.FC<NodeConversationProps> = ({
   useEffect(() => {
     const handleMessage = (message: string) => {
       console.log("Received message from server:", message);
-      handleNewMessage.current(message);
+      // 메시지 포맷이 'code|message'일 경우 처리
+      const [code, msg] = message.split('|');
+      if (code === '429') {
+        alert(`${msg}`);
+      } else {
+        handleNewMessage.current(message);
+      }
     };
 
     const handleBatchMessage = (data: { user: string; image: string; script: string }[]) => {
