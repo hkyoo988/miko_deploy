@@ -40,10 +40,16 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
 
   const [silenceThreshold, setSilenceThreshold] = useState<number>(0.34);
   const [silenceDuration, setSilenceDuration] = useState<number>(700);
+  const [minRecordingDuration, setMinRecordingDuration] = useState<number>(1200); // 초기값 1200ms
   const [maxRecordingDuration, setMaxRecordingDuration] = useState<number>(20000);
   const recordingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { socket } = useSocket();
+
+  useEffect(() => {
+    // silenceDuration이 변경될 때마다 minRecordingDuration 업데이트
+    setMinRecordingDuration(silenceDuration + 500);
+  }, [silenceDuration]);
 
   useEffect(() => {
     async function init() {
@@ -96,7 +102,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         };
 
         mediaRecorderRef.current.onstop = async () => {
-          if (audioChunksRef.current.length > 0) {
+          const elapsedTime = Date.now() - (startTimestampRef.current || 0);
+          if (audioChunksRef.current.length > 0 && elapsedTime >= minRecordingDuration) {
             const timestamp = startTimestampRef.current ?? Date.now();
             const blob = new Blob(audioChunksRef.current, {
               type: "audio/wav",
@@ -104,6 +111,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
             await sendAudioToServer(blob, timestamp);
             audioChunksRef.current = [];
             console.log("녹음 저장됨");
+          } else {
+            audioChunksRef.current = []; // 최소 녹음 시간 미만일 때 버퍼 비우기
           }
         };
       } catch (err: any) {
